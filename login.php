@@ -16,19 +16,22 @@
     include('header.php');
     ?>
 
-    <main>
-        <div class="user-wrapper user-login px-4 py-5">
+    <main class="user-login d-flex flex-column justify-content-center">
+        <div class="user-wrapper user-login_card px-4 py-5 shadow">
             <h1 class="mb-5 text-center">キャリコン予約</h1>
             <form action="check_login.php" method="post">
-                <div class="">
-                    <div class="mb-5 flex-column">
-                        <label for="id" class="mb-2 form-label">| ログインID</label>
-                        <input type="text" name="id" id="id" class="form-control" placeholder="出席番号">
-                    </div>
-                    <div>
-                        <label for="password" class="mb-2 form-label">| パスワード</label>
-                        <input type="text" name="password" id="password" class="form-control" placeholder="パスワード">
-                    </div>
+                <div class="mb-4">
+                    <label for="id" class="mb-2 form-label">| ログインID</label>
+                    <input type="text" name="id" id="id" class="form-control" placeholder="出席番号">
+                </div>
+
+                <div class="mb-5">
+                    <label for="password" class="mb-2 form-label">| パスワード</label>
+                    <input type="text" name="password" id="password" class="form-control" placeholder="パスワード">
+                </div>
+
+                <div class="text-center">
+                    <input type="submit" value="ログイン" class="btn btn-primary px-5 py-2 btn-lg">
                 </div>
             </form>
         </div>
