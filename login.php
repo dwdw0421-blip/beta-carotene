@@ -21,8 +21,8 @@
             <h1 class="mb-5 text-center">キャリコン予約</h1>
             <form action="check_login.php" method="post">
                 <div class="mb-4">
-                    <label for="id" class="mb-2 form-label">| ログインID</label>
-                    <input type="text" name="id" id="id" class="form-control" placeholder="出席番号">
+                    <label for="name" class="mb-2 form-label">| ログインID</label>
+                    <input type="text" name="name" id="name" class="form-control" placeholder="出席番号">
                 </div>
 
                 <div class="mb-5">
