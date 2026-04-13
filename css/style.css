@@ -5,6 +5,10 @@
 
 /* -- user -- */
 /* 共通部分 */
+body {
+    font-family: 'LINE Seed JP', sans-serif;
+}
+
 .user-wrapper {
     width: 92%;
     margin: 0 auto;
