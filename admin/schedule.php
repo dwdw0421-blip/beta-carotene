@@ -7,6 +7,8 @@
   <title>ドラッグ＆ドロップ 発展編 -DB連携-</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <!-- style.css -->
+  <link rel="stylesheet" href="../css/style.css">
   <style>
     :root {
       --drop-zone-bg: #f8f9fa;
@@ -86,8 +88,14 @@
   </style>
 </head>
 
-<body class="bg-light">
-  <main class="container py-5">
+<body class="bg-light admin-wrapper">
+
+  <?php
+  require dirname(__FILE__) . '/sidebar.php';
+  ?>
+  <main class="container py-5 admin-main-wrapper">
+
+
     <header class="text-center mb-5">
       <h1 class="display-5 fw-bold">ドラッグ＆ドロップ 発展編<br> -DB連携-</h1>
       <p class="text-muted">ドラッグ&ドロップでタスクを入れ替える度にDBに保存する</p>
@@ -95,8 +103,8 @@
     </header>
 
 
-<!-- 俺追加↓ -->
-     <div class="row mb-4 justify-content-center">
+    <!-- 俺追加↓ -->
+    <div class="row mb-4 justify-content-center">
       <div class="col">
         <button type="button" class="btn btn-primary" id="open-line-btn">Add Lines</button>
       </div>
@@ -113,7 +121,7 @@
         <button class="btn btn-primary flex-fill" type="button" id="add-line-btn">Add</button>
       </div>
     </dialog>
-<!-- 俺追加↑ -->
+    <!-- 俺追加↑ -->
 
 
     <div class="row mb-4 justify-content-center">
@@ -139,91 +147,91 @@
 
 
     <?php
-require_once 'functions_test.php';
-$pdo = db_connect();
+    require_once 'functions_test.php';
+    $pdo = db_connect();
 
-// ステータス（3列）を取得
-$sql = 'SELECT * FROM statuses';
-$stmt = $pdo->query($sql);
-$statuses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // ステータス（3列）を取得
+    $sql = 'SELECT * FROM statuses';
+    $stmt = $pdo->query($sql);
+    $statuses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// タスクを全取得
-$sql_tasks = 'SELECT * FROM tasks';
-$stmt_tasks = $pdo->query($sql_tasks);
-$all_tasks = $stmt_tasks->fetchAll(PDO::FETCH_ASSOC);
-?>
-
-
+    // タスクを全取得
+    $sql_tasks = 'SELECT * FROM tasks';
+    $stmt_tasks = $pdo->query($sql_tasks);
+    $all_tasks = $stmt_tasks->fetchAll(PDO::FETCH_ASSOC);
+    ?>
 
 
-<!-- Bootstrapのグリッドを使用 -->
-<div class="row row-cols-1 row-cols-md-6 g-3 mt-4 w-100 px-3">
-  <?php foreach ($statuses as $status): ?>
-    <div class="col">
-      <div class="status-column border border-2 border-secondary-subtle rounded-3 p-2 bg-light shadow-sm">
-        
-      <div class="d-flex justify-content-between align-items-start mb-3">
-        <h2 class="h6 fw-bold text-center border-bottom pb-2 mb-2">
-            <?= htmlspecialchars($status['status']) ?>
-          </h2>
-          <!--  俺追加　削除用ボタン -->
-            <button class="btn-close delete-status-btn"
+
+
+    <!-- Bootstrapのグリッドを使用 -->
+    <div class="row row-cols-1 row-cols-md-6 g-3 mt-4 w-100 px-3">
+      <?php foreach ($statuses as $status): ?>
+        <div class="col">
+          <div class="status-column border border-2 border-secondary-subtle rounded-3 p-2 bg-light shadow-sm">
+
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <h2 class="h6 fw-bold text-center border-bottom pb-2 mb-2">
+                <?= htmlspecialchars($status['status']) ?>
+              </h2>
+              <!--  俺追加　削除用ボタン -->
+              <button class="btn-close delete-status-btn"
                 data-id="<?php echo $status['id']; ?>"
                 style="font-size: 1.0rem;"></button>
-      </div>
-
-        <div class="task-slots">
-          <?php 
-          $hours = ['10:00～', '11:00～', '12:00～', '14:00～', '15:00～', '16:00～'];
-          
-          // このステータスに属するタスクを抽出
-          $current_tasks = array_filter($all_tasks, function($t) use ($status) {
-              return (int)$t['status'] === (int)$status['id'];
-          });
-
-          for ($i = 0; $i < 6; $i++): 
-              $task = null;
-              foreach ($current_tasks as $t) {
-                  if (isset($t['slot_index']) && (int)$t['slot_index'] === $i) {
-                      $task = $t;
-                      break;
-                  }
-              }
-          ?>
-            <div class="d-flex align-items-center mb-1">
-              <!-- 左側：時間表示 -->
-              <small class="text-secondary fw-bold pe-2" style="width: 45px; text-align: right; font-size: 0.65rem;">
-                <?= $hours[$i] ?>
-              </small>
-
-              <!-- 右側：スロット -->
-              <div class="drop-zone border border-dashed rounded flex-grow-1 d-flex align-items-center justify-content-center" 
-                   style="height: 30px; background: #fff; border-color: #ddd; overflow: hidden;"
-                   data-status-id="<?= $status['id'] ?>" 
-                   data-slot-index="<?= $i ?>"
-                   ondragover="event.preventDefault()" 
-                   ondrop="handleDrop(event)">
-                
-                <?php if ($task): ?>
-                  <div class="card bg-warning w-100 h-100 task-item border-0 shadow-none d-flex align-items-center justify-content-center" 
-                       id="task-<?= $task['id'] ?>" 
-                       data-task-id="<?= $task['id'] ?>" 
-                       draggable="true" 
-                       ondragstart="handleDragStart(event)"
-                       style="cursor: move; font-size: 0.75rem; font-weight: bold;">
-                    <?= htmlspecialchars($task['title']) ?>
-                  </div>
-                <?php else: ?>
-                  <span class="text-muted" style="font-size: 0.6rem; opacity: 0.4;">+</span>
-                <?php endif; ?>
-              </div>
             </div>
-          <?php endfor; ?>
+
+            <div class="task-slots">
+              <?php
+              $hours = ['10:00～', '11:00～', '12:00～', '14:00～', '15:00～', '16:00～'];
+
+              // このステータスに属するタスクを抽出
+              $current_tasks = array_filter($all_tasks, function ($t) use ($status) {
+                return (int)$t['status'] === (int)$status['id'];
+              });
+
+              for ($i = 0; $i < 6; $i++):
+                $task = null;
+                foreach ($current_tasks as $t) {
+                  if (isset($t['slot_index']) && (int)$t['slot_index'] === $i) {
+                    $task = $t;
+                    break;
+                  }
+                }
+              ?>
+                <div class="d-flex align-items-center mb-1">
+                  <!-- 左側：時間表示 -->
+                  <small class="text-secondary fw-bold pe-2" style="width: 45px; text-align: right; font-size: 0.65rem;">
+                    <?= $hours[$i] ?>
+                  </small>
+
+                  <!-- 右側：スロット -->
+                  <div class="drop-zone border border-dashed rounded flex-grow-1 d-flex align-items-center justify-content-center"
+                    style="height: 30px; background: #fff; border-color: #ddd; overflow: hidden;"
+                    data-status-id="<?= $status['id'] ?>"
+                    data-slot-index="<?= $i ?>"
+                    ondragover="event.preventDefault()"
+                    ondrop="handleDrop(event)">
+
+                    <?php if ($task): ?>
+                      <div class="card bg-warning w-100 h-100 task-item border-0 shadow-none d-flex align-items-center justify-content-center"
+                        id="task-<?= $task['id'] ?>"
+                        data-task-id="<?= $task['id'] ?>"
+                        draggable="true"
+                        ondragstart="handleDragStart(event)"
+                        style="cursor: move; font-size: 0.75rem; font-weight: bold;">
+                        <?= htmlspecialchars($task['title']) ?>
+                      </div>
+                    <?php else: ?>
+                      <span class="text-muted" style="font-size: 0.6rem; opacity: 0.4;">+</span>
+                    <?php endif; ?>
+                  </div>
+                </div>
+              <?php endfor; ?>
+            </div>
+          </div>
         </div>
-      </div>
+      <?php endforeach; ?>
     </div>
-  <?php endforeach; ?>
-</div>
 
 
 
@@ -236,7 +244,7 @@ $all_tasks = $stmt_tasks->fetchAll(PDO::FETCH_ASSOC);
 
 
 
-<div class="delete-area mt-5 p-5 text-center border border-2 border-danger-subtle">
+    <div class="delete-area mt-5 p-5 text-center border border-2 border-danger-subtle">
       Drop here to Delete
     </div>
   </main>
