@@ -10,9 +10,23 @@
     margin: 0 auto;
 }
 
+/* header */
+header {
+    background-color: #F6F8FB;
+}
+
+.user-logo {
+    max-width: 300px;
+}
+
 /* login */
 .user-login {
+    min-height: 80vh;
+}
+
+.user-login_card {
     background-color: #F6FAFF;
+    border-radius: 12px;
 }
 
 /* TOP */
