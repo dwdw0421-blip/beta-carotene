@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
-    <title>Document</title>
-</head>
+<?php
+include('head.php');
+?>
+
 
 <body>
-    <!-- <header></header> -->
+    <?php
+    include('header.php');
+    ?>
     <main>
         <section class="wrapper">
             <h1>面談予約</h1>
@@ -67,7 +67,7 @@
             </div>
         </section>
     </main>
-    <footer></footer>
+    <!-- <footer></footer> -->
 </body>
 
 </html>
