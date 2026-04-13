@@ -1,6 +1,13 @@
 @charset "utf-8";
 
 /* -- admin -- */
+.admin-wrapper {
+    display: flex;
+}
+
+.admin-sidebar-wrapper {
+    width: 30%;
+}
 
 
 /* -- user -- */
