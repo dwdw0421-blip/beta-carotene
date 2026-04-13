@@ -1,1 +1,24 @@
 @charset "utf-8";
+
+/* -- admin -- */
+
+
+/* -- user -- */
+/* 共通部分 */
+.user-wrapper {
+    width: 92%;
+    margin: 0 auto;
+}
+
+/* login */
+.user-login {
+    background-color: #F6FAFF;
+}
+
+/* TOP */
+
+
+/* reserve */
+
+
+/* reserve-check */
