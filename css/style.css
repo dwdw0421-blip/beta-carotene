@@ -21,6 +21,10 @@ body {
     margin: 0 auto;
 }
 
+.user-section_title {
+    color: #394C84;
+}
+
 /* header */
 header {
     background-color: #F6F8FB;
@@ -35,12 +39,17 @@ header {
     min-height: 80vh;
 }
 
-.user-login_card {
+.user-card {
     background-color: #F6FAFF;
     border-radius: 12px;
 }
 
 /* TOP */
+.user-card_subtitle {
+    font-size: 10px;
+    color: #394C84;
+}
+
 
 
 /* reserve */

@@ -11,8 +11,8 @@ include('head.php');
     ?>
 
     <main class="user-login d-flex flex-column justify-content-center">
-        <div class="user-wrapper user-login_card px-4 py-5 shadow">
-            <h1 class="mb-5 text-center">キャリコン予約</h1>
+        <div class="user-wrapper user-card px-4 py-5 shadow">
+            <h2 class="mb-5 text-center fw-bold">キャリコン予約</h2>
             <form action="check_login.php" method="post">
                 <div class="mb-4">
                     <label for="name" class="mb-2 form-label">| ログインID</label>
