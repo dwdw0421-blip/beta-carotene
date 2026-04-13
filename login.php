@@ -1,15 +1,9 @@
 <!DOCTYPE html>
 <html lang="ja">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <!-- style.css -->
-    <link rel="stylesheet" href="./css/style.css">
-    <title>ユーザー｜ログイン</title>
-</head>
+<?php
+include('head.php');
+?>
 
 <body>
     <?php
@@ -21,13 +15,13 @@
             <h1 class="mb-5 text-center">キャリコン予約</h1>
             <form action="check_login.php" method="post">
                 <div class="mb-4">
-                    <label for="id" class="mb-2 form-label">| ログインID</label>
-                    <input type="text" name="id" id="id" class="form-control" placeholder="出席番号">
+                    <label for="name" class="mb-2 form-label">| ログインID</label>
+                    <input type="text" name="name" id="name" class="form-control" placeholder="出席番号">
                 </div>
 
                 <div class="mb-5">
                     <label for="password" class="mb-2 form-label">| パスワード</label>
-                    <input type="text" name="password" id="password" class="form-control" placeholder="パスワード">
+                    <input type="password" name="password" id="password" class="form-control" placeholder="パスワード">
                 </div>
 
                 <div class="text-center">
