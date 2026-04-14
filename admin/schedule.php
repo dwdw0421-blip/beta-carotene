@@ -106,13 +106,13 @@
     <!-- 俺追加↓ -->
     <div class="row mb-4 justify-content-center">
       <div class="col">
-        <button type="button" class="btn btn-primary" id="open-line-btn">Add Lines</button>
+        <button type="button" class="btn btn-primary" id="open-line-btn">キャリコンプラス追加</button>
       </div>
     </div>
     <dialog class="form p-5" id="modal-line">
       <div class="row mb-3">
         <div class="col mb-3">
-          <label for="line-title" class="form-label">line名</label>
+          <label for="line-title" class="form-label">開催日</label>
           <input type="text" name="line-title" id="line-title" class="form-control">
         </div>
       </div>
@@ -126,13 +126,13 @@
 
     <div class="row mb-4 justify-content-center">
       <div class="col">
-        <button type="button" class="btn btn-primary" id="open-btn">Add Task</button>
+        <button type="button" class="btn btn-primary" id="open-btn">生徒情報追加</button>
       </div>
     </div>
     <dialog class="form p-5" id="modal">
       <div class="row mb-3">
         <div class="col mb-3">
-          <label for="task-title" class="form-label">タスク名</label>
+          <label for="task-title" class="form-label">生徒情報</label>
           <input type="text" name="task-title" id="task-title" class="form-control">
         </div>
       </div>
@@ -147,6 +147,35 @@
 
 
     <?php
+require_once 'functions_test.php';
+$pdo = db_connect();
+
+// ステータス（3列）を取得
+$sql = 'SELECT * FROM statuses';
+$stmt = $pdo->query($sql);
+$statuses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// タスクを全取得
+$sql_tasks = 'SELECT * FROM tasks';
+$stmt_tasks = $pdo->query($sql_tasks);
+$all_tasks = $stmt_tasks->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+
+
+
+<!-- Bootstrapのグリッドを使用 -->
+<div class="row row-cols-1 row-cols-md-6 g-3 mt-4 w-100 px-3">
+  <?php foreach ($statuses as $status): ?>
+    <div class="col">
+      <div class="status-column border border-2 border-secondary-subtle rounded-3 p-2 bg-light shadow-sm">
+        
+      <div class="d-flex justify-content-between align-items-start mb-0">
+        <h2 class="h6 fw-bold text-center border-bottom pb-0 mb-0">
+            <?= htmlspecialchars($status['status']) ?>
+          </h2>
+          <!--  俺追加　削除用ボタン -->
+            <button class="btn-close delete-status-btn"
     require_once 'functions_test.php';
     $pdo = db_connect();
 
@@ -184,6 +213,42 @@
               <?php
               $hours = ['10:00～', '11:00～', '12:00～', '14:00～', '15:00～', '16:00～'];
 
+      <!--  俺追加　教室記入ボタン -->
+    <div class="row mb-0 justify-content-center">
+      <div class="col">
+        <button type="button" class="btn btn-info btn-sm" id="open-held-btn">開催情報入力</button>
+      </div>
+    </div>
+    <dialog class="form p-5" id="modal-held">
+      <div class="row mb-3">
+        <div class="col mb-3">
+          <label for="held-title" class="form-label">生徒情報</label>
+          <input type="text" name="held-title" id="held-title" class="form-control">
+        </div>
+      </div>
+      <div class="d-flex gap-3">
+        <button class="btn btn-secondary flex-fill" type="button" id="cancel-btn">Cancel</button>
+        <button class="btn btn-primary flex-fill" type="button" id="add-btn">Add</button>
+      </div>
+    </dialog>
+
+      <div class="h6 fw-bold text-left border-bottom pb-2 mb-2">
+          <div>開催教室：</div>
+          <div>講師：</div>
+      </div>
+
+        <div class="task-slots">
+          <?php 
+          $hours = ['10:00～', '11:00～', '12:00～', '14:00～', '15:00～', '16:00～'];
+          
+          // このステータスに属するタスクを抽出
+          $current_tasks = array_filter($all_tasks, function($t) use ($status) {
+              return (int)$t['status'] === (int)$status['id'];
+          });
+
+          for ($i = 0; $i < 6; $i++): 
+              $task = null;
+              foreach ($current_tasks as $t) {
               // このステータスに属するタスクを抽出
               $current_tasks = array_filter($all_tasks, function ($t) use ($status) {
                 return (int)$t['status'] === (int)$status['id'];
@@ -252,7 +317,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
-  <script src="./script_schedule.js"></script>
+  <script src="../js/script_schedule.js"></script>
 </body>
 
 </html>
