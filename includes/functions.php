@@ -35,3 +35,46 @@ function format_date($datetime, $type)
     ];
     return date($format_types[$type], strtotime($datetime));
 }
+
+//教室IDから教室名を返す関数
+function get_classrooms_list()
+{
+    $room = array();
+    try {
+        //m_classroomsテーブルから全レコードを取得
+        $db = db_connect();
+        $sql = 'SELECT * FROM m_classrooms';
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($result as $row) {
+            $room[$row['id']] = $row['name'];
+        }
+        return $room;
+    } catch (PDOException $e) {
+        exit('エラー: ' . $e->getMessage());
+    }
+}
+
+
+//コース種別IDからコース種別名を返す関数
+function get_course_types_list()
+{
+    $course_types = array();
+    try {
+        //m_course_typesテーブルから全レコードを取得
+        $db = db_connect();
+        $sql = 'SELECT * FROM m_course_types';
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($result as $row) {
+            $course_types[$row['id']] = $row['name'];
+        }
+        return $course_types;
+    } catch (PDOException $e) {
+        exit('エラー: ' . $e->getMessage());
+    }
+}
