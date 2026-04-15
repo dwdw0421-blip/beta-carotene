@@ -50,6 +50,21 @@ header {
     color: #394C84;
 }
 
+/* カレンダー */
+.calendar {
+    background-color: #F6FAFF;
+}
+
+table {
+    border-spacing: 5px;
+}
+
+table td,
+table th {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
 
 
 /* reserve */

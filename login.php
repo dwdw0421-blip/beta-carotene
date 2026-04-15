@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="ja">
 
-<?php
-include('head.php');
-?>
+<head>
+    <?php
+    include('head_link.php');
+    ?>
+    <title>ユーザー｜TOP</title>
+</head>
 
 <body>
     <?php
