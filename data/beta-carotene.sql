@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- ホスト: 127.0.0.1
--- 生成日時: 2026-04-15 07:25:02
+-- 生成日時: 2026-04-15 07:32:47
 -- サーバのバージョン： 10.4.32-MariaDB
 -- PHP のバージョン: 8.2.12
 
@@ -176,6 +176,7 @@ INSERT INTO `m_admin_staffs` (`id`, `staff_id`, `name`, `password`, `is_deleted`
 CREATE TABLE `m_carcon_staffs` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -184,11 +185,11 @@ CREATE TABLE `m_carcon_staffs` (
 -- テーブルのデータのダンプ `m_carcon_staffs`
 --
 
-INSERT INTO `m_carcon_staffs` (`id`, `name`, `created_at`, `updated_at`) VALUES
-(1, '田中', '2026-04-13 15:40:23', '2026-04-13 15:40:23'),
-(2, '鈴木', '2026-04-13 15:40:23', '2026-04-13 15:40:23'),
-(3, '佐藤', '2026-04-13 15:40:23', '2026-04-13 15:40:23'),
-(4, '高橋', '2026-04-13 15:40:23', '2026-04-13 15:40:23');
+INSERT INTO `m_carcon_staffs` (`id`, `name`, `is_deleted`, `created_at`, `updated_at`) VALUES
+(1, '田中', 0, '2026-04-13 15:40:23', '2026-04-13 15:40:23'),
+(2, '鈴木', 0, '2026-04-13 15:40:23', '2026-04-13 15:40:23'),
+(3, '佐藤', 0, '2026-04-13 15:40:23', '2026-04-13 15:40:23'),
+(4, '高橋', 0, '2026-04-13 15:40:23', '2026-04-13 15:40:23');
 
 -- --------------------------------------------------------
 
@@ -232,7 +233,7 @@ CREATE TABLE `m_courses` (
   `end_date` date NOT NULL,
   `course_type` int(11) NOT NULL,
   `classroom_id` int(11) NOT NULL,
-  `is_deleted` tinyint(1) NOT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -347,7 +348,7 @@ CREATE TABLE `m_students` (
   `password` varchar(255) NOT NULL,
   `course_id` int(11) NOT NULL,
   `enrollment_id` int(11) NOT NULL,
-  `is_deleted` tinyint(1) NOT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
