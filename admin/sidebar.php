@@ -1,6 +1,6 @@
 <?php
 //コース情報を取得
-$sql = "SELECT start_date,m_classrooms.name as classroom_name FROM m_courses INNER JOIN m_classrooms ON m_courses.id = m_classrooms.course_id  ORDER BY start_date ASC";
+$sql = "SELECT start_date,m_classrooms.name as classroom_name FROM m_courses INNER JOIN m_classrooms ON m_courses.classroom_id = m_classrooms.id  ORDER BY start_date ASC";
 
 
 $stmt = $db->prepare($sql);
