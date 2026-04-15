@@ -1,3 +1,26 @@
+<?php
+
+require_once __DIR__ . '/../includes/functions.php';
+
+$db = db_connect();
+
+// ステータス（3列）を取得
+$sql = 'SELECT * FROM carcon_lines';
+// $stmt = $pdo->query($sql);
+// $statuses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $db->prepare($sql);
+$stmt->execute();
+$carcon_lines = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+var_dump($carcon_lines);
+
+// タスクを全取得
+// $sql_tasks = 'SELECT * FROM tasks';
+// $stmt_tasks = $pdo->query($sql_tasks);
+// $all_tasks = $stmt_tasks->fetchAll(PDO::FETCH_ASSOC);
+
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -136,35 +159,16 @@
 
 
 
-
-
-    <?php
-require_once 'functions_test.php';
-$pdo = db_connect();
-
-// ステータス（3列）を取得
-$sql = 'SELECT * FROM statuses';
-$stmt = $pdo->query($sql);
-$statuses = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// タスクを全取得
-$sql_tasks = 'SELECT * FROM tasks';
-$stmt_tasks = $pdo->query($sql_tasks);
-$all_tasks = $stmt_tasks->fetchAll(PDO::FETCH_ASSOC);
-?>
-
-
-
-
 <!-- Bootstrapのグリッドを使用 -->
 <div class="row row-cols-1 row-cols-md-3 g-3 mt-4 w-100 px-3">
-  <?php foreach ($statuses as $status): ?>
+  <?php foreach ($carcon_lines as $date): ?>
+    <?php var_dump($date);?>
     <div class="col">
       <div class="status-column border border-2 border-secondary-subtle rounded-3 p-2 bg-light shadow-sm">
         
       <div class="d-flex justify-content-between align-items-start mb-3">
         <h2 class="h6 fw-bold text-center border-bottom pb-2 mb-2">
-            <?= htmlspecialchars($status['status']) ?>
+            <?= htmlspecialchars($date['date']) ?>
           </h2>
           <!--  俺追加　削除用ボタン -->
             <button class="btn-close delete-status-btn"
