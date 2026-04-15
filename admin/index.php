@@ -78,7 +78,7 @@ $done_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <td><?php echo $data["student_name"]; ?></td>
                             <td><?php echo $data["course_name"]; ?></td>
                             <td><?php echo $data["request_status_name"]; ?></td>
-                            <td><a href="request_detail.php?<?php echo $data["request_id"]; ?>">詳細</a></td>
+                            <td><a href="request_detail.php?id=<?php echo $data["request_id"]; ?>">詳細</a></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -101,7 +101,7 @@ $done_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <td><?php echo $data["student_name"]; ?></td>
                             <td><?php echo $data["course_name"]; ?></td>
                             <td><?php echo $data["request_status_name"]; ?></td>
-                            <td><a href="request_detail.php?<?php echo $data["request_id"]; ?>">詳細</a></td>
+                            <td><a href="request_detail.php?id=<?php echo $data["request_id"]; ?>">詳細</a></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
