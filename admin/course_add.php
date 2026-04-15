@@ -31,7 +31,7 @@ $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
     ?>
     <section class="admin-main-wrapper">
         <h1>コースを追加</h1>
-        <form action="./course_add_do.php" method="post">
+        <form action="./course_add_confirm.php" method="post">
             <!-- コース名 -->
             <div class="mb-2">
                 <label class="form-label" for="name">コース名</label>
@@ -58,23 +58,28 @@ $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <!-- 修了日 -->
+            <div class="mb-2">
+                <label class="form-label" for="end_date">修了日</label>
+                <input class="form-control" type="date" name="end_date" id="end_date">
+            </div>
 
             <!-- コース種別 -->
+            <?php $types_list = get_course_types_list(); ?>
             <div class="mb-2">
-                <label class="form-label" for="classroom_id">コース種別</label>
+                <label class="form-label" for="course_type">コース種別</label>
                 <select class="form-select" name="course_type">
-                    <?php $course_types_list = get_course_types_list(); ?>
+
                     <?php
-                    foreach ($course_types_list as $type):
+                    foreach ($types_list as $key => $type):
                     ?>
-                        <option value="<?php echo h($type['id']) ?>"><?php echo h($type['name']) ?></option>
+                        <option value="<?php echo h($key) ?>"><?php echo h($type) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
 
-            <!-- 確認画面？ -->
+            <!-- 確認画面へ -->
+            <input class="btn btn-primary" type="submit" value="入力内容を確認">
 
-            <button type="submit" class="btn btn-primary">コースを追加</button>
         </form>
     </section>
 </body>
