@@ -1,12 +1,11 @@
 <?php
 //コース情報を取得
-$sql = "SELECT start_date,m_classrooms.name as classroom_name FROM m_courses INNER JOIN m_classrooms ON m_courses.classroom_id = m_classrooms.id  ORDER BY start_date ASC";
+$sql = "SELECT m_courses.name as courses_name, start_date,m_classrooms.name as classroom_name FROM m_courses INNER JOIN m_classrooms ON m_courses.classroom_id = m_classrooms.id  ORDER BY start_date ASC";
 
 
 $stmt = $db->prepare($sql);
 $stmt->execute();
 $course_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
 
 <aside class="admin-sidebar-wrapper">
@@ -20,13 +19,10 @@ $course_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div id="course">
             <p>コース管理</p>
             <ul>
-                <!-- TODO:コースはDBからforeach表示する -->
                 <?php
                 foreach ($course_list as $course):
                 ?>
                     <li><?php echo h($course['classroom_name']) ?>(<?php echo h(format_date($course['start_date'], 2)) ?>開講)</li>
-                    <!-- <li>6A（2025年11月開講）</li> -->
-
                 <?php endforeach; ?>
             </ul>
             <a href="course_add.php">コースを追加</a>
