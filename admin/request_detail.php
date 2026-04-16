@@ -1,3 +1,95 @@
+<?php
+
+require_once __DIR__ . '/../includes/functions.php';
+
+$id = (isset($_GET["id"]) ? (int)$_GET["id"] : "");
+
+if (empty($id)) {
+    header("location: index.php");
+    exit();
+}
+
+$db = db_connect();
+// リクエスト側のデータ取得
+// TODO: nagata-t リクエスト側のデータと変更側のデータを別々で取っている
+// 実装優先で簡単な方に倒したが効率よいやり方ありそうなのであとで探す
+$get_request_data_sql = "SELECT 
+    carcon_reservation_details.id AS detail_id,
+    carcon_reservation_details.slot_index AS detail_slot_index,
+    carcon_lines.id AS line_id,
+    carcon_lines.date AS line_date,
+    current_meeting_type.name AS current_meeting_type,
+    next_meeting_type.name AS next_meeting_type,
+    m_classrooms.name AS classroom_name,
+    m_students.id AS student_id,
+    carcon_reservation_details.created_at AS detail_send_date
+        FROM carcon_request_reservations
+        INNER JOIN carcon_reservation_details ON carcon_request_reservations.request_carcon_reservation_detail_id = carcon_reservation_details.id
+        INNER JOIN m_meeting_types AS next_meeting_type ON carcon_request_reservations.change_meeting_type = next_meeting_type.id
+		INNER JOIN m_meeting_types AS current_meeting_type ON carcon_reservation_details.meeting_type = current_meeting_type.id
+        INNER JOIN m_request_statuses ON carcon_request_reservations.request_status_id = m_request_statuses.id
+        INNER JOIN carcon_reservations ON carcon_reservations.carcon_reservation_detail_id = carcon_reservation_details.id
+        INNER JOIN carcon_lines ON carcon_reservations.carcon_line_id = carcon_lines.id
+        INNER JOIN m_classrooms ON carcon_lines.classroom_id = m_classrooms.id
+        INNER JOIN m_students ON carcon_reservation_details.student_id = m_students.id
+        WHERE carcon_request_reservations.id=:id;
+";
+$stmt = $db->prepare($get_request_data_sql);
+$stmt->bindParam(":id", $id, PDO::PARAM_INT);
+$stmt->execute();
+
+$request_result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// 変更側のデータ取得
+$get_change_data_sql = "SELECT 
+    carcon_reservation_details.id AS detail_id,
+    carcon_reservation_details.slot_index AS detail_slot_index,
+    carcon_lines.id AS line_id,
+    carcon_lines.date AS line_date,
+    current_meeting_type.name AS current_meeting_type,
+    next_meeting_type.name AS next_meeting_type,
+    m_classrooms.name AS classroom_name,
+    m_students.id AS student_id,
+    carcon_reservation_details.created_at AS detail_send_date
+        FROM carcon_request_reservations
+        INNER JOIN carcon_reservation_details ON carcon_request_reservations.change_carcon_reservation_detail_id = carcon_reservation_details.id
+        INNER JOIN m_meeting_types AS next_meeting_type ON carcon_request_reservations.change_meeting_type = next_meeting_type.id
+		INNER JOIN m_meeting_types AS current_meeting_type ON carcon_reservation_details.meeting_type = current_meeting_type.id
+        INNER JOIN m_request_statuses ON carcon_request_reservations.request_status_id = m_request_statuses.id
+        INNER JOIN carcon_reservations ON carcon_reservations.carcon_reservation_detail_id = carcon_reservation_details.id
+        INNER JOIN carcon_lines ON carcon_reservations.carcon_line_id = carcon_lines.id
+        INNER JOIN m_classrooms ON carcon_lines.classroom_id = m_classrooms.id
+        INNER JOIN m_students ON carcon_reservation_details.student_id = m_students.id
+        WHERE carcon_request_reservations.id=:id;
+";
+
+$stmt = $db->prepare($get_change_data_sql);
+$stmt->bindParam(":id", $id, PDO::PARAM_INT);
+$stmt->execute();
+
+$change_result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// 申請側の学生データ取得
+$get_student_sql = "SELECT 
+                    CONCAT(last_name, first_name) AS student_name,
+                    m_classrooms.name AS classroom_name,
+                    m_courses.start_date AS course_start_date
+                        FROM m_students 
+                        INNER JOIN m_courses ON m_courses.id = m_students.course_id
+                        INNER JOIN m_classrooms ON m_classrooms.id = m_courses.classroom_id
+                        WHERE m_students.id=:r_student_id OR m_students.id=:c_student_id";
+
+$stmt = $db->prepare($get_student_sql);
+$stmt->bindParam(":r_student_id", $request_result["student_id"], PDO::PARAM_INT);
+$stmt->bindParam(":c_student_id", $change_result["student_id"], PDO::PARAM_INT);
+$stmt->execute();
+
+$students_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$r_student = $students_data[0];
+$c_student = $students_data[1];
+
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -17,7 +109,143 @@
     ?>
     <section class="admin-main-wrapper">
         <h1>申請内容詳細</h1>
+        <p>申請者: <?php echo $r_student["student_name"]; ?>（<?php echo $r_student["classroom_name"]; ?>｜<?php echo h(format_date($r_student['course_start_date'], 2)) ?>開講）</p>
+        <p>申請日時: <?php echo format_date($request_result["detail_send_date"], 1); ?></p>
 
+        <div class="card">
+            <p><?php echo $r_student["student_name"]; ?>（<?php echo $r_student["classroom_name"]; ?>｜<?php echo h(format_date($r_student['course_start_date'], 2)) ?>開講）さんの変更内容</p>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="card-title">変更前の予約内容</p>
+                            <dl>
+                                <div class="d-flex justify-content-center gap-3">
+                                    <dt>日程</dt>
+                                    <dd><?php echo format_date($request_result["line_date"], 3); ?></dd>
+                                </div>
+                                <div class="d-flex justify-content-center gap-3">
+                                    <dt>ラインID</dt>
+                                    <dd><?php echo $request_result["line_id"]; ?></dd>
+                                </div>
+                                <div class="d-flex justify-content-center gap-3">
+                                    <dt>時間</dt>
+                                    <dd><?php echo $request_result["detail_slot_index"]; ?></dd>
+                                </div>
+                                <div class="d-flex justify-content-center gap-3">
+                                    <dt>形式</dt>
+                                    <dd><?php echo $request_result["current_meeting_type"]; ?></dd>
+                                </div>
+                                <div class="d-flex justify-content-center gap-3">
+                                    <dt>教室</dt>
+                                    <dd><?php echo $request_result["classroom_name"]; ?></dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="card-title">変更後の予約内容</p>
+                            <dl>
+                                <div class="d-flex justify-content-center gap-3">
+                                    <dt>日程</dt>
+                                    <dd><?php echo format_date($change_result["line_date"], 3); ?></dd>
+                                </div>
+                                <div class="d-flex justify-content-center gap-3">
+                                    <dt>ラインID</dt>
+                                    <dd><?php echo $change_result["line_id"]; ?></dd>
+                                </div>
+                                <div class="d-flex justify-content-center gap-3">
+                                    <dt>時間</dt>
+                                    <dd><?php echo $change_result["detail_slot_index"]; ?></dd>
+                                </div>
+                                <div class="d-flex justify-content-center gap-3">
+                                    <dt>形式</dt>
+                                    <dd><?php echo $change_result["next_meeting_type"]; ?></dd>
+                                </div>
+                                <div class="d-flex justify-content-center gap-3">
+                                    <dt>教室</dt>
+                                    <dd><?php echo $change_result["classroom_name"]; ?></dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <p><?php echo $c_student["student_name"]; ?>（<?php echo $c_student["classroom_name"]; ?>｜<?php echo h(format_date($c_student['course_start_date'], 2)) ?>開講）さんの変更内容</p>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <p>変更前の予約内容</p>
+                            <div class="d-flex justify-content-center gap-3">
+                                <dt>日程</dt>
+                                <dd><?php echo format_date($change_result["line_date"], 3); ?></dd>
+                            </div>
+                            <div class="d-flex justify-content-center gap-3">
+                                <dt>ラインID</dt>
+                                <dd><?php echo $change_result["line_id"]; ?></dd>
+                            </div>
+                            <div class="d-flex justify-content-center gap-3">
+                                <dt>時間</dt>
+                                <dd><?php echo $change_result["detail_slot_index"]; ?></dd>
+                            </div>
+                            <div class="d-flex justify-content-center gap-3">
+                                <dt>形式</dt>
+                                <dd><?php echo $change_result["current_meeting_type"]; ?></dd>
+                            </div>
+                            <div class="d-flex justify-content-center gap-3">
+                                <dt>教室</dt>
+                                <dd><?php echo $change_result["classroom_name"]; ?></dd>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <p>変更後の予約内容</p>
+                            <dl>
+                                <div class="d-flex justify-content-center gap-3">
+                                    <dt>日程</dt>
+                                    <dd><?php echo format_date($request_result["line_date"], 3); ?></dd>
+                                </div>
+                                <div class="d-flex justify-content-center gap-3">
+                                    <dt>ラインID</dt>
+                                    <dd><?php echo $request_result["line_id"]; ?></dd>
+                                </div>
+                                <div class="d-flex justify-content-center gap-3">
+                                    <dt>時間</dt>
+                                    <dd><?php echo $request_result["detail_slot_index"]; ?></dd>
+                                </div>
+                                <div class="d-flex justify-content-center gap-3">
+                                    <dt>形式</dt>
+                                    <dd><?php echo $request_result["next_meeting_type"]; ?></dd>
+                                </div>
+                                <div class="d-flex justify-content-center gap-3">
+                                    <dt>教室</dt>
+                                    <dd><?php echo $request_result["classroom_name"]; ?></dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form action="request_approval.php" method="post">
+            <button type="submit" name="action" value="approval">承認</button>
+        </form>
+        <form action="request_reject.php" method="post">
+            <button type="submit" name="action" value="reject">棄却</button>
+            <label for="reject_message">
+                <p>棄却する場合は下記に理由を入力してください。<span>※学生への通知メッセージに表示されます。</span></p>
+            </label>
+            <textarea name="reject_message" id="reject_message" placeholder="4月11日15:00の枠はZOOMのみの対応となりますので、佐藤さんにその旨お伝えして再度ご相談ください。また、その上で日時交換希望される際は改めて申請をお願いします。"></textarea>
+        </form>
     </section>
 </body>
 
