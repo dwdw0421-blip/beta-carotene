@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html lang="ja">
 
-<?php
-include('head.php');
-?>
+<head>
+    <?php
+    include('head_link.php');
+    ?>
+    <title>ユーザー｜TOP</title>
+</head>
 
-<body>
+<body class="mb-10">
     <?php
     include('header.php');
     ?>
 
     <main class="mt-5">
+        <!-- 次回の予約日時sec -->
         <section class="user-wrapper mb-5">
-            <h2 class="user-section_title mb-5 text-center">次回の予約日時</h2>
-            <div class="user-card  px-4 py-4 shadow mb-4">
+            <h2 class="user-section_title mb-5 text-center">
+                次回の予約日時
+            </h2>
+
+            <div class="user-card px-4 py-4 shadow mb-4 rounded-4">
                 <h3 class="mb-4 fw-bold">キャリコン（必須面談）</h3>
                 <dl>
                     <div class="mb-2">
@@ -29,7 +36,7 @@ include('head.php');
                 </dl>
             </div>
 
-            <div class="user-card  px-4 py-4 shadow">
+            <div class="user-card  px-4 py-4 shadow rounded-4">
                 <h3 class="mb-4 fw-bold">キャリコン（任意面談）</h3>
                 <dl>
                     <div class="mb-2">
@@ -46,13 +53,12 @@ include('head.php');
                     </div>
                 </dl>
             </div>
-
-
         </section>
 
-        <section class="user-wrapper mb-5">
+        <!-- 申請ステータスsec -->
+        <section class="user-wrapper mb-7">
             <h2 class="user-section_title text-center mb-5">申請ステータス</h2>
-            <div class="user-card px-4 py-4 shadow mb-4">
+            <div class="user-card px-4 py-4 shadow mb-4 rounded-4">
                 <h3 class="mb-4 fw-bold">変更申請</h3>
                 <dl>
                     <div class="mb-2">
@@ -73,12 +79,35 @@ include('head.php');
                     </div>
                 </dl>
             </div>
+
+            <div class="user-card px-4 py-4 shadow mb-4 rounded-4">
+                <h3 class="mb-4 fw-bold">キャンセル申請</h3>
+                <dl>
+                    <div class="mb-2">
+                        <dt class="user-card_subtitle mb-2">申請日時</dt>
+                        <div class="d-flex flex-row gap-4 fw-bold">
+                            <dd>4月 10日 (土)</dd>
+                        </div>
+                    </div>
+
+                    <div>
+                        <dt class="user-card_subtitle mb-2">ステータス</dt>
+                        <dd class="fw-bold">承認待ち or 承認済み</dd>
+                    </div>
+                </dl>
+            </div>
         </section>
 
-        <section class="user-wrapper">
-            <h2>スケジュール</h2>
-        </section>
+        <!-- カレンダーsec -->
+        <?php
+        include('calendar.php')
+        ?>
     </main>
+
+    <!-- ボトムバー -->
+    <?php
+    include('bottom_bar.php')
+    ?>
 </body>
 
 </html>

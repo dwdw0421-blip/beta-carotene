@@ -152,14 +152,15 @@ function setupEventListener() {
   const cancelLineBtn = document.getElementById('cancel-line-btn');
   const modalLine = document.getElementById('modal-line');
 
-  const openHeldBtn = document.getElementById('open-line-btn');
-  const addHeldBtn = document.getElementById('add-line-btn'); // ID注意
-  const cancelHeldBtn = document.getElementById('cancel-line-btn');
-  const modalHeld = document.getElementById('modal-held');
+  // const openHeldBtn = document.getElementById('open-line-btn');
+  // const addHeldBtn = document.getElementById('add-line-btn'); // ID注意
+  // const cancelHeldBtn = document.getElementById('cancel-line-btn');
+  // const modalHeld = document.getElementById('modal-held');
 
 
   if(openBtn) openBtn.onclick = () => modal.showModal();
   if(openLineBtn) openLineBtn.onclick = () => modalLine.showModal();
+
   if(openLineBtn) openLineBtn.onclick = () => modalLine.showModal();
 
   if(cancelBtn) cancelBtn.onclick = () => modal.close();
@@ -185,13 +186,13 @@ function setupEventListener() {
 
 
 // 教室情報登録ボタン 
-  if (addHeldBtn) {
-    addHeldBtn.onclick = async () => {
-      const heldTitle = document.getElementById('held-title').value;
-      if (!heldTitle) return alert('名前を入力してください');
-      await addHeld({ title: heldTitle });
-    };
-  }
+  // if (addHeldBtn) {
+  //   addHeldBtn.onclick = async () => {
+  //     const heldTitle = document.getElementById('held-title').value;
+  //     if (!heldTitle) return alert('名前を入力してください');
+  //     await addHeld({ title: heldTitle });
+  //   };
+  // }
 
 
 }

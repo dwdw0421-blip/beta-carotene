@@ -11,7 +11,9 @@
 
 
 /* -- user -- */
-/* 共通部分 */
+/* --------------------
+共通部分
+-------------------- */
 body {
     font-family: 'LINE Seed JP', sans-serif;
 }
@@ -25,7 +27,26 @@ body {
     color: #394C84;
 }
 
-/* header */
+/* margin-bottom */
+.mb-6 {
+    margin-bottom: 4.5rem !important;
+}
+
+.mb-7 {
+    margin-bottom: 6rem !important;
+}
+
+.mb-8 {
+    margin-bottom: 7.5rem !important;
+}
+
+.mb-10 {
+    margin-bottom: 10rem !important;
+}
+
+/* --------------------
+header 
+--------------------*/
 header {
     background-color: #F6F8FB;
 }
@@ -34,25 +55,63 @@ header {
     max-width: 300px;
 }
 
-/* login */
+/* --------------------
+login 
+--------------------*/
 .user-login {
     min-height: 80vh;
 }
 
 .user-card {
     background-color: #F6FAFF;
-    border-radius: 12px;
 }
 
-/* TOP */
+/* --------------------
+TOP 
+--------------------*/
 .user-card_subtitle {
     font-size: 10px;
     color: #394C84;
 }
 
+/* --------------------
+calendar
+--------------------*/
+.calendar {
+    background-color: #F6FAFF;
+}
+
+.calender-img {
+    width: 100%;
+    height: auto;
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 5px 16px;
+    table-layout: fixed;
+    width: 100%;
+}
+
+table td,
+table th {
+    padding: 1.0rem 0.6rem;
+}
+
+th:first-child,
+td:first-child {
+    width: 25%;
+}
+
+.user-table-title th:not(:first-child) {
+    width: auto;
+}
 
 
-/* reserve */
+
+/* --------------------
+reserve 
+--------------------*/
 h1 {
     text-align: center;
     color: #394C84;
@@ -137,4 +196,20 @@ h1 {
     margin-right: 0px;
 }
 
-/* reserve-check */
+/* --------------------
+reserve-check 
+--------------------*/
+
+
+/* --------------------
+bottom-bar 
+--------------------*/
+.navbar {
+    background-color: #F6F8FB;
+}
+
+.nav-link {
+    &:hover {
+        color: #2563EB;
+    }
+}

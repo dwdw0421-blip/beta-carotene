@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="ja">
 
-<?php
-include('head.php');
-?>
+<head>
+    <?php
+    include('head_link.php');
+    ?>
+    <title>ユーザー｜TOP</title>
+</head>
 
 <body>
     <?php
@@ -13,7 +16,7 @@ include('head.php');
     <main class="user-login d-flex flex-column justify-content-center">
         <div class="user-wrapper user-card px-4 py-5 shadow">
             <h2 class="mb-5 text-center fw-bold">キャリコン予約</h2>
-            <form action="check_login.php" method="post">
+            <form action="check_login.php" method="post" class="d-flex flex-column align-items-center">
                 <div class="mb-4">
                     <label for="name" class="mb-2 form-label">| ログインID</label>
                     <input type="text" name="name" id="name" class="form-control" placeholder="出席番号">
