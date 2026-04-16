@@ -78,3 +78,24 @@ function get_course_types_list()
         exit('エラー: ' . $e->getMessage());
     }
 }
+
+//在籍ステータスIDから在籍ステータス名を返す関数
+function get_course_enrollments_list()
+{
+    $enrollments_types = array();
+    try {
+        //m_course_typesテーブルから全レコードを取得
+        $db = db_connect();
+        $sql = 'SELECT * FROM m_enrollments';
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($result as $row) {
+            $enrollments_types[$row['id']] = $row['name'];
+        }
+        return $enrollments_types;
+    } catch (PDOException $e) {
+        exit('エラー: ' . $e->getMessage());
+    }
+}
