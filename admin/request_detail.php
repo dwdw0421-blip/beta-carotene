@@ -157,7 +157,7 @@ try {
         <div class="card">
             <p><?php echo $r_student["student_name"]; ?>（<?php echo $r_student["classroom_name"]; ?>｜<?php echo h(format_date($r_student['course_start_date'], 2)) ?>開講）さんの変更内容</p>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
                             <p class="card-title">変更前の予約内容</p>
@@ -186,7 +186,7 @@ try {
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
                             <p class="card-title">変更後の予約内容</p>
@@ -230,7 +230,7 @@ try {
             <div class="card">
                 <p><?php echo $c_student["student_name"]; ?>（<?php echo $c_student["classroom_name"]; ?>｜<?php echo h(format_date($c_student['course_start_date'], 2)) ?>開講）さんの変更内容</p>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="card">
                             <div class="card-body">
                                 <p>変更前の予約内容</p>
@@ -257,7 +257,7 @@ try {
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="card">
                             <div class="card-body">
                                 <p>変更後の予約内容</p>
