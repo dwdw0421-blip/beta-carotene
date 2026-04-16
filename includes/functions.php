@@ -32,7 +32,8 @@ function format_date($datetime, $type)
     $format_types = [
         1 => 'Y年m月d日 H:i:s',
         2 => 'Y年m月',
-        3 => 'Y年m月d日',
+        3 => 'm月d日',
+        4 => 'Y年m月d日',
     ];
     return date($format_types[$type], strtotime($datetime));
 }

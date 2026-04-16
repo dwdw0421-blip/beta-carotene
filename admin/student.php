@@ -108,7 +108,7 @@ $room = get_classrooms_list();
                                 <?php if (!empty($reservation_result)): ?>
                                     <?php foreach ($reservation_result as $reserve): ?>
                                         <?php if ($student['id'] == $reserve['student_id']): ?>
-                                            <?php echo h(format_date($reserve['date'], 3)) ?>&ensp;<?php echo h($slot[$reserve['slot_index']]) ?>
+                                            <?php echo h(format_date($reserve['date'], 4)) ?>&ensp;<?php echo h($slot[$reserve['slot_index']]) ?>
                                             <?php break;  ?>
                                         <?php endif; ?>
                                     <?php endforeach; ?>
