@@ -81,7 +81,7 @@ function get_course_types_list()
 }
 
 //在籍ステータスIDから在籍ステータス名を返す関数
-function get_course_enrollments_list()
+function get_enrollments_list()
 {
     $enrollments_types = array();
     try {
@@ -99,4 +99,18 @@ function get_course_enrollments_list()
     } catch (PDOException $e) {
         exit('エラー: ' . $e->getMessage());
     }
+}
+
+//slot_indexから時間枠を返す関数
+function get_slot_list()
+{
+    $slot_time = [
+        0 => '10:00～',
+        1 => '11:00～',
+        2 => '12:00～',
+        3 => '14:00～',
+        4 => '15:00～',
+        5 => '16:00～',
+    ];
+    return $slot_time;
 }
