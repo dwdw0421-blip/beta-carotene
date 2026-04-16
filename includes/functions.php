@@ -16,6 +16,14 @@ function db_connect()
     }
 }
 
+// 申請のステータス
+enum RequestStatus: int
+{
+    case Pending = 1;
+    case Approve = 2;
+    case Reject = 3;
+}
+
 // XSS対策用のエスケープ関数
 function h($string)
 {

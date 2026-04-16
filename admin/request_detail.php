@@ -9,14 +9,6 @@ if (empty($id)) {
     exit();
 }
 
-// 申請のステータス
-enum RequestStatus: int
-{
-    case Pending = 1;
-    case Approve = 2;
-    case Reject = 3;
-}
-
 try {
     // TODO: nagata-t リクエスト側のデータと変更側のデータを別々で取っている
     // 実装優先で簡単な方に倒したが効率よいやり方ありそうなのであとで探す
@@ -290,10 +282,12 @@ try {
             </div>
         <?php endif; ?>
         <?php if ($request_data["request_status_id"] === RequestStatus::Pending->value): ?>
-            <form action="request_approval.php" method="post">
+            <form action="request_approval_do.php" method="post">
+                <input type="hidden" name="id" value="<?php echo $id; ?>">
                 <button type="submit" name="action" value="approval">承認</button>
             </form>
-            <form action="request_reject.php" method="post">
+            <form action="request_reject_do.php" method="post">
+                <input type="hidden" name="id" value="<?php echo $id; ?>">
                 <button type="submit" name="action" value="reject">棄却</button>
                 <label for="reject_message">
                     <p>棄却する場合は下記に理由を入力してください。<span>※学生への通知メッセージに表示されます。</span></p>
