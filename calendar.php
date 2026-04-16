@@ -37,9 +37,9 @@ $timeSlots = [
 ];
 ?>
 
-<section class="user-wrapper calendar">
+<section class="user-wrapper calendar shadow rounded-4">
     <h2>
-        <img src="./img/calendar-title.jpg" alt="カレンダータイトル">
+        <img class="calender-img" src="./img/calendar-title.jpg" alt="カレンダータイトル">
     </h2>
 
     <div class="d-flex flex-column px-1 py-5 gap-4">

@@ -8,7 +8,7 @@
     <title>ユーザー｜TOP</title>
 </head>
 
-<body>
+<body class="mb-10">
     <?php
     include('header.php');
     ?>
@@ -20,7 +20,7 @@
                 次回の予約日時
             </h2>
 
-            <div class="user-card  px-4 py-4 shadow mb-4">
+            <div class="user-card px-4 py-4 shadow mb-4 rounded-4">
                 <h3 class="mb-4 fw-bold">キャリコン（必須面談）</h3>
                 <dl>
                     <div class="mb-2">
@@ -36,7 +36,7 @@
                 </dl>
             </div>
 
-            <div class="user-card  px-4 py-4 shadow">
+            <div class="user-card  px-4 py-4 shadow rounded-4">
                 <h3 class="mb-4 fw-bold">キャリコン（任意面談）</h3>
                 <dl>
                     <div class="mb-2">
@@ -58,7 +58,7 @@
         <!-- 申請ステータス -->
         <section class="user-wrapper mb-7">
             <h2 class="user-section_title text-center mb-5">申請ステータス</h2>
-            <div class="user-card px-4 py-4 shadow mb-4">
+            <div class="user-card px-4 py-4 shadow mb-4 rounded-4">
                 <h3 class="mb-4 fw-bold">変更申請</h3>
                 <dl>
                     <div class="mb-2">
@@ -80,7 +80,7 @@
                 </dl>
             </div>
 
-            <div class="user-card px-4 py-4 shadow mb-4">
+            <div class="user-card px-4 py-4 shadow mb-4 rounded-4">
                 <h3 class="mb-4 fw-bold">キャンセル申請</h3>
                 <dl>
                     <div class="mb-2">
@@ -103,6 +103,10 @@
         include('calendar.php')
         ?>
     </main>
+
+    <?php
+    include('bottom_bar.php')
+    ?>
 </body>
 
 </html>

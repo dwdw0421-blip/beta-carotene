@@ -11,7 +11,9 @@
 
 
 /* -- user -- */
-/* 共通部分 */
+/* --------------------
+共通部分
+-------------------- */
 body {
     font-family: 'LINE Seed JP', sans-serif;
 }
@@ -34,11 +36,17 @@ body {
     margin-bottom: 6rem !important;
 }
 
+.mb-8 {
+    margin-bottom: 7.5rem !important;
+}
+
 .mb-10 {
     margin-bottom: 10rem !important;
 }
 
-/* header */
+/* --------------------
+header 
+--------------------*/
 header {
     background-color: #F6F8FB;
 }
@@ -47,25 +55,35 @@ header {
     max-width: 300px;
 }
 
-/* login */
+/* --------------------
+login 
+--------------------*/
 .user-login {
     min-height: 80vh;
 }
 
 .user-card {
     background-color: #F6FAFF;
-    border-radius: 12px;
 }
 
-/* TOP */
+/* --------------------
+TOP 
+--------------------*/
 .user-card_subtitle {
     font-size: 10px;
     color: #394C84;
 }
 
-/* カレンダー */
+/* --------------------
+calendar
+--------------------*/
 .calendar {
     background-color: #F6FAFF;
+}
+
+.calender-img {
+    width: 100%;
+    height: auto;
 }
 
 table {
@@ -91,7 +109,9 @@ td:first-child {
 
 
 
-/* reserve */
+/* --------------------
+reserve 
+--------------------*/
 h1 {
     text-align: center;
     color: #394C84;
@@ -176,4 +196,20 @@ h1 {
     margin-right: 0px;
 }
 
-/* reserve-check */
+/* --------------------
+reserve-check 
+--------------------*/
+
+
+/* --------------------
+bottom-bar 
+--------------------*/
+.navbar {
+    background-color: #F6F8FB;
+}
+
+.nav-link {
+    &:hover {
+        color: #2563EB;
+    }
+}
