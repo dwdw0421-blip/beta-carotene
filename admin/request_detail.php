@@ -25,7 +25,7 @@ $get_request_data_sql = "SELECT
     carcon_reservation_details.created_at AS detail_send_date
         FROM carcon_request_reservations
         INNER JOIN carcon_reservation_details ON carcon_request_reservations.request_carcon_reservation_detail_id = carcon_reservation_details.id
-        INNER JOIN m_meeting_types AS next_meeting_type ON carcon_request_reservations.change_meeting_type = next_meeting_type.id
+        LEFT JOIN m_meeting_types AS next_meeting_type ON carcon_request_reservations.change_meeting_type = next_meeting_type.id
 		INNER JOIN m_meeting_types AS current_meeting_type ON carcon_reservation_details.meeting_type = current_meeting_type.id
         INNER JOIN m_request_statuses ON carcon_request_reservations.request_status_id = m_request_statuses.id
         INNER JOIN carcon_reservations ON carcon_reservations.carcon_reservation_detail_id = carcon_reservation_details.id
@@ -53,7 +53,7 @@ $get_change_data_sql = "SELECT
     carcon_reservation_details.created_at AS detail_send_date
         FROM carcon_request_reservations
         INNER JOIN carcon_reservation_details ON carcon_request_reservations.change_carcon_reservation_detail_id = carcon_reservation_details.id
-        INNER JOIN m_meeting_types AS next_meeting_type ON carcon_request_reservations.change_meeting_type = next_meeting_type.id
+        LEFT JOIN m_meeting_types AS next_meeting_type ON carcon_request_reservations.change_meeting_type = next_meeting_type.id
 		INNER JOIN m_meeting_types AS current_meeting_type ON carcon_reservation_details.meeting_type = current_meeting_type.id
         INNER JOIN m_request_statuses ON carcon_request_reservations.request_status_id = m_request_statuses.id
         INNER JOIN carcon_reservations ON carcon_reservations.carcon_reservation_detail_id = carcon_reservation_details.id
@@ -163,7 +163,7 @@ $c_student = $students_data[1];
                                 </div>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>形式</dt>
-                                    <dd><?php echo $change_result["next_meeting_type"]; ?></dd>
+                                    <dd><?php echo $request_result["next_meeting_type"] ?? $request_result["current_meeting_type"];  ?></dd>
                                 </div>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>教室</dt>
@@ -224,7 +224,7 @@ $c_student = $students_data[1];
                                 </div>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>形式</dt>
-                                    <dd><?php echo $request_result["next_meeting_type"]; ?></dd>
+                                    <dd><?php echo $change_result["next_meeting_type"] ?? $change_result["current_meeting_type"]; ?></dd>
                                 </div>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>教室</dt>
