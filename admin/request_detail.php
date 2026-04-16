@@ -9,10 +9,21 @@ if (empty($id)) {
     exit();
 }
 
+// 申請のステータス
+enum RequestStatus: int
+{
+    case Pending = 1;
+    case Approve = 2;
+    case Reject = 3;
+}
+
 try {
+    // TODO: nagata-t リクエスト側のデータと変更側のデータを別々で取っている
+    // 実装優先で簡単な方に倒したが効率よいやり方ありそうなのであとで探す
+
     $db = db_connect();
 
-    $sql = "SELECT change_carcon_reservation_detail_id FROM carcon_request_reservations WHERE id=:id";
+    $sql = "SELECT change_carcon_reservation_detail_id,request_status_id FROM carcon_request_reservations WHERE id=:id";
     $stmt = $db->prepare($sql);
     $stmt->bindParam(":id", $id, PDO::PARAM_INT);
     $stmt->execute();
@@ -33,8 +44,6 @@ try {
     $students_data = array();
 
     // リクエスト側のデータ取得
-    // TODO: nagata-t リクエスト側のデータと変更側のデータを別々で取っている
-    // 実装優先で簡単な方に倒したが効率よいやり方ありそうなのであとで探す
     $get_request_data_sql = "SELECT 
         carcon_reservation_details.id AS detail_id,
         carcon_reservation_details.slot_index AS detail_slot_index,
@@ -108,8 +117,8 @@ try {
                            OR m_students.id = :c_student_id";
 
     $stmt = $db->prepare($get_student_sql);
-    $stmt->bindValue(":r_student_id", $requestStudentId, $requestStudentId === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
-    $stmt->bindValue(":c_student_id", $changeStudentId, $changeStudentId === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+    $stmt->bindParam(":r_student_id", $requestStudentId, $requestStudentId === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+    $stmt->bindParam(":c_student_id", $changeStudentId, $changeStudentId === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
     $stmt->execute();
 
     $students_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -280,16 +289,22 @@ try {
                 </div>
             </div>
         <?php endif; ?>
-        <form action="request_approval.php" method="post">
-            <button type="submit" name="action" value="approval">承認</button>
-        </form>
-        <form action="request_reject.php" method="post">
-            <button type="submit" name="action" value="reject">棄却</button>
-            <label for="reject_message">
-                <p>棄却する場合は下記に理由を入力してください。<span>※学生への通知メッセージに表示されます。</span></p>
-            </label>
-            <textarea name="reject_message" id="reject_message" placeholder="4月11日15:00の枠はZOOMのみの対応となりますので、佐藤さんにその旨お伝えして再度ご相談ください。また、その上で日時交換希望される際は改めて申請をお願いします。"></textarea>
-        </form>
+        <?php if ($request_data["request_status_id"] === RequestStatus::Pending->value): ?>
+            <form action="request_approval.php" method="post">
+                <button type="submit" name="action" value="approval">承認</button>
+            </form>
+            <form action="request_reject.php" method="post">
+                <button type="submit" name="action" value="reject">棄却</button>
+                <label for="reject_message">
+                    <p>棄却する場合は下記に理由を入力してください。<span>※学生への通知メッセージに表示されます。</span></p>
+                </label>
+                <textarea name="reject_message" id="reject_message" placeholder="4月11日15:00の枠はZOOMのみの対応となりますので、佐藤さんにその旨お伝えして再度ご相談ください。また、その上で日時交換希望される際は改めて申請をお願いします。"></textarea>
+            </form>
+        <?php else: ?>
+            <p><?php echo $request_data["request_status_id"] === RequestStatus::Approve->value ?
+                    "承認済み" :
+                    "棄却済み"; ?></p>
+        <?php endif; ?>
     </section>
 </body>
 
