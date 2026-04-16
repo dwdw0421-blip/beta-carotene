@@ -12,12 +12,42 @@ $stmt = $db->prepare($sql);
 $stmt->execute();
 $carcon_lines = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-var_dump($carcon_lines);
+// var_dump($carcon_lines);
 
 // タスクを全取得
 // $sql_tasks = 'SELECT * FROM tasks';
 // $stmt_tasks = $pdo->query($sql_tasks);
 // $all_tasks = $stmt_tasks->fetchAll(PDO::FETCH_ASSOC);
+
+
+$sql_student = 'SELECT
+    res.id AS reservation_id,
+    lin.id AS line_id,  -- carcon_linesのid
+    std.student_no,
+    std.last_name,
+    std.first_name,
+    lin.date AS line_date,
+    det.slot_index,
+    rm.name AS classroom_name
+FROM
+    carcon_reservations AS res
+JOIN
+    carcon_reservation_details AS det ON res.carcon_reservation_detail_id = det.id
+JOIN
+    carcon_lines AS lin ON res.carcon_line_id = lin.id
+JOIN
+    m_students AS std ON det.student_id = std.id
+JOIN
+    m_classrooms AS rm ON lin.classroom_id = rm.id';
+
+$stmt_student = $db->prepare($sql_student);
+$stmt_student->execute();
+$students = $stmt_student->fetchAll(PDO::FETCH_ASSOC);
+
+// echo '<pre>';
+print_r($students);
+// echo '</pre>';
+
 
 ?>
 
@@ -161,14 +191,40 @@ var_dump($carcon_lines);
 
 <!-- Bootstrapのグリッドを使用 -->
 <div class="row row-cols-1 row-cols-md-3 g-3 mt-4 w-100 px-3">
-  <?php foreach ($carcon_lines as $date): ?>
-    <?php var_dump($date);?>
+
+<?php
+$grouped_students = [];
+foreach ($students as $s) {
+    // line_id をキーにして、その中にデータを詰め直す
+    $grouped_students[$s['line_id']][] = $s;
+    }
+
+    echo '<pre>';
+print_r($grouped_students);
+echo '</pre>';
+
+?>
+  
+  <?php 
+  // foreach ($grouped_students as $student): 
+  ?>
+  <?php foreach ($grouped_students as $line_id => $current_tasks):?>
+  <?php 
+    $student = $current_tasks[0]; 
+    ?>
+  
+  <?php
+//       echo '<pre>';
+// print_r($student);
+// echo '</pre>';
+  ?>
+
     <div class="col">
       <div class="status-column border border-2 border-secondary-subtle rounded-3 p-2 bg-light shadow-sm">
         
       <div class="d-flex justify-content-between align-items-start mb-3">
         <h2 class="h6 fw-bold text-center border-bottom pb-2 mb-2">
-            <?= htmlspecialchars($date['date']) ?>
+            <?= htmlspecialchars($student['reservation_id'] . '/' . $student['line_date'] ) ?>
           </h2>
           <!--  俺追加　削除用ボタン -->
             <button class="btn-close delete-status-btn"
@@ -181,8 +237,9 @@ var_dump($carcon_lines);
           $hours = ['10:00～', '11:00～', '12:00～', '14:00～', '15:00～', '16:00～'];
           
           // このステータスに属するタスクを抽出
-          $current_tasks = array_filter($all_tasks, function($t) use ($status) {
-              return (int)$t['status'] === (int)$status['id'];
+          $current_tasks = array_filter($students, function($t) use ($student) {
+              return (int)$t['line_id'] === (int)$student['line_id'];
+          
           });
 
           for ($i = 0; $i < 6; $i++): 
@@ -193,6 +250,11 @@ var_dump($carcon_lines);
                       break;
                   }
               }
+
+// echo '<pre>';
+// print_r($task);
+// echo '</pre>';
+
           ?>
             <div class="d-flex align-items-center mb-1">
               <!-- 左側：時間表示 -->
@@ -203,19 +265,19 @@ var_dump($carcon_lines);
               <!-- 右側：スロット -->
               <div class="drop-zone border border-dashed rounded flex-grow-1 d-flex align-items-center justify-content-center" 
                    style="height: 30px; background: #fff; border-color: #ddd; overflow: hidden;"
-                   data-status-id="<?= $status['id'] ?>" 
+                   data-status-id="<?= $task['line_id'] ?>" 
                    data-slot-index="<?= $i ?>"
                    ondragover="event.preventDefault()" 
                    ondrop="handleDrop(event)">
                 
                 <?php if ($task): ?>
                   <div class="card bg-warning w-100 h-100 task-item border-0 shadow-none d-flex align-items-center justify-content-center" 
-                       id="task-<?= $task['id'] ?>" 
-                       data-task-id="<?= $task['id'] ?>" 
+                       id="task-<?= $task['line_id'] ?>" 
+                       data-task-id="<?= $task['slot_index'] ?>" 
                        draggable="true" 
                        ondragstart="handleDragStart(event)"
                        style="cursor: move; font-size: 0.75rem; font-weight: bold;">
-                    <?= htmlspecialchars($task['title']) ?>
+                    <?= htmlspecialchars($task['classroom_name'] . ' ' . $task['student_no'] .' '. $task['last_name'] . $task['first_name']); ?>
                   </div>
                 <?php else: ?>
                   <span class="text-muted" style="font-size: 0.6rem; opacity: 0.4;">+</span>
