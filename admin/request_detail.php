@@ -302,8 +302,8 @@ try {
             </form>
         <?php else: ?>
             <p><?php echo $request_data["request_status_id"] === RequestStatus::Approve->value ?
-                    "承認されました" :
-                    "棄却されました"; ?></p>
+                    "承認済み" :
+                    "棄却済み"; ?></p>
         <?php endif; ?>
     </section>
 </body>
