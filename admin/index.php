@@ -6,7 +6,7 @@ $db = db_connect();
 // 申請中のデータを取得
 // 並び替えは 更新情報 昇順（古い更新順）
 $sql = "SELECT carcon_request_reservations.id AS request_id, 
-    CONCAT(m_students.first_name , ' ' , m_students.last_name) AS student_name, 
+    CONCAT(m_students.last_name , ' ' , m_students.first_name) AS student_name, 
     m_courses.name AS course_name, 
     m_courses.start_date, m_request_statuses.name AS request_status_name 
     FROM carcon_request_reservations 
@@ -24,7 +24,7 @@ $pending_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // 対応完了済みのデータ
 // 並び替えは 更新情報 昇順（新しい更新順）
 $sql = "SELECT carcon_request_reservations.id AS request_id, 
-    CONCAT(m_students.first_name , ' ' , m_students.last_name) AS student_name, 
+    CONCAT(m_students.last_name , ' ' , m_students.first_name) AS student_name, 
     m_courses.name AS course_name, 
     m_courses.start_date, m_request_statuses.name AS request_status_name 
     FROM carcon_request_reservations 
