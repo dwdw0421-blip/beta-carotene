@@ -14,7 +14,7 @@
     ?>
 
     <main class="mt-5">
-        <!-- 次回の予約日時 -->
+        <!-- 次回の予約日時sec -->
         <section class="user-wrapper mb-5">
             <h2 class="user-section_title mb-5 text-center">
                 次回の予約日時
@@ -55,7 +55,7 @@
             </div>
         </section>
 
-        <!-- 申請ステータス -->
+        <!-- 申請ステータスsec -->
         <section class="user-wrapper mb-7">
             <h2 class="user-section_title text-center mb-5">申請ステータス</h2>
             <div class="user-card px-4 py-4 shadow mb-4 rounded-4">
@@ -98,12 +98,13 @@
             </div>
         </section>
 
-        <!-- カレンダー -->
+        <!-- カレンダーsec -->
         <?php
         include('calendar.php')
         ?>
     </main>
 
+    <!-- ボトムバー -->
     <?php
     include('bottom_bar.php')
     ?>
