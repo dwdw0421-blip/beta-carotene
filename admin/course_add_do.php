@@ -15,7 +15,7 @@ if (!empty($_POST)) {
             $db = db_connect();
             // 悩み：重複チェックって必要？？同じ名前のコースって多分普通にあるよね...でも全く同じもの作ろうとしてたら、それは止めてあげたいか...？
 
-            // shopsテーブルに登録
+            // m_coursesテーブルに登録
             $sql = 'INSERT INTO m_courses (name,start_date,end_date,course_type,classroom_id) 
             VALUES (:name,:start_date,:end_date,:course_type,:classroom_id)';
             $stmt = $db->prepare($sql);
