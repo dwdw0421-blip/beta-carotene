@@ -56,7 +56,7 @@
         </section>
 
         <!-- 申請ステータス -->
-        <section class="user-wrapper mb-5">
+        <section class="user-wrapper mb-7">
             <h2 class="user-section_title text-center mb-5">申請ステータス</h2>
             <div class="user-card px-4 py-4 shadow mb-4">
                 <h3 class="mb-4 fw-bold">変更申請</h3>

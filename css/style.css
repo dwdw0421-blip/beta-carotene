@@ -25,6 +25,19 @@ body {
     color: #394C84;
 }
 
+/* margin-bottom */
+.mb-6 {
+    margin-bottom: 4.5rem !important;
+}
+
+.mb-7 {
+    margin-bottom: 6rem !important;
+}
+
+.mb-10 {
+    margin-bottom: 10rem !important;
+}
+
 /* header */
 header {
     background-color: #F6F8FB;
@@ -56,13 +69,24 @@ header {
 }
 
 table {
-    border-spacing: 5px;
+    border-collapse: separate;
+    border-spacing: 5px 16px;
+    table-layout: fixed;
+    width: 100%;
 }
 
 table td,
 table th {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+    padding: 1.0rem 0.6rem;
+}
+
+th:first-child,
+td:first-child {
+    width: 25%;
+}
+
+.user-table-title th:not(:first-child) {
+    width: auto;
 }
 
 
