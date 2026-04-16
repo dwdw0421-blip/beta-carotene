@@ -4,7 +4,7 @@ require_once __DIR__ . '/../includes/functions.php';
 
 $db = db_connect();
 
-// ステータス（3列）を取得
+// ステータス（3列）を取得---
 $sql = 'SELECT * FROM carcon_lines';
 // $stmt = $pdo->query($sql);
 // $statuses = $stmt->fetchAll(PDO::FETCH_ASSOC);
