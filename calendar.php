@@ -42,21 +42,25 @@ $timeSlots = [
         <img src="./img/calendar-title.jpg" alt="カレンダータイトル">
     </h2>
 
-    <div class="d-flex flex-column px-3 py-5 gap-4">
-        <div class="d-flex flex-row gap-3">
+    <div class="d-flex flex-column px-1 py-5 gap-4">
+        <div class="d-flex flex-row gap-3 justify-content-center">
             <a href="?y=<?= $prevDate->format('Y') ?>&m=<?= $prevDate->format('n') ?>" class="arrow">
-                < 前の月
-                    </a>
-                    <h3><?= $year ?>年 <?= $month ?>月</h3>
-                    <a href="?y=<?= $nextDate->format('Y') ?>&m=<?= $nextDate->format('n') ?>" class="arrow">
-                        次の月 >
-                    </a>
+                <span class="material-symbols-outlined">
+                    arrow_back_ios
+                </span>
+            </a>
+            <h3><?= $year ?>年 <?= $month ?>月</h3>
+            <a href="?y=<?= $nextDate->format('Y') ?>&m=<?= $nextDate->format('n') ?>" class="arrow">
+                <span class="material-symbols-outlined">
+                    arrow_forward_ios
+                </span>
+            </a>
         </div>
 
         <table class="user-table">
             <thead class="user-table-title">
                 <tr>
-                    <th>時間 / 日付</th>
+                    <th></th>
                     <?php foreach ($saturdays as $date): ?>
                         <th class="text-center">
                             <div class="date-label"><?= $date->format('n/j') ?></div>
@@ -72,7 +76,7 @@ $timeSlots = [
                         <td><?= $slot ?></td>
                         <?php foreach ($saturdays as $date): ?>
                             <td class="text-center bg-white rounded-2">
-                                -
+                                <a href="./reserve.php">○</a>
                             </td>
                         <?php endforeach; ?>
                     </tr>
