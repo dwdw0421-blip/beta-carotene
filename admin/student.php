@@ -97,8 +97,20 @@ $type = get_course_types_list();
                     </tr>
                 <?php endforeach; ?>
             </tbody>
-        </table>
 
+        </table>
+        <p>【在籍状況について】</p>
+        <ul>
+            <li>在校中：在校中でCC可能</li>
+            <li>中退：途中退校でCCは不要（開講前に辞退した方も含む）</li>
+            <li>支援中OB：修了済でCC可能</li>
+            <li>支援不要OB：修了済でCC不要（就職退校含む）</li>
+        </ul>
+
+        <a href="./student_add.php" class="btn btn-outline-secondary  d-inline-block">学生を追加（手入力）</a>
+        <button id="student_add" class="btn btn-outline-secondary  d-inline-block">学生を追加（CSV読み込み）</button>
+
+        <a href="./required_add.php" class="btn btn-outline-secondary  d-inline-block">必須キャリコンの一括予約</a>
     </section>
 </body>
 
