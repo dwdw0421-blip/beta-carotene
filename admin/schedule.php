@@ -44,9 +44,16 @@ $stmt_student = $db->prepare($sql_student);
 $stmt_student->execute();
 $students = $stmt_student->fetchAll(PDO::FETCH_ASSOC);
 
-// echo '<pre>';
+
+// $studentsの配列を日付順に並べ替える
+usort($students, function ($a, $b) {
+    return strtotime($a['line_date']) <=> strtotime($b['line_date']);
+});
+
+
+echo '<pre>';
 print_r($students);
-// echo '</pre>';
+echo '</pre>';
 
 
 ?>
@@ -190,7 +197,14 @@ print_r($students);
 
 
 <!-- Bootstrapのグリッドを使用 -->
-<div class="row row-cols-1 row-cols-md-3 g-3 mt-4 w-100 px-3">
+<div class="row row-cols-1 row-cols-md-6 g-3 mt-4 w-100 px-3">
+
+
+<!-- 日付の区切りにライン -->
+<?php
+$prev_date = null;      // 直前の日付を保存
+?>
+
 
 <?php
 $grouped_students = [];
@@ -199,9 +213,9 @@ foreach ($students as $s) {
     $grouped_students[$s['line_id']][] = $s;
     }
 
-    echo '<pre>';
-print_r($grouped_students);
-echo '</pre>';
+//     echo '<pre>';
+// print_r($grouped_students);
+// echo '</pre>';
 
 ?>
   
@@ -211,7 +225,23 @@ echo '</pre>';
   <?php foreach ($grouped_students as $line_id => $current_tasks):?>
   <?php 
     $student = $current_tasks[0]; 
-    ?>
+
+    $current_date = $student['line_date'];
+
+    // ★ 最初、または日付が変わるタイミングでラインを差し込む
+    if ($prev_date !== $current_date): ?>
+        <!-- 強制的に100%幅を持たせて改行させる -->
+        <div class="col-12" style="flex: 0 0 100%; max-width: 100%; width: 100%;">
+            <div class="d-flex align-items-center mt-4 mb-2">
+                <hr class="flex-grow-1 border-secondary border-2 opacity-50">
+                <span class="mx-3 fw-bold text-secondary" style="white-space: nowrap; font-size: 0.8rem;">
+                    <?= htmlspecialchars($current_date) ?>
+                </span>
+                <hr class="flex-grow-1 border-secondary border-2 opacity-50">
+            </div>
+        </div>
+    <?php endif; ?>
+
   
   <?php
 //       echo '<pre>';
@@ -220,11 +250,11 @@ echo '</pre>';
   ?>
 
     <div class="col">
-      <div class="status-column border border-2 border-secondary-subtle rounded-3 p-2 bg-light shadow-sm">
+      <div class="status-column border border-2 border-secondary-subtle rounded-3 p-1 bg-light shadow-sm <?= $bg_color_class ?>">
         
       <div class="d-flex justify-content-between align-items-start mb-3">
         <h2 class="h6 fw-bold text-center border-bottom pb-2 mb-2">
-            <?= htmlspecialchars($student['reservation_id'] . '/' . $student['line_date'] ) ?>
+            <?= 'ID:' . htmlspecialchars($student['reservation_id'] . ' / ' . $student['line_date'] ) ?>
           </h2>
           <!--  俺追加　削除用ボタン -->
             <button class="btn-close delete-status-btn"
@@ -288,7 +318,9 @@ echo '</pre>';
         </div>
       </div>
     </div>
-  <?php endforeach; ?>
+  <?php 
+$prev_date = $current_date; // 今回の日付を保存
+endforeach; ?>
 </div>
 
 
