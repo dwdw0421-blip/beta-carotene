@@ -125,3 +125,15 @@ function get_slot_list()
     ];
     return $slot_time;
 }
+
+// slot_indexに紐づく対象の時間枠表示を返す関数
+function get_slot_time_by_index($i)
+{
+    $slot = get_slot_list();
+
+    if (count($slot) < $i) {
+        return 0;
+    }
+
+    return $slot[$i];
+}

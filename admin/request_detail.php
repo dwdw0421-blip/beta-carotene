@@ -144,11 +144,11 @@ try {
     ?>
     <section class="admin-main-wrapper">
         <h1>申請内容詳細</h1>
-        <p>申請者: <?php echo $r_student["student_name"]; ?>（<?php echo $r_student["classroom_name"]; ?>｜<?php echo h(format_date($r_student['course_start_date'], 2)) ?>開講）</p>
-        <p>申請日時: <?php echo format_date($request_result["detail_send_date"], 1); ?></p>
+        <p>申請者: <?php echo h($r_student["student_name"]); ?>（<?php echo h($r_student["classroom_name"]); ?>｜<?php echo h(format_date($r_student['course_start_date'], 2)) ?>開講）</p>
+        <p>申請日時: <?php echo h(format_date($request_result["detail_send_date"], 1)); ?></p>
 
         <div class="card">
-            <p><?php echo $r_student["student_name"]; ?>（<?php echo $r_student["classroom_name"]; ?>｜<?php echo h(format_date($r_student['course_start_date'], 2)) ?>開講）さんの変更内容</p>
+            <p><?php echo h($r_student["student_name"]); ?>（<?php echo h($r_student["classroom_name"]); ?>｜<?php echo h(format_date($r_student['course_start_date'], 2)) ?>開講）さんの変更内容</p>
             <div class="row">
                 <div class="col-md-6">
                     <div class="card">
@@ -157,23 +157,23 @@ try {
                             <dl>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>日程</dt>
-                                    <dd><?php echo format_date($request_result["line_date"], 3); ?></dd>
+                                    <dd><?php echo h(format_date($request_result["line_date"], 3)); ?></dd>
                                 </div>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>ラインID</dt>
-                                    <dd><?php echo $request_result["line_id"]; ?></dd>
+                                    <dd><?php echo h($request_result["line_id"]); ?></dd>
                                 </div>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>時間</dt>
-                                    <dd><?php echo $request_result["detail_slot_index"]; ?></dd>
+                                    <dd><?php echo h(get_slot_time_by_index($request_result["detail_slot_index"])); ?></dd>
                                 </div>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>形式</dt>
-                                    <dd><?php echo $request_result["current_meeting_type"]; ?></dd>
+                                    <dd><?php echo h($request_result["current_meeting_type"]); ?></dd>
                                 </div>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>教室</dt>
-                                    <dd><?php echo $request_result["classroom_name"]; ?></dd>
+                                    <dd><?php echo h($request_result["classroom_name"]); ?></dd>
                                 </div>
                             </dl>
                         </div>
@@ -186,31 +186,31 @@ try {
                             <dl>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>日程</dt>
-                                    <dd><?php echo !$is_exchange_data ?
+                                    <dd><?php echo h(!$is_exchange_data ?
                                             format_date($request_result["line_date"], 3) :
-                                            format_date($change_result["line_date"], 3); ?></dd>
+                                            format_date($change_result["line_date"], 3)); ?></dd>
                                 </div>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>ラインID</dt>
-                                    <dd><?php echo !$is_exchange_data ?
+                                    <dd><?php echo h(!$is_exchange_data ?
                                             $request_result["line_id"] :
-                                            $change_result["line_id"]; ?></dd>
+                                            $change_result["line_id"]); ?></dd>
                                 </div>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>時間</dt>
-                                    <dd><?php echo !$is_exchange_data ?
-                                            $request_result["detail_slot_index"] :
-                                            $change_result["detail_slot_index"]; ?></dd>
+                                    <dd><?php echo h(!$is_exchange_data ?
+                                            h(get_slot_time_by_index($request_result["detail_slot_index"])) :
+                                            h(get_slot_time_by_index($change_result["detail_slot_index"]))); ?></dd>
                                 </div>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>形式</dt>
-                                    <dd><?php echo $request_result["next_meeting_type"] ?? $request_result["current_meeting_type"];  ?></dd>
+                                    <dd><?php echo h($request_result["next_meeting_type"] ?? $request_result["current_meeting_type"]); ?></dd>
                                 </div>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>教室</dt>
-                                    <dd><?php echo !$is_exchange_data ?
+                                    <dd><?php echo h(!$is_exchange_data ?
                                             $request_result["classroom_name"] :
-                                            $change_result["classroom_name"]; ?></dd>
+                                            $change_result["classroom_name"]); ?></dd>
                                 </div>
                             </dl>
                         </div>
@@ -221,7 +221,7 @@ try {
 
         <?php if ($is_exchange_data): ?>
             <div class="card">
-                <p><?php echo $c_student["student_name"]; ?>（<?php echo $c_student["classroom_name"]; ?>｜<?php echo h(format_date($c_student['course_start_date'], 2)) ?>開講）さんの変更内容</p>
+                <p><?php echo h($c_student["student_name"]); ?>（<?php echo h($c_student["classroom_name"]); ?>｜<?php echo h(format_date($c_student['course_start_date'], 2)) ?>開講）さんの変更内容</p>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="card">
@@ -229,23 +229,23 @@ try {
                                 <p>変更前の予約内容</p>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>日程</dt>
-                                    <dd><?php echo format_date($change_result["line_date"], 3); ?></dd>
+                                    <dd><?php echo h(format_date($change_result["line_date"], 3)); ?></dd>
                                 </div>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>ラインID</dt>
-                                    <dd><?php echo $change_result["line_id"]; ?></dd>
+                                    <dd><?php echo h($change_result["line_id"]); ?></dd>
                                 </div>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>時間</dt>
-                                    <dd><?php echo $change_result["detail_slot_index"]; ?></dd>
+                                    <dd><?php echo h(get_slot_time_by_index($change_result["detail_slot_index"])); ?></dd>
                                 </div>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>形式</dt>
-                                    <dd><?php echo $change_result["current_meeting_type"]; ?></dd>
+                                    <dd><?php echo h($change_result["current_meeting_type"]); ?></dd>
                                 </div>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>教室</dt>
-                                    <dd><?php echo $change_result["classroom_name"]; ?></dd>
+                                    <dd><?php echo h($change_result["classroom_name"]); ?></dd>
                                 </div>
                             </div>
                         </div>
@@ -257,23 +257,23 @@ try {
                                 <dl>
                                     <div class="d-flex justify-content-center gap-3">
                                         <dt>日程</dt>
-                                        <dd><?php echo format_date($request_result["line_date"], 3); ?></dd>
+                                        <dd><?php echo h(format_date($request_result["line_date"], 3)); ?></dd>
                                     </div>
                                     <div class="d-flex justify-content-center gap-3">
                                         <dt>ラインID</dt>
-                                        <dd><?php echo $request_result["line_id"]; ?></dd>
+                                        <dd><?php echo h($request_result["line_id"]); ?></dd>
                                     </div>
                                     <div class="d-flex justify-content-center gap-3">
                                         <dt>時間</dt>
-                                        <dd><?php echo $request_result["detail_slot_index"]; ?></dd>
+                                        <dd><?php echo h(get_slot_time_by_index($request_result["detail_slot_index"])); ?></dd>
                                     </div>
                                     <div class="d-flex justify-content-center gap-3">
                                         <dt>形式</dt>
-                                        <dd><?php echo $change_result["next_meeting_type"] ?? $change_result["current_meeting_type"]; ?></dd>
+                                        <dd><?php echo h($change_result["next_meeting_type"] ?? $change_result["current_meeting_type"]); ?></dd>
                                     </div>
                                     <div class="d-flex justify-content-center gap-3">
                                         <dt>教室</dt>
-                                        <dd><?php echo $request_result["classroom_name"]; ?></dd>
+                                        <dd><?php echo h($request_result["classroom_name"]); ?></dd>
                                     </div>
                                 </dl>
                             </div>
@@ -284,11 +284,11 @@ try {
         <?php endif; ?>
         <?php if ($request_data["request_status_id"] === RequestStatus::Pending->value): ?>
             <form action="request_approval_do.php" method="post">
-                <input type="hidden" name="id" value="<?php echo $id; ?>">
+                <input type="hidden" name="id" value="<?php echo h($id); ?>">
                 <button type="submit" name="action" value="approval">承認</button>
             </form>
             <form action="request_reject_do.php" method="post">
-                <input type="hidden" name="id" value="<?php echo $id; ?>">
+                <input type="hidden" name="id" value="<?php echo h($id); ?>">
                 <button type="submit" name="action" value="reject">棄却</button>
                 <label for="reject_message">
                     <p>棄却する場合は下記に理由を入力してください。<span>※学生への通知メッセージに表示されます。</span></p>
@@ -296,9 +296,14 @@ try {
                 <textarea name="reject_message" id="reject_message" placeholder="4月11日15:00の枠はZOOMのみの対応となりますので、佐藤さんにその旨お伝えして再度ご相談ください。また、その上で日時交換希望される際は改めて申請をお願いします。" required></textarea>
             </form>
         <?php else: ?>
-            <p><?php echo $request_data["request_status_id"] === RequestStatus::Approve->value ?
-                    "承認済み" :
-                    "棄却済み<br>" . "棄却理由: " . h(nl2br($request_data["reject_message"], false)); ?></p>
+            <p>
+                <?php if ($request_data["request_status_id"] === RequestStatus::Approve->value): ?>
+                    承認済み
+                <?php else: ?>
+                    棄却済み<br>
+                    棄却理由: <?php echo h(nl2br($request_data["reject_message"], false)); ?>
+                <?php endif; ?>
+            </p>
         <?php endif; ?>
     </section>
 </body>
