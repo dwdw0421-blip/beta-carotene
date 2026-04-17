@@ -102,16 +102,18 @@ $room = get_classrooms_list();
                         <tr>
                             <th scope="row"><?php echo h($student['student_no']) ?></th>
                             <td><?php echo h($student['last_name']) ?>&ensp;<?php echo h($student['first_name']) ?></td>
-                            <td><?php echo h($course['classroom_name']) ?><?php echo h(sprintf('%02d', $student['student_no'])) ?></td>
+                            <td><?php echo h(format_date($result['start_date'], 5)) ?><?php echo h(format_date($result['start_date'], 6)) ?><?php echo h($course['classroom_name']) ?><?php echo h(sprintf('%02d', $student['student_no'])) ?></td>
                             <td><?php echo h($student['password']) ?></td>
                             <td>
                                 <?php if (!empty($reservation_result)): ?>
                                     <?php foreach ($reservation_result as $reserve): ?>
+                                        <?php $text = "予約はありません" ?>
                                         <?php if ($student['id'] == $reserve['student_id']): ?>
-                                            <?php echo h(format_date($reserve['date'], 4)) ?>&ensp;<?php echo h($slot[$reserve['slot_index']]) ?>
+                                            <?php $text = h(format_date($reserve['date'], 4)) . "&nbsp;" . h($slot[$reserve['slot_index']]) ?>
                                             <?php break;  ?>
                                         <?php endif; ?>
                                     <?php endforeach; ?>
+                                    <?php echo $text; ?>
                                 <?php else: ?>
                                     予約はありません
                                 <?php endif; ?>
@@ -132,7 +134,15 @@ $room = get_classrooms_list();
             </ul>
 
             <a href="./student_add.php" class="btn btn-outline-secondary  d-inline-block">学生を追加（手入力）</a>
-            <button id="student_add" class="btn btn-outline-secondary  d-inline-block">学生を追加（CSV読み込み）</button>
+            <form action="student_import_do.php" method="post" enctype="multipart/form-data" class="card-body bg-light p-2">
+                <input type="file" name="csv_file" accept=".csv" required>
+                <input type="hidden" name="course_id" value="<?php echo h($courses_id); ?>">
+                <input type="hidden" name="start_year" value="<?php echo h(format_date($result['start_date'], 5)); ?>">
+                <input type="hidden" name="start_month" value="<?php echo h(format_date($result['start_date'], 6)); ?>">
+                <input type="hidden" name="room" value="<?php echo h($room[$result['classroom_id']]); ?>">
+                <button type="submit" class="btn btn-outline-secondary  d-inline-block">学生を追加（CSV読み込み）</button>
+            </form>
+
         </div>
         <a href="./required_add.php" class="btn btn-outline-secondary d-inline-block mt-2 mb-2">必須キャリコンの一括予約</a>
     </section>

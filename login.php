@@ -1,3 +1,17 @@
+<?php
+session_start();
+require_once __DIR__ . '/includes/functions.php';
+
+if (isset($_SESSION['id'])) {
+    header('location:index.php');
+    exit();
+}
+
+$message = $_SESSION['res_message'] ?? '';
+unset($_SESSION['res_message']);
+$type = ['danger', 'primary'];
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -14,12 +28,20 @@
     ?>
 
     <main class="user-login d-flex flex-column justify-content-center">
+        <div id="message-area">
+            <?php if ($message !== ''): ?>
+                <div class="alert alert-<?php echo $type[$message['type']]; ?> alert-dismissible" role="alert">
+                    <div><?php echo $message['msg']; ?></div>
+                </div>
+            <?php endif; ?>
+        </div>
+
         <div class="user-wrapper user-card px-4 py-5 shadow">
             <h2 class="mb-5 text-center fw-bold">キャリコン予約</h2>
             <form action="check_login.php" method="post" class="d-flex flex-column align-items-center">
                 <div class="mb-4">
                     <label for="name" class="mb-2 form-label">| ログインID</label>
-                    <input type="text" name="name" id="name" class="form-control" placeholder="出席番号">
+                    <input type="text" name="login_id" id="login_id" class="form-control" placeholder=" 例：202646A01">
                 </div>
 
                 <div class="mb-5">
