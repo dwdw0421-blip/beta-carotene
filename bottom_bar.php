@@ -14,7 +14,7 @@
             <small>予約</small>
         </a>
 
-        <a class="nav-link text-center" href=".edit.php">
+        <a class="nav-link text-center" href="./edit.php">
             <span class="material-symbols-outlined d-block">
                 edit_document
             </span>
