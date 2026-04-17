@@ -435,7 +435,11 @@ async function handleDrop(e) {
   const taskId = taskEl.dataset.taskId;
   const newStatusId = zone.dataset.statusId;
   
-  await updateDatabase(taskId, newStatusId);
+  // await updateDatabase(taskId, newStatusId);
+
+  // 本番データベースで修正追加
+  const newSlotIndex = [...zone.children].indexOf(taskEl); // 例：何番目かを取得
+  await updateDatabase(taskId, newStatusId, newSlotIndex);
 }
 
 async function updateDatabase(taskId, statusId, slotIndex) {
