@@ -107,11 +107,13 @@ $room = get_classrooms_list();
                             <td>
                                 <?php if (!empty($reservation_result)): ?>
                                     <?php foreach ($reservation_result as $reserve): ?>
+                                        <?php $text = "予約はありません" ?>
                                         <?php if ($student['id'] == $reserve['student_id']): ?>
-                                            <?php echo h(format_date($reserve['date'], 4)) ?>&ensp;<?php echo h($slot[$reserve['slot_index']]) ?>
+                                            <?php $text = h(format_date($reserve['date'], 4)) . "&nbsp;" . h($slot[$reserve['slot_index']]) ?>
                                             <?php break;  ?>
                                         <?php endif; ?>
                                     <?php endforeach; ?>
+                                    <?php echo $text; ?>
                                 <?php else: ?>
                                     予約はありません
                                 <?php endif; ?>
