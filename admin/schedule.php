@@ -20,25 +20,53 @@ $carcon_lines = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // $all_tasks = $stmt_tasks->fetchAll(PDO::FETCH_ASSOC);
 
 
+// $sql_student = 'SELECT
+//     res.id AS reservation_id,
+//     lin.id AS line_id,  -- carcon_linesのid
+//     std.student_no,
+//     std.last_name,
+//     std.first_name,
+//     lin.date AS line_date,
+//     det.slot_index,
+//     rm.name AS classroom_name
+// FROM
+//     carcon_reservations AS res
+// JOIN
+//     carcon_reservation_details AS det ON res.carcon_reservation_detail_id = det.id
+// JOIN
+//     carcon_lines AS lin ON res.carcon_line_id = lin.id
+// JOIN
+//     m_students AS std ON det.student_id = std.id
+// JOIN
+//     m_classrooms AS rm ON lin.classroom_id = rm.id
+// ORDER BY
+//     lin.date ASC,
+//     lin.id ASC'; 
+    // 日付順なおかつline_id順 これがないとupdateのとき毎回順番が変わる
+
+
 $sql_student = 'SELECT
+    lin.id AS line_id,
+    lin.date AS line_date,
+    rm.name AS classroom_name,
     res.id AS reservation_id,
-    lin.id AS line_id,  -- carcon_linesのid
     std.student_no,
     std.last_name,
     std.first_name,
-    lin.date AS line_date,
-    det.slot_index,
-    rm.name AS classroom_name
+    det.slot_index
 FROM
-    carcon_reservations AS res
+    carcon_lines AS lin
 JOIN
+    m_classrooms AS rm ON lin.classroom_id = rm.id
+LEFT JOIN
+    carcon_reservations AS res ON lin.id = res.carcon_line_id
+LEFT JOIN
     carcon_reservation_details AS det ON res.carcon_reservation_detail_id = det.id
-JOIN
-    carcon_lines AS lin ON res.carcon_line_id = lin.id
-JOIN
+LEFT JOIN
     m_students AS std ON det.student_id = std.id
-JOIN
-    m_classrooms AS rm ON lin.classroom_id = rm.id';
+ORDER BY
+    lin.date ASC,
+    lin.id ASC';
 
 $stmt_student = $db->prepare($sql_student);
 $stmt_student->execute();
@@ -46,9 +74,9 @@ $students = $stmt_student->fetchAll(PDO::FETCH_ASSOC);
 
 
 // $studentsの配列を日付順に並べ替える
-usort($students, function ($a, $b) {
-    return strtotime($a['line_date']) <=> strtotime($b['line_date']);
-});
+// usort($students, function ($a, $b) {
+//     return strtotime($a['line_date']) <=> strtotime($b['line_date']);
+// });
 
 
 echo '<pre>';
@@ -197,7 +225,7 @@ echo '</pre>';
 
 
 <!-- Bootstrapのグリッドを使用 -->
-<div class="row row-cols-1 row-cols-md-6 g-3 mt-4 w-100 px-3">
+<div class="row row-cols-1 row-cols-md-5 g-3 mt-4 w-100 px-3">
 
 
 <!-- 日付の区切りにライン -->
@@ -254,7 +282,7 @@ foreach ($students as $s) {
         
       <div class="d-flex justify-content-between align-items-start mb-3">
         <h2 class="h6 fw-bold text-center border-bottom pb-2 mb-2">
-            <?= 'ID:' . htmlspecialchars($student['reservation_id'] . ' / ' . $student['line_date'] ) ?>
+            <?= 'ID:' . htmlspecialchars($student['line_id'] . ' / ' . $student['line_date'] ) ?>
           </h2>
           <!--  俺追加　削除用ボタン -->
             <button class="btn-close delete-status-btn"
@@ -293,17 +321,21 @@ foreach ($students as $s) {
               </small>
 
               <!-- 右側：スロット -->
+               <!-- data-status-id=には空スロットの場合を考え"$line_id"を入れる -->
               <div class="drop-zone border border-dashed rounded flex-grow-1 d-flex align-items-center justify-content-center" 
                    style="height: 30px; background: #fff; border-color: #ddd; overflow: hidden;"
-                   data-status-id="<?= $task['line_id'] ?>" 
+                   data-status-id="<?= $line_id ?>" 
                    data-slot-index="<?= $i ?>"
                    ondragover="event.preventDefault()" 
                    ondrop="handleDrop(event)">
                 
+                   <!-- data-task-id=には 誰を動かしたかわかるため reservation_idをいれる-->
                 <?php if ($task): ?>
                   <div class="card bg-warning w-100 h-100 task-item border-0 shadow-none d-flex align-items-center justify-content-center" 
                        id="task-<?= $task['line_id'] ?>" 
-                       data-task-id="<?= $task['slot_index'] ?>" 
+                       data-task-id="<?= $task['reservation_id'] ?>" 
+
+                       
                        draggable="true" 
                        ondragstart="handleDragStart(event)"
                        style="cursor: move; font-size: 0.75rem; font-weight: bold;">
