@@ -32,6 +32,10 @@ function format_date($datetime, $type)
     $format_types = [
         1 => 'Y年m月d日 H:i:s',
         2 => 'Y年m月',
+        3 => 'm月d日',
+        4 => 'Y年m月d日',
+        5 => 'Y',
+        6 => 'm',
     ];
     return date($format_types[$type], strtotime($datetime));
 }
@@ -77,4 +81,39 @@ function get_course_types_list()
     } catch (PDOException $e) {
         exit('エラー: ' . $e->getMessage());
     }
+}
+
+//在籍ステータスIDから在籍ステータス名を返す関数
+function get_enrollments_list()
+{
+    $enrollments_types = array();
+    try {
+        //m_course_typesテーブルから全レコードを取得
+        $db = db_connect();
+        $sql = 'SELECT * FROM m_enrollments';
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($result as $row) {
+            $enrollments_types[$row['id']] = $row['name'];
+        }
+        return $enrollments_types;
+    } catch (PDOException $e) {
+        exit('エラー: ' . $e->getMessage());
+    }
+}
+
+//slot_indexから時間枠を返す関数
+function get_slot_list()
+{
+    $slot_time = [
+        0 => '10:00～',
+        1 => '11:00～',
+        2 => '12:00～',
+        3 => '14:00～',
+        4 => '15:00～',
+        5 => '16:00～',
+    ];
+    return $slot_time;
 }

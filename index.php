@@ -99,6 +99,7 @@
         </div>
     </main>
 
+    <!-- ボトムバー -->
     <?php
     include('bottom_bar.php')
     ?>
