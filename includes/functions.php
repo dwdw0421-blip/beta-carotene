@@ -34,6 +34,8 @@ function format_date($datetime, $type)
         2 => 'Y年m月',
         3 => 'm月d日',
         4 => 'Y年m月d日',
+        5 => 'Y',
+        6 => 'm',
     ];
     return date($format_types[$type], strtotime($datetime));
 }
