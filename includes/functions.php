@@ -16,6 +16,14 @@ function db_connect()
     }
 }
 
+// 申請のステータス
+enum RequestStatus: int
+{
+    case Pending = 1;
+    case Approve = 2;
+    case Reject = 3;
+}
+
 // XSS対策用のエスケープ関数
 function h($string)
 {
@@ -116,4 +124,16 @@ function get_slot_list()
         5 => '16:00～',
     ];
     return $slot_time;
+}
+
+// slot_indexに紐づく対象の時間枠表示を返す関数
+function get_slot_time_by_index($i)
+{
+    $slot = get_slot_list();
+
+    if (count($slot) < $i) {
+        return 0;
+    }
+
+    return $slot[$i];
 }
