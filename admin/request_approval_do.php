@@ -137,8 +137,6 @@ try {
         $d_update_stmt->bindParam(":id_a_where", $detail_idA, PDO::PARAM_INT);
         $d_update_stmt->bindParam(":id_b_where", $detail_idB, PDO::PARAM_INT);
         $d_update_stmt->execute();
-
-        $db->commit();
     } else {
         // リクエスト側しかデータがないケース
         // 形式の変更のみ
@@ -156,6 +154,8 @@ try {
     $stmt->bindParam(":next_status", $approve_id, PDO::PARAM_INT);
     $stmt->bindParam(":id", $id, PDO::PARAM_INT);
     $stmt->execute();
+
+    $db->commit();
 } catch (Throwable $e) {
     if ($db->inTransaction()) {
         $db->rollBack();
