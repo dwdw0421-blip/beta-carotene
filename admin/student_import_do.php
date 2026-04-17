@@ -36,6 +36,21 @@ foreach ($data as $key => $row) {
     try {
         $db = db_connect();
 
+        //ユーザーID被りがいないか確認
+        $sql = 'SELECT COUNT(login_id) FROM m_students WHERE login_id=:login_id';
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':login_id', $login_id, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_NUM);
+
+        //相談したい：ここの重複チェックの仕様
+        //被ってたら、一旦既存学生のレコードも削除するでいいかな？
+        if ($result[0] !== 0) {
+            $sql = "DELETE FROM m_students WHERE course_id = $course_id";
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+        }
+
 
         $sql = ("INSERT INTO m_students (student_no, first_name, last_name,login_id,password, course_id, enrollment_id) VALUES (:student_no, :first_name, :last_name,:login_id, :password, :course_id, :enrollment_id)");
         $stmt = $db->prepare($sql);
