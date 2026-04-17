@@ -50,23 +50,23 @@ try {
                 FOR UPDATE
             ";
         $r_stmt = $db->prepare($reservation_select_sql);
-        $r_stmt->bindParam(':id_a', $detail_idA, PDO::PARAM_INT);
-        $r_stmt->bindParam(':id_b', $detail_idB, PDO::PARAM_INT);
+        $r_stmt->bindParam(":id_a", $detail_idA, PDO::PARAM_INT);
+        $r_stmt->bindParam(":id_b", $detail_idB, PDO::PARAM_INT);
         $r_stmt->execute();
 
         $r_rows = $r_stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if (count($r_rows) !== 2) {
-            throw new RuntimeException('carcon_reservations の対象レコードが2件取得できませんでした。');
+            throw new RuntimeException("carcon_reservations の対象レコードが2件取得できませんでした。");
         }
 
         $line_id_array = [];
         foreach ($r_rows as $row) {
-            $line_id_array[(int)$row['carcon_reservation_detail_id']] = (int)$row['carcon_line_id'];
+            $line_id_array[(int)$row["carcon_reservation_detail_id"]] = (int)$row["carcon_line_id"];
         }
 
         if (!isset($line_id_array[$detail_idA], $line_id_array[$detail_idB])) {
-            throw new RuntimeException('carcon_reservations の対象IDが不足しています。');
+            throw new RuntimeException("carcon_reservations の対象IDが不足しています。");
         }
 
         $line_idA = $line_id_array[$detail_idA];
@@ -80,23 +80,23 @@ try {
                 FOR UPDATE
             ";
         $d_stmt = $db->prepare($detail_select_sql);
-        $d_stmt->bindValue(':id_a', $detail_idA, PDO::PARAM_INT);
-        $d_stmt->bindValue(':id_b', $detail_idB, PDO::PARAM_INT);
+        $d_stmt->bindParam(":id_a", $detail_idA, PDO::PARAM_INT);
+        $d_stmt->bindParam(":id_b", $detail_idB, PDO::PARAM_INT);
         $d_stmt->execute();
 
         $d_rows = $d_stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if (count($d_rows) !== 2) {
-            throw new RuntimeException('carcon_reservation_details の対象レコードが2件取得できませんでした。');
+            throw new RuntimeException("carcon_reservation_details の対象レコードが2件取得できませんでした。");
         }
 
         $slot_index_array = [];
         foreach ($d_rows as $row) {
-            $slot_index_array[(int)$row['id']] = (int)$row['slot_index'];
+            $slot_index_array[(int)$row["id"]] = (int)$row["slot_index"];
         }
 
         if (!isset($slot_index_array[$detail_idA], $slot_index_array[$detail_idB])) {
-            throw new RuntimeException('carcon_reservation_details の対象IDが不足しています。');
+            throw new RuntimeException("carcon_reservation_details の対象IDが不足しています。");
         }
 
         $slot_indexA = $slot_index_array[$detail_idA];
@@ -112,12 +112,12 @@ try {
                 WHERE carcon_reservation_detail_id IN (:id_a_where, :id_b_where)
             ";
         $r_update_stmt = $db->prepare($r_update_sql);
-        $r_update_stmt->bindValue(':id_a_case', $detail_idA, PDO::PARAM_INT);
-        $r_update_stmt->bindValue(':id_b_case', $detail_idB, PDO::PARAM_INT);
-        $r_update_stmt->bindValue(':line_id_b', $line_idB, PDO::PARAM_INT);
-        $r_update_stmt->bindValue(':line_id_a', $line_idA, PDO::PARAM_INT);
-        $r_update_stmt->bindValue(':id_a_where', $detail_idA, PDO::PARAM_INT);
-        $r_update_stmt->bindValue(':id_b_where', $detail_idB, PDO::PARAM_INT);
+        $r_update_stmt->bindParam(":id_a_case", $detail_idA, PDO::PARAM_INT);
+        $r_update_stmt->bindParam(":id_b_case", $detail_idB, PDO::PARAM_INT);
+        $r_update_stmt->bindParam(":line_id_b", $line_idB, PDO::PARAM_INT);
+        $r_update_stmt->bindParam(":line_id_a", $line_idA, PDO::PARAM_INT);
+        $r_update_stmt->bindParam(":id_a_where", $detail_idA, PDO::PARAM_INT);
+        $r_update_stmt->bindParam(":id_b_where", $detail_idB, PDO::PARAM_INT);
         $r_update_stmt->execute();
 
         // 4. carcon_reservation_details.slot_index を入れ替え
@@ -130,12 +130,12 @@ try {
                 WHERE id IN (:id_a_where, :id_b_where)
             ";
         $d_update_stmt = $db->prepare($detail_update_sql);
-        $d_update_stmt->bindValue(':id_a_case', $detail_idA, PDO::PARAM_INT);
-        $d_update_stmt->bindValue(':id_b_case', $detail_idB, PDO::PARAM_INT);
-        $d_update_stmt->bindValue(':slot_index_b', $slotIndexB, PDO::PARAM_INT);
-        $d_update_stmt->bindValue(':slot_index_a', $slotIndexA, PDO::PARAM_INT);
-        $d_update_stmt->bindValue(':id_a_where', $detail_idA, PDO::PARAM_INT);
-        $d_update_stmt->bindValue(':id_b_where', $detail_idB, PDO::PARAM_INT);
+        $d_update_stmt->bindParam(":id_a_case", $detail_idA, PDO::PARAM_INT);
+        $d_update_stmt->bindParam(":id_b_case", $detail_idB, PDO::PARAM_INT);
+        $d_update_stmt->bindParam(":slot_index_b", $slot_indexB, PDO::PARAM_INT);
+        $d_update_stmt->bindParam(":slot_index_a", $slot_indexA, PDO::PARAM_INT);
+        $d_update_stmt->bindParam(":id_a_where", $detail_idA, PDO::PARAM_INT);
+        $d_update_stmt->bindParam(":id_b_where", $detail_idB, PDO::PARAM_INT);
         $d_update_stmt->execute();
 
         $db->commit();
@@ -163,12 +163,6 @@ try {
     exit($e->getMessage());
 }
 
-// 二つデータがあるケース
-
-// 1. キャリコン予約 に紐づいているそれぞれの詳細データ を入れ替える（ラインの入れ替え）
-// 2. それぞれの詳細に紐づいているslot_indexを入れ替える（時間の入れ替え）
-// 3. 問題なければ通してOK
-
-// リクエスト側しかデータがないケース
-
-// 1. 形式の変更のみなので、形式変更を更新する
+// 処理が終わったらトップに戻す
+header("location: index.php");
+exit();
