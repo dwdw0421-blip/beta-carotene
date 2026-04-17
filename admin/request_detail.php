@@ -29,7 +29,8 @@ try {
     }
 
     // 変更側の詳細データがない＝リクエスト側だけのデータ（自分のデータ変更は「形式」のみ）
-    $is_change_data = !is_null($request_data["change_carcon_reservation_detail_id"]);
+    // 二人分のデータの交換・入れ替えが発生するかどうか（ture: データの交換が発生する false: 申請者のデータ更新・形式変更のみ）
+    $is_exchange_data = !is_null($request_data["change_carcon_reservation_detail_id"]);
 
     $request_result = array();
     $change_result = array();
@@ -63,7 +64,7 @@ try {
 
     $request_result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($is_change_data) {
+    if ($is_exchange_data) {
         // 変更側のデータ取得
         $get_change_data_sql = "SELECT 
             carcon_reservation_details.id AS detail_id,
@@ -116,7 +117,7 @@ try {
     $students_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $r_student = $students_data[0];
-    if ($is_change_data) {
+    if ($is_exchange_data) {
         $c_student = $students_data[1];
     }
 } catch (PDOException $e) {
@@ -185,19 +186,19 @@ try {
                             <dl>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>日程</dt>
-                                    <dd><?php echo !$is_change_data ?
+                                    <dd><?php echo !$is_exchange_data ?
                                             format_date($request_result["line_date"], 3) :
                                             format_date($change_result["line_date"], 3); ?></dd>
                                 </div>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>ラインID</dt>
-                                    <dd><?php echo !$is_change_data ?
+                                    <dd><?php echo !$is_exchange_data ?
                                             $request_result["line_id"] :
                                             $change_result["line_id"]; ?></dd>
                                 </div>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>時間</dt>
-                                    <dd><?php echo !$is_change_data ?
+                                    <dd><?php echo !$is_exchange_data ?
                                             $request_result["detail_slot_index"] :
                                             $change_result["detail_slot_index"]; ?></dd>
                                 </div>
@@ -207,7 +208,7 @@ try {
                                 </div>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>教室</dt>
-                                    <dd><?php echo !$is_change_data ?
+                                    <dd><?php echo !$is_exchange_data ?
                                             $request_result["classroom_name"] :
                                             $change_result["classroom_name"]; ?></dd>
                                 </div>
@@ -218,7 +219,7 @@ try {
             </div>
         </div>
 
-        <?php if ($is_change_data): ?>
+        <?php if ($is_exchange_data): ?>
             <div class="card">
                 <p><?php echo $c_student["student_name"]; ?>（<?php echo $c_student["classroom_name"]; ?>｜<?php echo h(format_date($c_student['course_start_date'], 2)) ?>開講）さんの変更内容</p>
                 <div class="row">
