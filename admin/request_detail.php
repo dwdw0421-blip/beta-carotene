@@ -15,7 +15,7 @@ try {
 
     $db = db_connect();
 
-    $sql = "SELECT change_carcon_reservation_detail_id,request_status_id FROM carcon_request_reservations WHERE id=:id";
+    $sql = "SELECT change_carcon_reservation_detail_id,request_status_id,reject_message FROM carcon_request_reservations WHERE id=:id";
     $stmt = $db->prepare($sql);
     $stmt->bindParam(":id", $id, PDO::PARAM_INT);
     $stmt->execute();
@@ -293,12 +293,12 @@ try {
                 <label for="reject_message">
                     <p>棄却する場合は下記に理由を入力してください。<span>※学生への通知メッセージに表示されます。</span></p>
                 </label>
-                <textarea name="reject_message" id="reject_message" placeholder="4月11日15:00の枠はZOOMのみの対応となりますので、佐藤さんにその旨お伝えして再度ご相談ください。また、その上で日時交換希望される際は改めて申請をお願いします。"></textarea>
+                <textarea name="reject_message" id="reject_message" placeholder="4月11日15:00の枠はZOOMのみの対応となりますので、佐藤さんにその旨お伝えして再度ご相談ください。また、その上で日時交換希望される際は改めて申請をお願いします。" required></textarea>
             </form>
         <?php else: ?>
             <p><?php echo $request_data["request_status_id"] === RequestStatus::Approve->value ?
                     "承認済み" :
-                    "棄却済み"; ?></p>
+                    "棄却済み<br>" . "棄却理由: " . h(nl2br($request_data["reject_message"], false)); ?></p>
         <?php endif; ?>
     </section>
 </body>
