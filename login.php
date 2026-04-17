@@ -28,10 +28,12 @@ $type = ['danger', 'primary'];
     ?>
 
     <main class="user-login d-flex flex-column justify-content-center">
-        <div id="message-area">
+        <div id="user-wrapper message-area">
             <?php if ($message !== ''): ?>
                 <div class="alert alert-<?php echo $type[$message['type']]; ?> alert-dismissible" role="alert">
-                    <div><?php echo $message['msg']; ?></div>
+                    <div>
+                        <?php echo $message['msg']; ?>
+                    </div>
                 </div>
             <?php endif; ?>
         </div>
@@ -40,12 +42,16 @@ $type = ['danger', 'primary'];
             <h2 class="mb-5 text-center fw-bold">キャリコン予約</h2>
             <form action="check_login.php" method="post" class="d-flex flex-column align-items-center">
                 <div class="mb-4">
-                    <label for="name" class="mb-2 form-label">| ログインID</label>
+                    <label for="login_id" class="mb-2 form-label">
+                        | ログインID
+                    </label>
                     <input type="text" name="login_id" id="login_id" class="form-control" placeholder=" 例：202646A01">
                 </div>
 
                 <div class="mb-5">
-                    <label for="password" class="mb-2 form-label">| パスワード</label>
+                    <label for="password" class="mb-2 form-label">
+                        | パスワード
+                    </label>
                     <input type="password" name="password" id="password" class="form-control" placeholder="パスワード">
                 </div>
 
