@@ -1,20 +1,18 @@
 <?php
 // セッションの開始
 session_start();
+require_once __DIR__ . '/includes/functions.php';
 
 // debug_check_array($_POST);
 if (!empty($_POST)) {
-    if (!empty($_POST['name']) && !empty($_POST['password'])) {
+    if (!empty($_POST['login_id']) && !empty($_POST['password'])) {
         // ユーザー認証処理
-        $login_input = $_POST['name'];
+        $login_input = $_POST['login_id'];
         $password = $_POST['password'];
 
         try {
             $db = db_connect();
-            $sql = 'SELECT *, 
-            CONCAT(classroom_id, student_no) AS login_id
-            FROM m_students 
-            WHERE CONCAT(classroom_id, student_no) = :login_id';
+            $sql = 'SELECT * FROM m_students WHERE login_id = :login_id';
             $stmt = $db->prepare($sql);
             $stmt->bindParam(':login_id', $login_input, PDO::PARAM_STR);
             $stmt->execute();
@@ -24,16 +22,18 @@ if (!empty($_POST)) {
             if ($result) {
                 // パスワードの検証
                 if (password_verify($password, $result['password'])) {
-                    $_SESSION['id'] = session_id();
+                    $_SESSION['id'] = $result['id'];
                     $_SESSION['name'] = $result['name'];
+                    $_SESSION['res_message'] = ['type' => 1, 'msg' => 'ログイン成功'];
                     header('location:index.php');
                     exit();
                 }
+                $_SESSION['res_message'] = ['type' => 0, 'msg' => 'ログインIDまたはパスワードが正しくありません。'];
+                header('location:login.php');
+                exit();
             }
         } catch (PDOException $e) {
             exit('エラー: ' . $e->getMessage());
         }
     }
 }
-header('location:login.php');
-exit();
