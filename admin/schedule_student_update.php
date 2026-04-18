@@ -23,7 +23,7 @@ $slot_index = isset($data['slot_index']) ? (int)$data['slot_index'] : 0;
 
 
 
-// var_dump($id);
+// var_dump($data);
 
 
 

@@ -79,9 +79,9 @@ $students = $stmt_student->fetchAll(PDO::FETCH_ASSOC);
 // });
 
 
-echo '<pre>';
-print_r($students);
-echo '</pre>';
+// echo '<pre>';
+// print_r($students);
+// echo '</pre>';
 
 
 ?>
@@ -247,16 +247,15 @@ foreach ($students as $s) {
 
 ?>
   
+  
+  <?php foreach ($grouped_students as $line_id => $tasks_in_line):?>
+
   <?php 
-  // foreach ($grouped_students as $student): 
-  ?>
-  <?php foreach ($grouped_students as $line_id => $current_tasks):?>
-  <?php 
-    $student = $current_tasks[0]; 
+    $student = $tasks_in_line[0]; // 代表データ
 
     $current_date = $student['line_date'];
 
-    // ★ 最初、または日付が変わるタイミングでラインを差し込む
+    //  日付の区切りライン
     if ($prev_date !== $current_date): ?>
         <!-- 強制的に100%幅を持たせて改行させる -->
         <div class="col-12" style="flex: 0 0 100%; max-width: 100%; width: 100%;">
@@ -282,7 +281,7 @@ foreach ($students as $s) {
         
       <div class="d-flex justify-content-between align-items-start mb-3">
         <h2 class="h6 fw-bold text-center border-bottom pb-2 mb-2">
-            <?= 'ID:' . htmlspecialchars($student['line_id'] . ' / ' . $student['line_date'] ) ?>
+           <?= 'ID:' . htmlspecialchars($line_id . ' / ' . $current_date) ?>
           </h2>
           <!--  俺追加　削除用ボタン -->
             <button class="btn-close delete-status-btn"
@@ -294,20 +293,15 @@ foreach ($students as $s) {
           <?php 
           $hours = ['10:00～', '11:00～', '12:00～', '14:00～', '15:00～', '16:00～'];
           
-          // このステータスに属するタスクを抽出
-          $current_tasks = array_filter($students, function($t) use ($student) {
-              return (int)$t['line_id'] === (int)$student['line_id'];
-          
-          });
+           for ($i = 0; $i < 6; $i++):
+            $task = null;
 
-          for ($i = 0; $i < 6; $i++): 
-              $task = null;
-              foreach ($current_tasks as $t) {
-                  if (isset($t['slot_index']) && (int)$t['slot_index'] === $i) {
-                      $task = $t;
-                      break;
-                  }
-              }
+          foreach ($tasks_in_line as $t) { 
+            if (isset($t['slot_index']) && (int)$t['slot_index'] === $i) { 
+              $task = $t; 
+              break;
+              } 
+              } 
 
 // echo '<pre>';
 // print_r($task);
@@ -324,7 +318,7 @@ foreach ($students as $s) {
                <!-- data-status-id=には空スロットの場合を考え"$line_id"を入れる -->
               <div class="drop-zone border border-dashed rounded flex-grow-1 d-flex align-items-center justify-content-center" 
                    style="height: 30px; background: #fff; border-color: #ddd; overflow: hidden;"
-                   data-status-id="<?= $line_id ?>" 
+                   data-status-id="<?= htmlspecialchars($line_id) ?>" 
                    data-slot-index="<?= $i ?>"
                    ondragover="event.preventDefault()" 
                    ondrop="handleDrop(event)">
@@ -332,8 +326,8 @@ foreach ($students as $s) {
                    <!-- data-task-id=には 誰を動かしたかわかるため reservation_idをいれる-->
                 <?php if ($task): ?>
                   <div class="card bg-warning w-100 h-100 task-item border-0 shadow-none d-flex align-items-center justify-content-center" 
-                       id="task-<?= $task['line_id'] ?>" 
-                       data-task-id="<?= $task['reservation_id'] ?>" 
+                       id="task-<?= htmlspecialchars($task['reservation_id']) ?>" 
+                       data-task-id="<?= htmlspecialchars($task['reservation_id']) ?>" 
 
                        
                        draggable="true" 
@@ -342,7 +336,7 @@ foreach ($students as $s) {
                     <?= htmlspecialchars($task['classroom_name'] . ' ' . $task['student_no'] .' '. $task['last_name'] . $task['first_name']); ?>
                   </div>
                 <?php else: ?>
-                  <span class="text-muted" style="font-size: 0.6rem; opacity: 0.4;">+</span>
+                  <span class="text-muted small" style="font-size: 0.65rem;">【 空き 】</span>
                 <?php endif; ?>
               </div>
             </div>
