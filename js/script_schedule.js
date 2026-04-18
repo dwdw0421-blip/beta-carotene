@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // 元の場所を「空き」表示に戻す
       if (originZone && originZone !== zone) {
-        originZone.innerHTML = '<span class="placeholder-text text-muted" style="font-size: 0.7rem;">(空き)</span>';
+        originZone.innerHTML = '<span class="placeholder-text text-muted" style="font-size: 0.7rem;">777777777</span>';
       }
 
       // DB更新（必要であれば関数を呼び出す）
@@ -428,7 +428,7 @@ async function handleDrop(e) {
 
   // 2. 移動元の枠を「空き」表示に戻す
   if (originZone && originZone !== zone) {
-    originZone.innerHTML = '<span class="text-muted small" style="font-size: 0.65rem;">(空き)</span>';
+    originZone.innerHTML = '<span class="text-muted small" style="font-size: 0.65rem;">99999999</span>';
   }
 
   // 3. データベース更新処理 (JSON送信)
@@ -485,7 +485,7 @@ async function handleDrop(e) {
   zone.appendChild(taskEl);
 
   if (originZone && originZone !== zone) {
-    originZone.innerHTML = '<span class="text-muted small" style="font-size: 0.65rem;">(空き)</span>';
+    originZone.innerHTML = '<span class="text-muted small" style="font-size: 0.65rem;">【 空き 】</span>';
   }
 
   // 送信データ作成
