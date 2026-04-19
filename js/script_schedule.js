@@ -385,12 +385,13 @@ function setupDeleteButtons() {
   document.querySelectorAll('.delete-status-btn').forEach(btn => {
     btn.onclick = async (e) => {
       // 確認ダイアログ
-      if (!confirm('このlineを削除しますか？')) return;
+      if (!confirm('この予約枠を削除しますか？')) return;
 
       const id = e.target.dataset.id; // ボタンの data-id を取得
 
+
       try {
-        const res = await fetch('./schedule_del_do.php', {//ファイルパス注意
+        const res = await fetch('./schedule_student_delete_do.php', {//ファイルパス注意
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id: id })

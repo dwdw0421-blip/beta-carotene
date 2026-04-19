@@ -87,9 +87,9 @@ $students = $stmt_student->fetchAll(PDO::FETCH_ASSOC);
 // });
 
 
-echo '<pre>';
-print_r($students);
-echo '</pre>';
+// echo '<pre>';
+// print_r($students);
+// echo '</pre>';
 
 
 ?>
@@ -299,7 +299,7 @@ foreach ($students as $s) {
 
           <!--  俺追加　削除用ボタン -->
             <button class="btn-close delete-status-btn"
-                data-id="<?php echo $student['line_date']; ?>"
+                data-id="<?php echo $student['line_id']; ?>"
                 style="font-size: 1.0rem;"></button>
       </div>
 
