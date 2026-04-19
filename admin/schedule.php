@@ -88,6 +88,7 @@ function day($datetime, $type)
   <title>ドラッグ＆ドロップ 発展編 -DB連携-</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="../css/style.css">
   <style>
     :root {
       --drop-zone-bg: #f8f9fa;
@@ -167,7 +168,13 @@ function day($datetime, $type)
   </style>
 </head>
 
-<body class="bg-light">
+<body class="bg-light admin-wrapper">
+
+<?php
+    require dirname(__FILE__) . '/sidebar.php';
+    ?>
+    
+
   <main class="container-fluid py-5">
     <header class="text-center mb-5">
       <h1 class="display-5 fw-bold">ドラッグ＆ドロップ 発展編<br> -DB連携-</h1>
@@ -227,12 +234,11 @@ foreach ($students as $s) {
 
 
 <!-- 俺追加↓ -->
-
-        <button type="button" class="btn btn-primary btn-sm text-nowrap py-4 px-4" id="open-line-btn" >キャリコン予約枠追加</button>
+<button type="button" class="btn btn-primary btn-sm text-nowrap py-4 px-4" id="open-line-btn" >キャリコン＋ 追加</button>
 
     <dialog class="form p-5" id="modal-line">
       <div class="row mb-3">
-        <h5 class="fw-bold">キャリコン予約枠追加</h5>
+        <h5 class="fw-bold">キャリコン＋ 追加</h5>
       </div>
 
     <div class="row mb-3">
@@ -249,21 +255,22 @@ foreach ($students as $s) {
 <!-- 俺追加↑ -->
 
 
-<!-- 削除エリア -->
-    <div class="delete-area bg-danger text-white rounded text-nowrap py-4 px-5" 
-                 style="font-size: 0.75rem; cursor: pointer; border: 1px dashed white;">
-                Drop to Delete
-    </div>
-
-
   <!-- 日付ライン -->
           <div class="flex-grow-1 d-flex align-items-center">
                 <div class="border-top border-secondary opacity-50 flex-grow-1"></div>
-                <span class="mx-3 fw-bold text-secondary text-nowrap" style="font-size: 0.8rem;">
+                <span class="mx-3 fw-bold text-secondary text-nowrap" style="font-size: 1.5rem;">
         <?= htmlspecialchars($current_date) ?>
         </span>
                 <div class="border-top border-secondary opacity-50 flex-grow-1"></div>
         </div>
+
+
+<!-- 削除エリア -->
+        <div class="delete-area bg-danger text-white rounded text-nowrap py-4 px-5" 
+                 style="font-size: 0.75rem; cursor: pointer; border: 1px dashed white;">
+                Drop to Delete
+        </div>
+
     </div>
     </div>
 
@@ -289,7 +296,9 @@ foreach ($students as $s) {
 
 
 
-<form action="schedule_class_staff_update_do.php" class="center mb-2" method="POST">
+
+<form action="schedule_class_staff_update_do.php" class="mb-2" method="POST">
+
   <input type="hidden" name="line_id" value="<?= htmlspecialchars($line_id) ?>">
   <div class="row g-2 mb-2">
   <div class="col-6">
