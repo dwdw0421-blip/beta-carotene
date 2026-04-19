@@ -1,30 +1,36 @@
 <?php
-require_once 'functions_test.php';
-header('Content-Type: application/json; charset=UTF-8'); // JSONで返すことを明示
+require_once __DIR__ . '/../includes/functions.php';
+$line_data_json = file_get_contents('php://input');
+$line_data = json_decode($line_data_json, true);
 
-$json = file_get_contents('php://input');
-$data = json_decode($json, true);
+$id = (int)$line_data['id'];
 
-// キー名が 'id' であることを確認
-$id = isset($data['id']) ? (int)$data['id'] : 0;
+var_dump($id);
 
-if ($id > 0) {
-    try {
-        $pdo = db_connect();
-        $sql = 'DELETE FROM tasks WHERE id = :id';
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
+try {
+    $pdo = db_connect();
 
-        echo json_encode(['msg' => 'タスクを削除しました。']);
-        exit();
-        
-    } catch (PDOException $e) {
-        http_response_code(500);
-        echo json_encode(['msg' => '削除エラー: ' . $e->getMessage()]);
+    // 消すlineにタスクがないかチェック
+    $checkSql = 'SELECT COUNT(*) FROM tasks WHERE status = :id';
+    $checkStmt = $pdo->prepare($checkSql);
+    $checkStmt->bindValue(':id', $id, PDO::PARAM_INT);
+    $checkStmt->execute();
+    $taskCount = $checkStmt->fetchColumn();
+
+    // 2. タスクが1つ以上あれば、削除せずにメッセージを返す
+    if ($taskCount > 0) {
+        echo json_encode(['msg' => '削除する前にタスクを移動してください。', 'status' => 'error']);
+        exit;
     }
-} else {
-    http_response_code(400);
-    echo json_encode(['msg' => '無効なIDです。']);
+
+
+    $sql = 'DELETE FROM statuses WHERE id = :id';
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    echo json_encode(['msg' => 'lineを削除しました。']);
+} catch (PDOException $e) {
+    echo $e->getMessage();
 }
-exit();
+

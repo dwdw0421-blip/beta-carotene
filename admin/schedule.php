@@ -45,10 +45,12 @@ $carcon_lines = $stmt->fetchAll(PDO::FETCH_ASSOC);
     // 日付順なおかつline_id順 これがないとupdateのとき毎回順番が変わる
 
 
-$sql_student = 'SELECT
+$sql_student = 
+   'SELECT
     lin.id AS line_id,
     lin.date AS line_date,
-    rm.name AS classroom_name,
+    -- ★ lin(枠)ではなく rm2(コース経由の教室名) を取得する
+    rm2.name AS classroom_name, 
     res.id AS reservation_id,
     std.student_no,
     std.last_name,
@@ -64,9 +66,15 @@ LEFT JOIN
     carcon_reservation_details AS det ON res.carcon_reservation_detail_id = det.id
 LEFT JOIN
     m_students AS std ON det.student_id = std.id
+-- ★ ここからが追加：生徒のコースを介して教室名を取得する
+LEFT JOIN
+    m_courses AS cou ON std.course_id = cou.id  -- ※std側のカラム名は適宜修正してください
+LEFT JOIN
+    m_classrooms AS rm2 ON cou.classroom_id = rm2.id 
 ORDER BY
     lin.date ASC,
     lin.id ASC';
+    // 日付順なおかつline_id順 これがないとupdateのとき毎回順番が変わる
 
 $stmt_student = $db->prepare($sql_student);
 $stmt_student->execute();
@@ -79,9 +87,9 @@ $students = $stmt_student->fetchAll(PDO::FETCH_ASSOC);
 // });
 
 
-// echo '<pre>';
-// print_r($students);
-// echo '</pre>';
+echo '<pre>';
+print_r($students);
+echo '</pre>';
 
 
 ?>
@@ -186,19 +194,24 @@ $students = $stmt_student->fetchAll(PDO::FETCH_ASSOC);
 <!-- 俺追加↓ -->
      <div class="row mb-4 justify-content-center">
       <div class="col">
-        <button type="button" class="btn btn-primary" id="open-line-btn">Add Lines</button>
+        <button type="button" class="btn btn-primary" id="open-line-btn">キャリコン予約枠追加</button>
       </div>
     </div>
+
     <dialog class="form p-5" id="modal-line">
       <div class="row mb-3">
-        <div class="col mb-3">
-          <label for="line-title" class="form-label">line名</label>
-          <input type="text" name="line-title" id="line-title" class="form-control">
-        </div>
+        <h5 class="fw-bold">キャリコン予約枠追加</h5>
       </div>
+
+    <div class="row mb-3">
+    <div class="col-12 mb-3">
+      <label for="line-date" class="form-label">追加する日付</label>
+      <input type="date" id="line-date" class="form-control" value="<?= date('Y-m-d') ?>">
+    </div>
+
       <div class="d-flex gap-3">
-        <button class="btn btn-secondary flex-fill" type="button" id="cancel-line-btn">Cancel</button>
-        <button class="btn btn-primary flex-fill" type="button" id="add-line-btn">Add</button>
+        <button class="btn btn-secondary flex-fill" type="button" id="cancel-line-btn">キャンセル</button>
+        <button class="btn btn-primary flex-fill" type="button" id="add-line-btn">追加</button>
       </div>
     </dialog>
 <!-- 俺追加↑ -->
@@ -281,11 +294,12 @@ foreach ($students as $s) {
         
       <div class="d-flex justify-content-between align-items-start mb-3">
         <h2 class="h6 fw-bold text-center border-bottom pb-2 mb-2">
-           <?= 'ID:' . htmlspecialchars($line_id . ' / ' . $current_date) ?>
+           <?= 'ID : ' . htmlspecialchars($line_id . ' / ' . $current_date) ?>
           </h2>
+
           <!--  俺追加　削除用ボタン -->
             <button class="btn-close delete-status-btn"
-                data-id="<?php echo $status['id']; ?>"
+                data-id="<?php echo $student['line_date']; ?>"
                 style="font-size: 1.0rem;"></button>
       </div>
 
