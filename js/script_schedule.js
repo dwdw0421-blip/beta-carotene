@@ -175,14 +175,26 @@ function setupEventListener() {
     };
   }
 
-  // ステータス(line)登録ボタン 
+  // キャリコンラインの追加
   if (addLineBtn) {
     addLineBtn.onclick = async () => {
-      const lineTitle = document.getElementById('line-title').value;
-      if (!lineTitle) return alert('名前を入力してください');
-      await addLine({ title: lineTitle });
+      const lineTitle = document.getElementById('line-date').value;
+      if (!lineTitle) return alert('日付を入力してください');
+      await addLine({ date: lineTitle, classroom_id: null}); //追加時はnullを登録
     };
   }
+
+
+// キャリコンラインの追加
+// addBtn.addEventListener('click', () => {
+//   const newLineData = {
+//     date: document.getElementById('line-date').value,
+//     classroom_id: document.getElementById('line-classroom-id').value
+//   };
+
+//   addLine(newLineData);
+// });
+
 
 
 // 教室情報登録ボタン 
@@ -231,17 +243,29 @@ async function addTask(newTaskData) {
   } catch (error) { console.error(error); }
 }
 
+
+
 async function addLine(newLineData) {
   try {
     // PHPファイル名を「my_add_line.php」に統一
-    const res = await fetch('schedule_add_do.php', { //ファイルパス注意
+    const res = await fetch('schedule_student_add_do.php', { //ファイルパス注意
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newLineData)
     });
-    if (!res.ok) throw new Error('通信エラー');
-    location.reload();
-  } catch (error) { console.error(error); }
+
+    const result = await res.json();
+
+ if (res.ok && result.success) {
+      // 成功した時だけリロード
+      location.reload();
+    } else {
+      alert('エラーが発生しました: ' + (result.error || '不明なエラー'));
+    }
+  } catch (error) { 
+    console.error('通信エラー:', error);
+    alert('サーバーと通信できませんでした');
+  }
 }
 
 
@@ -293,7 +317,7 @@ async function addLine(newLineData) {
  */
 async function updateTask(dataObject) {
   try {
-    const res = await fetch('./schedule_student_update.php', {//ファイルパス注意
+    const res = await fetch('./schedule_student_update_do.php', {//ファイルパス注意
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -361,12 +385,13 @@ function setupDeleteButtons() {
   document.querySelectorAll('.delete-status-btn').forEach(btn => {
     btn.onclick = async (e) => {
       // 確認ダイアログ
-      if (!confirm('このlineを削除しますか？')) return;
+      if (!confirm('この予約枠を削除しますか？')) return;
 
       const id = e.target.dataset.id; // ボタンの data-id を取得
 
+
       try {
-        const res = await fetch('./schedule_del_do.php', {//ファイルパス注意
+        const res = await fetch('./schedule_student_delete_do.php', {//ファイルパス注意
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id: id })
@@ -455,7 +480,7 @@ async function updateDatabase(taskId, statusId, slotIndex) {
   console.log("送信データ:", data); // デバッグ用
 
   try {
-    const response = await fetch('schedule_student_update.php', {//ファイルパス注意
+    const response = await fetch('schedule_student_update_do.php', {//ファイルパス注意
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
