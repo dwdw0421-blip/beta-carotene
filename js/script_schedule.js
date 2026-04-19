@@ -180,7 +180,7 @@ function setupEventListener() {
     addLineBtn.onclick = async () => {
       const lineTitle = document.getElementById('line-date').value;
       if (!lineTitle) return alert('日付を入力してください');
-      await addLine({ date: lineTitle, classroom_id: 1}); //classroom_id: 1　存在するidなら何でもよい
+      await addLine({ date: lineTitle, classroom_id: null}); //追加時はnullを登録
     };
   }
 
@@ -317,7 +317,7 @@ async function addLine(newLineData) {
  */
 async function updateTask(dataObject) {
   try {
-    const res = await fetch('./schedule_student_update.php', {//ファイルパス注意
+    const res = await fetch('./schedule_student_update_do.php', {//ファイルパス注意
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -480,7 +480,7 @@ async function updateDatabase(taskId, statusId, slotIndex) {
   console.log("送信データ:", data); // デバッグ用
 
   try {
-    const response = await fetch('schedule_student_update.php', {//ファイルパス注意
+    const response = await fetch('schedule_student_update_do.php', {//ファイルパス注意
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)

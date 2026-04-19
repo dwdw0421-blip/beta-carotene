@@ -4,52 +4,15 @@ require_once __DIR__ . '/../includes/functions.php';
 
 $db = db_connect();
 
-// ステータス（3列）を取得---
-$sql = 'SELECT * FROM carcon_lines';
-// $stmt = $pdo->query($sql);
-// $statuses = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$stmt = $db->prepare($sql);
-$stmt->execute();
-$carcon_lines = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// var_dump($carcon_lines);
-
-// タスクを全取得
-// $sql_tasks = 'SELECT * FROM tasks';
-// $stmt_tasks = $pdo->query($sql_tasks);
-// $all_tasks = $stmt_tasks->fetchAll(PDO::FETCH_ASSOC);
-
-
-// $sql_student = 'SELECT
-//     res.id AS reservation_id,
-//     lin.id AS line_id,  -- carcon_linesのid
-//     std.student_no,
-//     std.last_name,
-//     std.first_name,
-//     lin.date AS line_date,
-//     det.slot_index,
-//     rm.name AS classroom_name
-// FROM
-//     carcon_reservations AS res
-// JOIN
-//     carcon_reservation_details AS det ON res.carcon_reservation_detail_id = det.id
-// JOIN
-//     carcon_lines AS lin ON res.carcon_line_id = lin.id
-// JOIN
-//     m_students AS std ON det.student_id = std.id
-// JOIN
-//     m_classrooms AS rm ON lin.classroom_id = rm.id
-// ORDER BY
-//     lin.date ASC,
-//     lin.id ASC'; 
-    // 日付順なおかつline_id順 これがないとupdateのとき毎回順番が変わる
-
-
 $sql_student = 
    'SELECT
     lin.id AS line_id,
     lin.date AS line_date,
-    -- ★ lin(枠)ではなく rm2(コース経由の教室名) を取得する
+
+    lin.classroom_id,      -- 教室プルダウン用
+    lin.carcon_staff_id,   -- 講師プルダウン用
+
+    -- ★ rm(枠の教室)がNULLでも、rm2(コース経由)があれば表示される
     rm2.name AS classroom_name, 
     res.id AS reservation_id,
     std.student_no,
@@ -58,7 +21,7 @@ $sql_student =
     det.slot_index
 FROM
     carcon_lines AS lin
-JOIN
+LEFT JOIN
     m_classrooms AS rm ON lin.classroom_id = rm.id
 LEFT JOIN
     carcon_reservations AS res ON lin.id = res.carcon_line_id
@@ -81,18 +44,40 @@ $stmt_student->execute();
 $students = $stmt_student->fetchAll(PDO::FETCH_ASSOC);
 
 
-// $studentsの配列を日付順に並べ替える
-// usort($students, function ($a, $b) {
-//     return strtotime($a['line_date']) <=> strtotime($b['line_date']);
-// });
-
-
 // echo '<pre>';
 // print_r($students);
 // echo '</pre>';
 
 
+
+// セレクトボックス用データ
+$sql_classrooms = 'SELECT * FROM m_classrooms';
+$stmt_classrooms = $db->prepare($sql_classrooms);
+$stmt_classrooms->execute();
+$m_classrooms = $stmt_classrooms->fetchAll(PDO::FETCH_ASSOC);
+
+$sql_staffs = 'SELECT * FROM m_carcon_staffs';
+$stmt_staffs = $db->prepare($sql_staffs);
+$stmt_staffs->execute();
+$m_carcon_staffs = $stmt_staffs->fetchAll(PDO::FETCH_ASSOC);
+
+
+// echo '<pre>';
+// print_r($m_carcon_staffs);
+// echo '</pre>';
+
+
+// 日付の曜日出し
+function day($datetime, $type)
+{
+  $week = ["日", "月", "火", "水", "木", "金", "土"];
+  $timestamp = strtotime($datetime);
+  return date('n月d日', $timestamp) . '(' . $week[date('w', $timestamp)] . ')';
+}
+
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -183,7 +168,7 @@ $students = $stmt_student->fetchAll(PDO::FETCH_ASSOC);
 </head>
 
 <body class="bg-light">
-  <main class="container py-5">
+  <main class="container-fluid py-5">
     <header class="text-center mb-5">
       <h1 class="display-5 fw-bold">ドラッグ＆ドロップ 発展編<br> -DB連携-</h1>
       <p class="text-muted">ドラッグ&ドロップでタスクを入れ替える度にDBに保存する</p>
@@ -191,12 +176,59 @@ $students = $stmt_student->fetchAll(PDO::FETCH_ASSOC);
     </header>
 
 
+
+<!-- 日付の区切りにライン -->
+<?php
+$prev_date = null;      // 直前の日付を保存
+?>
+
+
+<?php
+$grouped_students = [];
+foreach ($students as $s) {
+    // line_id をキーにして、その中にデータを詰め直す
+    $grouped_students[$s['line_id']][] = $s;
+    }
+
+//     echo '<pre>';
+// print_r($s);
+// echo '</pre>';
+
+?>
+  
+  
+  <?php foreach ($grouped_students as $line_id => $tasks_in_line):?>
+
+  <?php 
+    $student = $tasks_in_line[0]; // 代表データ
+
+    //教室と講師のプルダウンの初期値表示用
+    $current_classroom_id = $student['classroom_id']; 
+    $current_staff_id     = $student['carcon_staff_id']; 
+
+    $current_date = $student['line_date'];
+
+  ?>
+
+
+   <?php 
+   if ($prev_date !== $current_date): 
+
+    // ブートストラップ対応のための記述　最初のループ以外は row を閉じる
+    if ($prev_date !== null) echo '</div>';
+    ?>
+
+  <!-- ブートストラップ対応　1. 日付ラインエリア（rowの外に出すことで100%広がる） -->
+    <div class="col-12 mt-5 mb-3">
+       <div class="d-flex align-items-center gap-3 bg-secondary-subtle p-2 rounded shadow-sm">
+
+        <!-- <div class="col-12" style="flex: 0 0 100%; max-width: 100%; width: 100%;">
+            <div class="d-flex align-items-center mt-4 mb-2"> -->
+
+
 <!-- 俺追加↓ -->
-     <div class="row mb-4 justify-content-center">
-      <div class="col">
-        <button type="button" class="btn btn-primary" id="open-line-btn">キャリコン予約枠追加</button>
-      </div>
-    </div>
+
+        <button type="button" class="btn btn-primary btn-sm text-nowrap py-4 px-4" id="open-line-btn" >キャリコン予約枠追加</button>
 
     <dialog class="form p-5" id="modal-line">
       <div class="row mb-3">
@@ -217,84 +249,36 @@ $students = $stmt_student->fetchAll(PDO::FETCH_ASSOC);
 <!-- 俺追加↑ -->
 
 
-    <div class="row mb-4 justify-content-center">
-      <div class="col">
-        <button type="button" class="btn btn-primary" id="open-btn">Add Task</button>
-      </div>
+<!-- 削除エリア -->
+    <div class="delete-area bg-danger text-white rounded text-nowrap py-4 px-5" 
+                 style="font-size: 0.75rem; cursor: pointer; border: 1px dashed white;">
+                Drop to Delete
     </div>
-    <dialog class="form p-5" id="modal">
-      <div class="row mb-3">
-        <div class="col mb-3">
-          <label for="task-title" class="form-label">タスク名</label>
-          <input type="text" name="task-title" id="task-title" class="form-control">
+
+
+  <!-- 日付ライン -->
+          <div class="flex-grow-1 d-flex align-items-center">
+                <div class="border-top border-secondary opacity-50 flex-grow-1"></div>
+                <span class="mx-3 fw-bold text-secondary text-nowrap" style="font-size: 0.8rem;">
+        <?= htmlspecialchars($current_date) ?>
+        </span>
+                <div class="border-top border-secondary opacity-50 flex-grow-1"></div>
         </div>
-      </div>
-      <div class="d-flex gap-3">
-        <button class="btn btn-secondary flex-fill" type="button" id="cancel-btn">Cancel</button>
-        <button class="btn btn-primary flex-fill" type="button" id="add-btn">Add</button>
-      </div>
-    </dialog>
+    </div>
+    </div>
 
+  <!-- ブートストラップ対応　2. 再びカードを並べるための row を開始 -->
+    <div class="row row-cols-1 row-cols-md-5 g-3 w-100 px-3">
 
-
-<!-- Bootstrapのグリッドを使用 -->
-<div class="row row-cols-1 row-cols-md-5 g-3 mt-4 w-100 px-3">
-
-
-<!-- 日付の区切りにライン -->
-<?php
-$prev_date = null;      // 直前の日付を保存
-?>
-
-
-<?php
-$grouped_students = [];
-foreach ($students as $s) {
-    // line_id をキーにして、その中にデータを詰め直す
-    $grouped_students[$s['line_id']][] = $s;
-    }
-
-//     echo '<pre>';
-// print_r($grouped_students);
-// echo '</pre>';
-
-?>
-  
-  
-  <?php foreach ($grouped_students as $line_id => $tasks_in_line):?>
-
-  <?php 
-    $student = $tasks_in_line[0]; // 代表データ
-
-    $current_date = $student['line_date'];
-
-    //  日付の区切りライン
-    if ($prev_date !== $current_date): ?>
-        <!-- 強制的に100%幅を持たせて改行させる -->
-        <div class="col-12" style="flex: 0 0 100%; max-width: 100%; width: 100%;">
-            <div class="d-flex align-items-center mt-4 mb-2">
-                <hr class="flex-grow-1 border-secondary border-2 opacity-50">
-                <span class="mx-3 fw-bold text-secondary" style="white-space: nowrap; font-size: 0.8rem;">
-                    <?= htmlspecialchars($current_date) ?>
-                </span>
-                <hr class="flex-grow-1 border-secondary border-2 opacity-50">
-            </div>
-        </div>
     <?php endif; ?>
 
-  
-  <?php
-//       echo '<pre>';
-// print_r($student);
-// echo '</pre>';
-  ?>
-
+ <!-- ブートストラップ対応　3. ここにカード（col）の処理 -->
     <div class="col">
       <div class="status-column border border-2 border-secondary-subtle rounded-3 p-1 bg-light shadow-sm <?= $bg_color_class ?>">
         
-      <div class="d-flex justify-content-between align-items-start mb-3">
+      <div class="d-flex justify-content-between align-items-start mb-0">
         <h2 class="h6 fw-bold text-center border-bottom pb-2 mb-2">
-           <?= 'ID : ' . htmlspecialchars($line_id . ' / ' . $current_date) ?>
+           <?= 'ID : ' . htmlspecialchars($line_id . ' / ' . day($current_date, 7)) ?>
           </h2>
 
           <!--  俺追加　削除用ボタン -->
@@ -302,6 +286,50 @@ foreach ($students as $s) {
                 data-id="<?php echo $student['line_id']; ?>"
                 style="font-size: 1.0rem;"></button>
       </div>
+
+
+
+<form action="schedule_class_staff_update_do.php" class="center mb-2" method="POST">
+  <input type="hidden" name="line_id" value="<?= htmlspecialchars($line_id) ?>">
+  <div class="row g-2 mb-2">
+  <div class="col-6">
+    <select name="classroom_id" class="form-select form-select-sm small">
+       <option value="">教室選択</option>
+
+<?php foreach($m_classrooms as $class): 
+$selected = ($class['id'] == $current_classroom_id) ? 'selected' : '';   
+?>
+
+    <option value="<?php echo $class['id']; ?>" <?php echo $selected; ?>>
+       <?php echo $class['name']; ?>
+    </option>
+<?php endforeach; ?>
+    </select>
+  </div>
+
+  <div class="col-6">
+      <select name="staff_id" class="form-select form-select-sm small">
+        <option value="">講師選択</option>
+        
+        <?php foreach($m_carcon_staffs as $staff): 
+          $selected_staff = ($staff['id'] == $current_staff_id) ? 'selected' : ''; 
+        ?>
+          <option value="<?php echo $staff['id']; ?>" <?php echo $selected_staff; ?>>
+            <?php echo $staff['last_name'] . $staff['first_name']; ?>
+          </option>
+        <?php endforeach; ?>
+      </select>
+    </div>
+  </div>
+
+  <div class="text-center mt-2">
+    <button type="submit" class="btn btn-primary btn-sm">教室・講師 / 設定更新</button>
+  </div>
+
+</form>
+
+
+
 
         <div class="task-slots">
           <?php 
@@ -357,27 +385,16 @@ foreach ($students as $s) {
           <?php endfor; ?>
         </div>
       </div>
+      
     </div>
+    
+
   <?php 
 $prev_date = $current_date; // 今回の日付を保存
 endforeach; ?>
-</div>
+     
 
-
-
-
-
-
-
-
-
-
-
-
-<div class="delete-area mt-5 p-5 text-center border border-2 border-danger-subtle">
-      Drop here to Delete
-    </div>
-  </main>
+    </main>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

@@ -11,7 +11,8 @@ $data = json_decode($json, true);
 // var_dump($data);
 
 // 必要なデータ（classroom_id と date）が揃っているか確認
-if ($data && isset($data['classroom_id']) && isset($data['date'])) {
+//array_key_exists　値が何であれ（たとえ null でも）、「箱（キー）さえあれば」 true に。
+if ($data && array_key_exists('classroom_id', $data) && isset($data['date'])) {
     try {
         $pdo = db_connect();
         
@@ -19,7 +20,7 @@ if ($data && isset($data['classroom_id']) && isset($data['date'])) {
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             ':date'         => $data['date'],
-            ':classroom_id' => $data['classroom_id']
+            ':classroom_id' => ($data['classroom_id'] === "" || $data['classroom_id'] === null) ? null : $data['classroom_id']
 ]);
 
         echo json_encode(['success' => true]);
