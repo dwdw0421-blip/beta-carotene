@@ -1,3 +1,50 @@
+<?php
+
+require_once __DIR__ . '/../includes/functions.php';
+
+$db = db_connect();
+$courses_id = htmlspecialchars($_GET['courses_id']);
+
+try {
+    // コース情報を取得
+    $sql = 'SELECT * FROM m_courses WHERE m_courses.id  = :courses_id AND m_courses.is_deleted = 0';
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':courses_id', $courses_id, PDO::PARAM_INT);
+    // SQLの実行
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+    //学生情報を取得
+    $sql = 'SELECT * FROM m_students WHERE m_students.course_id  = :courses_id AND m_students.is_deleted = 0';
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':courses_id', $courses_id, PDO::PARAM_INT);
+    // SQLの実行
+    $stmt->execute();
+    $student_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+    //学生の予約情報を取得
+    $sql = 'SELECT carcon_reservation_details.student_id as student_id,carcon_reservation_details.meeting_type as meeting_type,carcon_reservation_details.slot_index as slot_index,carcon_lines.date as date FROM carcon_reservation_details INNER JOIN carcon_reservations ON carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id ORDER BY carcon_lines.date DESC';
+    $stmt = $db->prepare($sql);
+    // SQLの実行
+    $stmt->execute();
+    $reservation_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    //教室マスタ情報を取得
+    $sql = "SELECT * FROM m_classrooms ORDER BY id ASC";
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+    $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    exit('エラー:' . $e->getMessage());
+}
+$type = get_course_types_list();
+$rooms = get_classrooms_list();
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -16,8 +63,77 @@
     require dirname(__FILE__) . '/sidebar.php';
     ?>
     <section class="admin-main-wrapper">
-        <h1>コース情報を修正</h1>
-        <form action=""></form>
+        <h1><?php echo h($rooms[$result['classroom_id']]) ?>(<?php echo h(format_date($result['start_date'], 2)) ?>開講)</h1>
+
+        <dl class="row card-body">
+            <dt class="col-sm-3">コース名</dt>
+            <dd class="col-sm-9"><?php echo h($result['name']) ?></dd>
+
+            <dt class="col-sm-3">教室</dt>
+            <dd class="col-sm-9"><?php echo h($rooms[$result['classroom_id']]) ?></dd>
+
+            <dt class="col-sm-3">期間</dt>
+            <dd class="col-sm-9"><?php echo h(format_date($result['start_date'], 2)) ?>～<?php echo h(format_date($result['end_date'], 2)) ?></dd>
+
+
+            <dt class="col-sm-3">区分</dt>
+            <dd class="col-sm-9"><?php echo h($type[$result['course_type']]) ?></dd>
+
+        </dl>
+        <form action="./course_edit_confirm.php" method="post">
+            <!-- コース名 -->
+            <div class="mb-2">
+                <label class="form-label" for="name">コース名</label>
+                <input class="form-control" type="text" name="name" id="name" value="<?php echo h($result['name']) ?>">
+            </div>
+
+            <!-- 教室ID -->
+            <div class="mb-2">
+                <label class="form-label">教室</label>
+                <select class="form-select" name="classroom_id">
+                    <?php $roomlist = get_classrooms_list(); ?>
+                    <?php
+                    foreach ($classrooms as $room):
+                    ?>
+                        <option value="<?php echo h($room['id']) ?>" <?php echo  $room['id'] == $result['classroom_id'] ? 'selected' : ""; ?>><?php echo h($room['name']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <!-- 入校日 -->
+            <div class="mb-2">
+                <label class="form-label" for="start_date">入校日</label>
+                <input class="form-control" type="date" name="start_date" id="start_date" value="<?php echo h($result['start_date']) ?>">
+            </div>
+
+            <!-- 修了日 -->
+            <div class=" mb-2">
+                <label class="form-label" for="end_date">修了日</label>
+                <input class="form-control" type="date" name="end_date" id="end_date" value="<?php echo h($result['end_date']) ?>">
+            </div>
+
+            <!-- コース種別 -->
+            <?php $types_list = get_course_types_list(); ?>
+            <div class="mb-2">
+                <label class="form-label" for="course_type">コース種別</label>
+                <select class="form-select" name="course_type">
+
+                    <?php
+                    foreach ($types_list as $key => $type):
+                    ?>
+                        <option value="<?php echo h($key) ?>" <?php echo  $key == $result['course_type'] ? 'selected' : ""; ?>><?php echo h($type) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <!-- 確認画面へ -->
+            <input class="btn btn-primary" type="submit" value="入力内容を確認">
+
+
+
+        </form>
+
+
     </section>
 </body>
 

@@ -56,21 +56,21 @@ $room = get_classrooms_list();
     <section class="admin-main-wrapper">
         <h1><?php echo h($room[$result['classroom_id']]) ?>(<?php echo h(format_date($result['start_date'], 2)) ?>開講)</h1>
         <form class="row card-body bg-light" action="./course_del_do.php" method="post" onsubmit="return confirm('このコースを削除してよろしいですか？')">
-
-            <dt class="col-sm-3">コース名</dt>
-            <dd class="col-sm-9"><?php echo h($result['name']) ?></dd>
-
-
-            <dt class="col-sm-3">教室</dt>
-            <dd class="col-sm-9"><?php echo h($room[$result['classroom_id']]) ?></dd>
-
-            <dt class="col-sm-3">期間</dt>
-            <dd class="col-sm-9"><?php echo h(format_date($result['start_date'], 2)) ?>～<?php echo h(format_date($result['end_date'], 2)) ?></dd>
+            <dl>
+                <dt class="col-sm-3">コース名</dt>
+                <dd class="col-sm-9"><?php echo h($result['name']) ?></dd>
 
 
-            <dt class="col-sm-3">区分</dt>
-            <dd class="col-sm-9"><?php echo h($type[$result['course_type']]) ?></dd>
+                <dt class="col-sm-3">教室</dt>
+                <dd class="col-sm-9"><?php echo h($room[$result['classroom_id']]) ?></dd>
 
+                <dt class="col-sm-3">期間</dt>
+                <dd class="col-sm-9"><?php echo h(format_date($result['start_date'], 2)) ?>～<?php echo h(format_date($result['end_date'], 2)) ?></dd>
+
+
+                <dt class="col-sm-3">区分</dt>
+                <dd class="col-sm-9"><?php echo h($type[$result['course_type']]) ?></dd>
+            </dl>
             <div>
                 <a href="./course_edit.php?courses_id=<?php echo h($result['id']) ?>" class="btn btn-outline-secondary  d-inline-block">情報を修正</a>
                 <input type="hidden" name="courses_id" value="<?php echo h($courses_id) ?>">
