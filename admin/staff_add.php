@@ -1,3 +1,11 @@
+<?php
+
+require_once __DIR__ . '/../includes/functions.php';
+
+$db = db_connect();
+
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -17,7 +25,30 @@
     ?>
     <section class="admin-main-wrapper">
         <h1>管理者を追加</h1>
-        <form action=""></form>
+        <form class="row card-body bg-light" action="./staff_add_do.php" method="post" onsubmit="return confirm('管理者データを追加しますか？')">
+
+            <div class="mb-2">
+                <label class="form-label" for="staff_id">スタッフID</label>
+                <input class="form-control" type="text" name="staff_id" id="staff_id">
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label" for="last_name">苗字</label>
+                <input class="form-control" type="text" name="last_name" id="last_name">
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label" for="last_name">名前</label>
+                <input class="form-control" type="text" name="first_name" id="first_name">
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label" for="end_date">パスワード</label>
+                <input class="form-control" type="password" name="password" id="password">
+            </div>
+
+            <input type="submit" class="btn btn-outline-danger d-inline-block" value="変更する">
+        </form>
     </section>
 </body>
 

@@ -6,8 +6,6 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 require_once __DIR__ . '/../includes/functions.php';
 
-var_dump($_POST);
-// debug_check_array($_POST);
 if (!empty($_POST)) {
     if (!empty($_POST['staff_id']) && !empty($_POST['password'])) {
         // ユーザー認証処理
@@ -25,8 +23,8 @@ if (!empty($_POST)) {
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             var_dump($result);
             if ($result) {
-                // パスワードの検証:password_verify()を後日追記
-                if ($result['password']) {
+                // パスワードの検証
+                if (password_verify($password, $result['password'])) {
                     $_SESSION['login_admin_id'] = $result['id'];
                     $_SESSION['staff_id'] = $result['staff_id'];
                     $_SESSION['staff_name'] = $result['last_name'] . $result['first_name'];
