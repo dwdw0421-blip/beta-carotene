@@ -29,22 +29,22 @@ $db = db_connect();
 
             <div class="mb-2">
                 <label class="form-label" for="staff_id">スタッフID</label>
-                <input class="form-control" type="text" name="staff_id" id="staff_id">
+                <input class="form-control" type="text" name="staff_id" id="staff_id" required>
             </div>
 
             <div class="mb-2">
                 <label class="form-label" for="last_name">苗字</label>
-                <input class="form-control" type="text" name="last_name" id="last_name">
+                <input class="form-control" type="text" name="last_name" id="last_name" required>
             </div>
 
             <div class="mb-2">
                 <label class="form-label" for="last_name">名前</label>
-                <input class="form-control" type="text" name="first_name" id="first_name">
+                <input class="form-control" type="text" name="first_name" id="first_name" required>
             </div>
 
             <div class="mb-2">
                 <label class="form-label" for="end_date">パスワード</label>
-                <input class="form-control" type="password" name="password" id="password">
+                <input class="form-control" type="password" name="password" id="password" required>
             </div>
 
             <input type="submit" class="btn btn-outline-danger d-inline-block" value="変更する">

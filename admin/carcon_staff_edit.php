@@ -51,12 +51,12 @@ try {
 
             <div class="mb-2">
                 <label class="form-label" for="last_name">苗字</label>
-                <input class="form-control" type="text" name="last_name" id="last_name" value="<?php echo h($result["last_name"]); ?>">
+                <input class="form-control" type="text" name="last_name" id="last_name" value="<?php echo h($result["last_name"]); ?>" required>
             </div>
 
             <div class="mb-2">
                 <label class="form-label" for="last_name">名前</label>
-                <input class="form-control" type="text" name="first_name" id="first_name" value="<?php echo h($result["first_name"]); ?>">
+                <input class="form-control" type="text" name="first_name" id="first_name" value="<?php echo h($result["first_name"]); ?>" required>
             </div>
 
             <input type="hidden" name="id" value="<?php echo h($result["id"]); ?>">
