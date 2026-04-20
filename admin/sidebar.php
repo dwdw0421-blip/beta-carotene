@@ -16,6 +16,7 @@ $course_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <nav>
         <ul>
             <li><a href="staff.php">管理者一覧</a></li>
+            <li><a href="carcon-staff.php">キャリコン担当者一覧</a></li>
             <li><a href="index.php">申請内容一覧</a></li>
             <li><a href="schedule.php">面談日程表一覧</a></li>
         </ul>
