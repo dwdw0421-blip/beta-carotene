@@ -6,8 +6,6 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 require_once __DIR__ . '/../includes/functions.php';
 
-var_dump($_POST);
-// debug_check_array($_POST);
 if (!empty($_POST)) {
     if (!empty($_POST['staff_id']) && !empty($_POST['password'])) {
         // ユーザー認証処理
