@@ -26,7 +26,8 @@ $pending_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $sql = "SELECT carcon_request_reservations.id AS request_id, 
     CONCAT(m_students.last_name , ' ' , m_students.first_name) AS student_name, 
     m_courses.name AS course_name, 
-    m_courses.start_date, m_request_statuses.name AS request_status_name 
+    m_courses.start_date, m_request_statuses.name AS request_status_name, 
+    carcon_request_reservations.updated_at
     FROM carcon_request_reservations 
     INNER JOIN carcon_reservation_details ON carcon_request_reservations.request_carcon_reservation_detail_id = carcon_reservation_details.id 
     INNER JOIN m_students ON carcon_reservation_details.student_id = m_students.id 
@@ -75,10 +76,10 @@ $done_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <tbody>
                     <?php foreach ($pending_data as $data): ?>
                         <tr>
-                            <td><?php echo $data["student_name"]; ?></td>
-                            <td><?php echo $data["course_name"]; ?></td>
-                            <td><?php echo $data["request_status_name"]; ?></td>
-                            <td><a href="request_detail.php?id=<?php echo $data["request_id"]; ?>">詳細</a></td>
+                            <td><?php echo h($data["student_name"]); ?></td>
+                            <td><?php echo h($data["course_name"]); ?></td>
+                            <td><?php echo h($data["request_status_name"]); ?></td>
+                            <td><a href="request_detail.php?id=<?php echo h($data["request_id"]); ?>">詳細</a></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -92,16 +93,16 @@ $done_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <th>学生名</th>
                         <th>コース名</th>
                         <th>ステータス</th>
-                        <th>詳細</th>
+                        <th>更新日</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($done_data as $data): ?>
                         <tr>
-                            <td><?php echo $data["student_name"]; ?></td>
-                            <td><?php echo $data["course_name"]; ?></td>
-                            <td><?php echo $data["request_status_name"]; ?></td>
-                            <td><a href="request_detail.php?id=<?php echo $data["request_id"]; ?>">詳細</a></td>
+                            <td><?php echo h($data["student_name"]); ?></td>
+                            <td><?php echo h($data["course_name"]); ?></td>
+                            <td><?php echo h($data["request_status_name"]); ?></td>
+                            <td><?php echo h(format_date($data["updated_at"], 1)); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
