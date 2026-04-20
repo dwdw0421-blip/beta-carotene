@@ -22,8 +22,8 @@ if (!empty($_POST)) {
             // 結果セットを連想配列の形で取得
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($result) {
-                // パスワードの検証:password_verify()を後日追記
-                if ($result['password']) {
+                // パスワードの検証
+                if (password_verify($password, $result['password'])) {
                     $_SESSION['id'] = $result['id'];
                     $_SESSION['login_id'] = $result['login_id'];
                     $_SESSION['res_message'] = ['type' => 1, 'msg' => 'ログイン成功'];
