@@ -73,6 +73,7 @@ $room = get_classrooms_list();
 
             <div>
                 <a href="./course_edit.php?courses_id=<?php echo h($result['id']) ?>" class="btn btn-outline-secondary  d-inline-block">情報を修正</a>
+                <input type="hidden" name="courses_id" value="<?php echo h($courses_id) ?>">
                 <input type="submit" class="btn btn-outline-danger d-inline-block" value="コースを削除">
             </div>
         </form>
