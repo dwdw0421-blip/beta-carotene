@@ -3,12 +3,12 @@ require_once __DIR__ . '/../includes/functions.php';
 
 try {
     $db = db_connect();
-    $sql = "SELECT * FROM m_admin_staffs WHERE is_deleted=0";
+    $sql = "SELECT * FROM m_carcon_staffs WHERE is_deleted=0";
 
     $stmt = $db->prepare($sql);
     $stmt->execute();
 
-    $admin_staffs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $carcon_staffs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     exit($e->getMessage());
 }
@@ -32,12 +32,11 @@ try {
     require dirname(__FILE__) . '/sidebar.php';
     ?>
     <section class="admin-main-wrapper">
-        <h1>管理者一覧</h1>
+        <h1>キャリコン担当者一覧</h1>
         <table>
             <thead>
                 <tr>
                     <th>管理ID</th>
-                    <th>スタッフID</th>
                     <th>スタッフ名</th>
                     <th>追加日時</th>
                     <th>更新日時</th>
@@ -46,20 +45,19 @@ try {
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($admin_staffs as $data): ?>
+                <?php foreach ($carcon_staffs as $data): ?>
                     <tr>
                         <td><?php echo h($data["id"]); ?></td>
-                        <td><?php echo h($data["staff_id"]); ?></td>
                         <td><?php echo h($data["last_name"] . $data["first_name"]); ?></td>
                         <td><?php echo h(format_date($data["created_at"], 1)); ?></td>
                         <td><?php echo h(format_date($data["updated_at"], 1)); ?></td>
-                        <td><a href="staff_edit.php?id=<?php echo h($data["id"]); ?>">変更</a></td>
-                        <td><a href="staff_del_do.php?id=<?php echo h($data["id"]); ?>" onclick="return confirm('削除してよろしいですか？');">削除</a></td>
+                        <td><a href="carcon_staff_edit.php?id=<?php echo h($data["id"]); ?>">変更</a></td>
+                        <td><a href="carcon_staff_del_do.php?id=<?php echo h($data["id"]);  ?>" onclick="return confirm('削除してよろしいですか？');">削除</a></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
-        <a href="staff_add.php">管理者を追加</a>
+        <a href="carcon_staff_add.php">キャリコン担当者を追加</a>
     </section>
 </body>
 

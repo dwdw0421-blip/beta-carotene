@@ -11,7 +11,7 @@ if (empty($id)) {
 
 try {
     $db = db_connect();
-    $sql = "SELECT * FROM m_admin_staffs WHERE id=:id";
+    $sql = "SELECT * FROM m_carcon_staffs WHERE id=:id";
 
     $stmt = $db->prepare($sql);
     $stmt->bindParam(":id", $id, PDO::PARAM_INT);
@@ -33,7 +33,7 @@ try {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <!-- style.css -->
     <link rel="stylesheet" href="../css/style.css">
-    <title>管理者を編集</title>
+    <title>キャリコン担当者を編集</title>
 </head>
 
 <body class="admin-wrapper">
@@ -41,17 +41,12 @@ try {
     require dirname(__FILE__) . '/sidebar.php';
     ?>
     <section class="admin-main-wrapper">
-        <h1>管理者を編集</h1>
-        <form class="row card-body bg-light" action="./staff_edit_do.php" method="post" onsubmit="return confirm('管理者データを変更しますか？')">
+        <h1>キャリコン担当者を編集</h1>
+        <form class="row card-body bg-light" action="./carcon_staff_edit_do.php" method="post" onsubmit="return confirm('キャリコン担当者データを変更しますか？')">
 
             <div class="mb-2">
                 <label class="form-label" for="id">管理ID</label>
                 <p><?php echo h($result["id"]); ?></p>
-            </div>
-
-            <div class="mb-2">
-                <label class="form-label" for="staff_id">スタッフID</label>
-                <input class="form-control" type="text" name="staff_id" id="staff_id" value="<?php echo h($result["staff_id"]); ?>" required>
             </div>
 
             <div class="mb-2">
@@ -62,11 +57,6 @@ try {
             <div class="mb-2">
                 <label class="form-label" for="last_name">名前</label>
                 <input class="form-control" type="text" name="first_name" id="first_name" value="<?php echo h($result["first_name"]); ?>" required>
-            </div>
-
-            <div class="mb-2">
-                <label class="form-label" for="end_date">パスワード</label>
-                <input class="form-control" type="password" name="password" id="password">
             </div>
 
             <input type="hidden" name="id" value="<?php echo h($result["id"]); ?>">
