@@ -120,7 +120,7 @@ function setupEventListener() {
     const deleteArea = e.target.closest('.delete-area');
     if (deleteArea) {
       deleteArea.classList.remove('bg-danger', 'text-white');
-      if (confirm('このタスクを削除しますか？')) {
+      if (confirm('本当に削除して大丈夫ですか？')) {
         deleteTask(taskId); 
       }
       return; 
@@ -147,21 +147,28 @@ function setupEventListener() {
   const cancelBtn = document.getElementById('cancel-btn');
   const modal = document.getElementById('modal');
   
-  const openLineBtn = document.getElementById('open-line-btn');
-  const addLineBtn = document.getElementById('add-line-btn'); // ID注意
-  const cancelLineBtn = document.getElementById('cancel-line-btn');
-  const modalLine = document.getElementById('modal-line');
+  // キャリコン+ボタンを追加したので、データ取得をidからclassに変更
+  // const openLineBtn = document.getElementById('open-line-btn');
+  // const addLineBtn = document.getElementById('add-line-btn'); // ID注意
+  // const cancelLineBtn = document.getElementById('cancel-line-btn');
+  // const modalLine = document.getElementById('modal-line');
 
-  // const openHeldBtn = document.getElementById('open-line-btn');
-  // const addHeldBtn = document.getElementById('add-line-btn'); // ID注意
-  // const cancelHeldBtn = document.getElementById('cancel-line-btn');
-  // const modalHeld = document.getElementById('modal-held');
+  const openLineBtn = document.querySelectorAll('.open-line-btn');
+  const addLineBtn = document.getElementById('add-line-btn'); // ID注意 これはidが確実
+  const cancelLineBtn = document.querySelector('.cancel-line-btn');//モーダルは一つなのでALL無しのquerySelector単数形で
+  const modalLine = document.querySelector('.modal-line');//モーダルは一つなのでALL無しのquerySelector単数形で
 
 
   if(openBtn) openBtn.onclick = () => modal.showModal();
-  if(openLineBtn) openLineBtn.onclick = () => modalLine.showModal();
 
-  if(openLineBtn) openLineBtn.onclick = () => modalLine.showModal();
+  //querySelectorAllで取得すると配列のような感じになるので、forEachで全部のボタンに命令する
+  openLineBtn.forEach(btn => {
+    btn.onclick = () => modalLine.showModal();
+  });
+
+
+  // if(openLineBtn) openLineBtn.onclick = () => modalLine.showModal();
+  // if(openLineBtn) openLineBtn.onclick = () => modalLine.showModal();
 
   if(cancelBtn) cancelBtn.onclick = () => modal.close();
   if(cancelLineBtn) cancelLineBtn.onclick = () => modalLine.close();
@@ -335,7 +342,7 @@ async function updateTask(dataObject) {
 
 async function deleteTask(taskId) {
   const id = parseInt(String(taskId).replace(/[^\d]/g, ''));
-  const res = await fetch('schedule_student_delete_do.php', {//ファイルパス注意
+  const res = await fetch('schedule_student_delete_task_do.php', {//ファイルパス注意
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ id: id })

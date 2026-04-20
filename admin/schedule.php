@@ -12,7 +12,7 @@ $sql_student =
     lin.classroom_id,      -- 教室プルダウン用
     lin.carcon_staff_id,   -- 講師プルダウン用
 
-    -- ★ rm(枠の教室)がNULLでも、rm2(コース経由)があれば表示される
+    -- rm(枠の教室)がNULLでも、rm2(コース経由)があれば表示
     rm2.name AS classroom_name, 
     res.id AS reservation_id,
     std.student_no,
@@ -29,9 +29,8 @@ LEFT JOIN
     carcon_reservation_details AS det ON res.carcon_reservation_detail_id = det.id
 LEFT JOIN
     m_students AS std ON det.student_id = std.id
--- ★ ここからが追加：生徒のコースを介して教室名を取得する
 LEFT JOIN
-    m_courses AS cou ON std.course_id = cou.id  -- ※std側のカラム名は適宜修正してください
+    m_courses AS cou ON std.course_id = cou.id
 LEFT JOIN
     m_classrooms AS rm2 ON cou.classroom_id = rm2.id 
 ORDER BY
@@ -234,9 +233,9 @@ foreach ($students as $s) {
 
 
 <!-- 俺追加↓ -->
-<button type="button" class="btn btn-primary btn-sm text-nowrap py-4 px-4" id="open-line-btn" >キャリコン＋ 追加</button>
+<button type="button" class="open-line-btn btn btn-primary btn-sm text-nowrap py-4 px-4">キャリコン＋ 追加</button>
 
-    <dialog class="form p-5" id="modal-line">
+    <dialog class="modal-line form p-5">
       <div class="row mb-3">
         <h5 class="fw-bold">キャリコン＋ 追加</h5>
       </div>
@@ -244,12 +243,12 @@ foreach ($students as $s) {
     <div class="row mb-3">
     <div class="col-12 mb-3">
       <label for="line-date" class="form-label">追加する日付</label>
-      <input type="date" id="line-date" class="form-control" value="<?= date('Y-m-d') ?>">
+      <input type="date" id="line-date" class="line-date form-control" value="<?= date('Y-m-d') ?>">
     </div>
 
       <div class="d-flex gap-3">
-        <button class="btn btn-secondary flex-fill" type="button" id="cancel-line-btn">キャンセル</button>
-        <button class="btn btn-primary flex-fill" type="button" id="add-line-btn">追加</button>
+        <button class="cancel-line-btn btn btn-secondary flex-fill" type="button">キャンセル</button>
+        <button class="btn btn-primary flex-fill" id="add-line-btn" type="button">追加</button>
       </div>
     </dialog>
 <!-- 俺追加↑ -->
