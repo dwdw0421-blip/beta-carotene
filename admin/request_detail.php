@@ -15,7 +15,7 @@ try {
 
     $db = db_connect();
 
-    $sql = "SELECT change_carcon_reservation_detail_id,request_status_id,reject_message FROM carcon_request_reservations WHERE id=:id";
+    $sql = "SELECT change_carcon_reservation_detail_id,request_status_id,reject_message,request_type FROM carcon_request_reservations WHERE id=:id";
     $stmt = $db->prepare($sql);
     $stmt->bindParam(":id", $id, PDO::PARAM_INT);
     $stmt->execute();
@@ -31,6 +31,8 @@ try {
     // 変更側の詳細データがない＝リクエスト側だけのデータ（自分のデータ変更は「形式」のみ）
     // 二人分のデータの交換・入れ替えが発生するかどうか（ture: データの交換が発生する false: 申請者のデータ更新・形式変更のみ）
     $is_exchange_data = !is_null($request_data["change_carcon_reservation_detail_id"]);
+    // キャンセルの申請かどうか
+    $is_cancel_data = $request_data["request_type"] === 1;
 
     $request_result = array();
     $change_result = array();
@@ -153,7 +155,13 @@ try {
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
-                            <p class="card-title">変更前の予約内容</p>
+                            <p class="card-title">
+                                <?php if ($is_cancel_data): ?>
+                                    キャンセル申請の予約内容
+                                <?php else: ?>
+                                    変更前の予約内容
+                                <?php endif; ?>
+                            </p>
                             <dl>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>日程</dt>
@@ -179,43 +187,45 @@ try {
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <p class="card-title">変更後の予約内容</p>
-                            <dl>
-                                <div class="d-flex justify-content-center gap-3">
-                                    <dt>日程</dt>
-                                    <dd><?php echo h(!$is_exchange_data ?
-                                            format_date($request_result["line_date"], 3) :
-                                            format_date($change_result["line_date"], 3)); ?></dd>
-                                </div>
-                                <div class="d-flex justify-content-center gap-3">
-                                    <dt>ラインID</dt>
-                                    <dd><?php echo h(!$is_exchange_data ?
-                                            $request_result["line_id"] :
-                                            $change_result["line_id"]); ?></dd>
-                                </div>
-                                <div class="d-flex justify-content-center gap-3">
-                                    <dt>時間</dt>
-                                    <dd><?php echo h(!$is_exchange_data ?
-                                            h(get_slot_time_by_index($request_result["detail_slot_index"])) :
-                                            h(get_slot_time_by_index($change_result["detail_slot_index"]))); ?></dd>
-                                </div>
-                                <div class="d-flex justify-content-center gap-3">
-                                    <dt>形式</dt>
-                                    <dd><?php echo h($request_result["next_meeting_type"] ?? $request_result["current_meeting_type"]); ?></dd>
-                                </div>
-                                <div class="d-flex justify-content-center gap-3">
-                                    <dt>教室</dt>
-                                    <dd><?php echo h(!$is_exchange_data ?
-                                            $request_result["classroom_name"] :
-                                            $change_result["classroom_name"]); ?></dd>
-                                </div>
-                            </dl>
+                <?php if (!$is_cancel_data): ?>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="card-title">変更後の予約内容</p>
+                                <dl>
+                                    <div class="d-flex justify-content-center gap-3">
+                                        <dt>日程</dt>
+                                        <dd><?php echo h(!$is_exchange_data ?
+                                                format_date($request_result["line_date"], 3) :
+                                                format_date($change_result["line_date"], 3)); ?></dd>
+                                    </div>
+                                    <div class="d-flex justify-content-center gap-3">
+                                        <dt>ラインID</dt>
+                                        <dd><?php echo h(!$is_exchange_data ?
+                                                $request_result["line_id"] :
+                                                $change_result["line_id"]); ?></dd>
+                                    </div>
+                                    <div class="d-flex justify-content-center gap-3">
+                                        <dt>時間</dt>
+                                        <dd><?php echo h(!$is_exchange_data ?
+                                                h(get_slot_time_by_index($request_result["detail_slot_index"])) :
+                                                h(get_slot_time_by_index($change_result["detail_slot_index"]))); ?></dd>
+                                    </div>
+                                    <div class="d-flex justify-content-center gap-3">
+                                        <dt>形式</dt>
+                                        <dd><?php echo h($request_result["next_meeting_type"] ?? $request_result["current_meeting_type"]); ?></dd>
+                                    </div>
+                                    <div class="d-flex justify-content-center gap-3">
+                                        <dt>教室</dt>
+                                        <dd><?php echo h(!$is_exchange_data ?
+                                                $request_result["classroom_name"] :
+                                                $change_result["classroom_name"]); ?></dd>
+                                    </div>
+                                </dl>
+                            </div>
                         </div>
                     </div>
-                </div>
+                <?php endif; ?>
             </div>
         </div>
 
