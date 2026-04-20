@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- ホスト: 127.0.0.1
--- 生成日時: 2026-04-17 05:33:32
+-- 生成日時: 2026-04-20 04:10:24
 -- サーバのバージョン： 10.4.32-MariaDB
 -- PHP のバージョン: 8.2.12
 
@@ -63,6 +63,7 @@ CREATE TABLE `carcon_request_reservations` (
   `request_meeting_type` int(11) DEFAULT NULL,
   `change_meeting_type` int(11) DEFAULT NULL,
   `request_status_id` int(11) NOT NULL,
+  `request_type` int(4) NOT NULL DEFAULT 0 COMMENT '0: 変更申請 1: キャンセル申請',
   `reject_message` text DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -72,13 +73,13 @@ CREATE TABLE `carcon_request_reservations` (
 -- テーブルのデータのダンプ `carcon_request_reservations`
 --
 
-INSERT INTO `carcon_request_reservations` (`id`, `request_carcon_reservation_detail_id`, `change_carcon_reservation_detail_id`, `request_meeting_type`, `change_meeting_type`, `request_status_id`, `reject_message`, `created_at`, `updated_at`) VALUES
-(1, 1, 2, 1, 1, 1, NULL, '2026-04-13 16:04:44', '2026-04-13 16:04:44'),
-(2, 3, 4, NULL, NULL, 1, NULL, '2026-04-13 16:04:44', '2026-04-13 16:04:44'),
-(3, 5, NULL, 2, NULL, 1, NULL, '2026-04-13 16:04:44', '2026-04-13 16:04:44'),
-(4, 6, NULL, 1, NULL, 1, NULL, '2026-04-15 11:35:37', '2026-04-15 11:35:37'),
-(5, 7, NULL, 2, NULL, 2, NULL, '2026-04-15 11:35:58', '2026-04-15 11:35:58'),
-(6, 8, NULL, 2, NULL, 3, NULL, '2026-04-15 11:36:13', '2026-04-15 11:36:13');
+INSERT INTO `carcon_request_reservations` (`id`, `request_carcon_reservation_detail_id`, `change_carcon_reservation_detail_id`, `request_meeting_type`, `change_meeting_type`, `request_status_id`, `request_type`, `reject_message`, `created_at`, `updated_at`) VALUES
+(1, 1, 2, 1, 1, 1, 0, NULL, '2026-04-13 16:04:44', '2026-04-13 16:04:44'),
+(2, 3, 4, NULL, NULL, 1, 0, NULL, '2026-04-13 16:04:44', '2026-04-13 16:04:44'),
+(3, 5, NULL, 2, NULL, 2, 0, NULL, '2026-04-13 16:04:44', '2026-04-17 16:10:32'),
+(4, 6, NULL, 1, NULL, 1, 0, NULL, '2026-04-15 11:35:37', '2026-04-15 11:35:37'),
+(5, 7, NULL, 2, NULL, 2, 0, NULL, '2026-04-15 11:35:58', '2026-04-15 11:35:58'),
+(6, 8, NULL, 2, NULL, 3, 0, NULL, '2026-04-15 11:36:13', '2026-04-15 11:36:13');
 
 -- --------------------------------------------------------
 
@@ -124,6 +125,7 @@ CREATE TABLE `carcon_reservation_details` (
   `meeting_id` varchar(255) NOT NULL,
   `meeting_passcode` varchar(255) NOT NULL,
   `slot_index` int(4) NOT NULL,
+  `is_plus_carcon` int(4) NOT NULL DEFAULT 0 COMMENT '0: 必須キャリコン 1: キャリコンプラス',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -132,17 +134,17 @@ CREATE TABLE `carcon_reservation_details` (
 -- テーブルのデータのダンプ `carcon_reservation_details`
 --
 
-INSERT INTO `carcon_reservation_details` (`id`, `student_id`, `meeting_type`, `meeting_url`, `meeting_id`, `meeting_passcode`, `slot_index`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 'https://www.google.com', '000 0000 000', '000000', 0, '2026-04-13 15:59:30', '2026-04-13 15:59:30'),
-(2, 2, 2, 'https://www.google.com', '000 0000 000', '000000', 1, '2026-04-13 15:59:30', '2026-04-13 15:59:30'),
-(3, 3, 1, 'https://www.google.com', '000 0000 000', '000000', 3, '2026-04-13 15:59:30', '2026-04-13 15:59:30'),
-(4, 4, 1, 'https://www.google.com', '000 0000 000', '000000', 4, '2026-04-13 15:59:30', '2026-04-13 15:59:30'),
-(5, 5, 1, 'https://www.google.com', '000 0000 000', '000000', 5, '2026-04-13 15:59:30', '2026-04-17 12:32:34'),
-(6, 20, 1, 'https://www.google.com', '000 0000 000', '000000', 0, '2026-04-13 15:59:30', '2026-04-13 15:59:30'),
-(7, 21, 1, 'https://www.google.com', '000 0000 000', '000000', 1, '2026-04-13 15:59:30', '2026-04-13 15:59:30'),
-(8, 22, 2, 'https://www.google.com', '000 0000 000', '000000', 2, '2026-04-13 15:59:30', '2026-04-13 15:59:30'),
-(9, 23, 1, 'https://www.google.com', '000 0000 000', '000000', 3, '2026-04-13 15:59:30', '2026-04-13 15:59:30'),
-(10, 24, 2, 'https://www.google.com', '000 0000 000', '000000', 4, '2026-04-13 15:59:30', '2026-04-13 15:59:30');
+INSERT INTO `carcon_reservation_details` (`id`, `student_id`, `meeting_type`, `meeting_url`, `meeting_id`, `meeting_passcode`, `slot_index`, `is_plus_carcon`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 'https://www.google.com', '000 0000 000', '000000', 0, 0, '2026-04-13 15:59:30', '2026-04-13 15:59:30'),
+(2, 2, 2, 'https://www.google.com', '000 0000 000', '000000', 1, 0, '2026-04-13 15:59:30', '2026-04-13 15:59:30'),
+(3, 3, 1, 'https://www.google.com', '000 0000 000', '000000', 3, 0, '2026-04-13 15:59:30', '2026-04-13 15:59:30'),
+(4, 4, 1, 'https://www.google.com', '000 0000 000', '000000', 4, 0, '2026-04-13 15:59:30', '2026-04-13 15:59:30'),
+(5, 5, 2, 'https://www.google.com', '000 0000 000', '000000', 5, 0, '2026-04-13 15:59:30', '2026-04-17 16:10:32'),
+(6, 20, 1, 'https://www.google.com', '000 0000 000', '000000', 0, 0, '2026-04-13 15:59:30', '2026-04-13 15:59:30'),
+(7, 21, 1, 'https://www.google.com', '000 0000 000', '000000', 1, 0, '2026-04-13 15:59:30', '2026-04-13 15:59:30'),
+(8, 22, 2, 'https://www.google.com', '000 0000 000', '000000', 2, 0, '2026-04-13 15:59:30', '2026-04-13 15:59:30'),
+(9, 23, 1, 'https://www.google.com', '000 0000 000', '000000', 3, 0, '2026-04-13 15:59:30', '2026-04-13 15:59:30'),
+(10, 24, 2, 'https://www.google.com', '000 0000 000', '000000', 4, 0, '2026-04-13 15:59:30', '2026-04-13 15:59:30');
 
 -- --------------------------------------------------------
 
@@ -592,8 +594,8 @@ ALTER TABLE `carcon_lines`
 -- テーブルの制約 `carcon_request_reservations`
 --
 ALTER TABLE `carcon_request_reservations`
-  ADD CONSTRAINT `carcon_request_reservations_ibfk_1` FOREIGN KEY (`request_carcon_reservation_detail_id`) REFERENCES `carcon_reservation_details` (`id`),
-  ADD CONSTRAINT `carcon_request_reservations_ibfk_2` FOREIGN KEY (`change_carcon_reservation_detail_id`) REFERENCES `carcon_reservation_details` (`id`),
+  ADD CONSTRAINT `carcon_request_reservations_ibfk_1` FOREIGN KEY (`request_carcon_reservation_detail_id`) REFERENCES `carcon_reservation_details` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `carcon_request_reservations_ibfk_2` FOREIGN KEY (`change_carcon_reservation_detail_id`) REFERENCES `carcon_reservation_details` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `carcon_request_reservations_ibfk_3` FOREIGN KEY (`request_meeting_type`) REFERENCES `m_meeting_types` (`id`),
   ADD CONSTRAINT `carcon_request_reservations_ibfk_4` FOREIGN KEY (`change_meeting_type`) REFERENCES `m_meeting_types` (`id`),
   ADD CONSTRAINT `carcon_request_reservations_ibfk_5` FOREIGN KEY (`request_status_id`) REFERENCES `m_request_statuses` (`id`);
@@ -603,7 +605,7 @@ ALTER TABLE `carcon_request_reservations`
 --
 ALTER TABLE `carcon_reservations`
   ADD CONSTRAINT `carcon_reservations_ibfk_1` FOREIGN KEY (`carcon_line_id`) REFERENCES `carcon_lines` (`id`),
-  ADD CONSTRAINT `carcon_reservations_ibfk_2` FOREIGN KEY (`carcon_reservation_detail_id`) REFERENCES `carcon_reservation_details` (`id`);
+  ADD CONSTRAINT `carcon_reservations_ibfk_2` FOREIGN KEY (`carcon_reservation_detail_id`) REFERENCES `carcon_reservation_details` (`id`) ON DELETE CASCADE;
 
 --
 -- テーブルの制約 `carcon_reservation_details`
