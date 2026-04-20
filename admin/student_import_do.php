@@ -30,8 +30,7 @@ foreach ($data as $key => $row) {
     $first_name = $row[2];
     $password = $row[3];
     $enrollment_id = $row[4];
-    //悩み：ログインIDが意図しないものになっちゃう　前のひとの出席番号も含めてしまう
-    $login_id = $login_id . $row[0];
+    $login_id = $login_id . sprintf('%02d', $row[0]);
 
 
     try {
@@ -71,6 +70,7 @@ foreach ($data as $key => $row) {
             $stmt->bindParam(':course_id', $course_id, PDO::PARAM_INT);
             $stmt->bindParam(':enrollment_id', $enrollment_id, PDO::PARAM_INT);
             $stmt->execute();
+            $login_id = $_POST['start_year'] . $_POST['start_month'] . $_POST['room'];
             header('location:student.php?courses_id=' . $course_id);
         }
     } catch (PDOException $e) {
