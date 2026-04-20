@@ -54,7 +54,7 @@ try {
                         <td><?php echo h(format_date($data["created_at"], 1)); ?></td>
                         <td><?php echo h(format_date($data["updated_at"], 1)); ?></td>
                         <td><a href="staff_edit.php?id=<?php echo h($data["id"]); ?>">変更</a></td>
-                        <td><a href="staff_del_do.php?id=<?php echo h($data["id"]); ?>">削除</a></td>
+                        <td><a href="staff_del_do.php?id=<?php echo h($data["id"]); ?>" onclick="return confirm('削除してよろしいですか？');">削除</a></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
