@@ -2,7 +2,7 @@
 session_start();
 require_once __DIR__ . '/../includes/functions.php';
 
-if (isset($_SESSION['login_id'])) {
+if (isset($_SESSION['login_admin_id'])) {
     header('location:index.php');
     exit();
 }
