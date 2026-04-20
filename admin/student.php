@@ -134,7 +134,7 @@ $room = get_classrooms_list();
                 <li>支援不要OB：修了済でCC不要（就職退校含む）</li>
             </ul>
 
-            <a href="./student_add.php" class="btn btn-outline-secondary  d-inline-block">学生を追加（手入力）</a>
+            <a href="./student_add.php?courses_id=<?php echo h($courses_id) ?>" class="btn btn-outline-secondary  d-inline-block">学生を追加（手入力）</a>
             <form action="student_import_do.php" method="post" enctype="multipart/form-data" class="card-body bg-light p-2">
                 <input type="file" name="csv_file" accept=".csv" required>
                 <input type="hidden" name="course_id" value="<?php echo h($courses_id); ?>">

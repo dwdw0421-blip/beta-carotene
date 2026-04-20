@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../includes/functions.php';
-$courses_id = $_POST['courses_id'];
+$course_id = $_POST['courses_id'];
 
 if (!empty($_POST)) {
     if (!empty($_POST['name']) && !empty($_POST['classroom_id']) && !empty($_POST['start_date']) && !empty($_POST['end_date']) && !empty($_POST['course_type'])) {
@@ -34,4 +34,4 @@ if (!empty($_POST)) {
 
 
 
-header('location:index.php');
+header('location:student.php?courses_id=' . $course_id);
