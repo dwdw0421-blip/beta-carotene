@@ -27,8 +27,9 @@ if (!empty($_POST)) {
             if ($result) {
                 // パスワードの検証:password_verify()を後日追記
                 if ($result['password']) {
-                    $_SESSION['login_id'] = $result['id'];
+                    $_SESSION['login_admin_id'] = $result['id'];
                     $_SESSION['staff_id'] = $result['staff_id'];
+                    $_SESSION['staff_name'] = $result['last_name'] . $result['first_name'];
                     $_SESSION['res_message'] = ['type' => 1, 'msg' => 'ログイン成功'];
                     header('location: index.php');
                     exit();
@@ -42,5 +43,5 @@ if (!empty($_POST)) {
         }
     }
 }
-// header('location: login.php');
+header('location: login.php');
 exit();

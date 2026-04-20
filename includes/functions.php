@@ -137,3 +137,38 @@ function get_slot_time_by_index($i)
 
     return $slot[$i];
 }
+
+// session_startの重複実行を防ぐための関数
+// ファイル分割するなど複数実行される可能性がある時などに使用
+function safe_session_start()
+{
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+}
+
+// 【管理画面】
+// ログイン済みかどうかチェック
+// TODO: あとで全画面に適用させる
+function check_admin_logined()
+{
+    safe_session_start();
+
+    if (!isset($_SESSION["login_admin_id"])) {
+        header("location:login.php");
+        exit();
+    }
+}
+
+// 【ユーザー画面】
+// ログイン済みかどうかチェック
+// TODO: あとで全画面に適用させる
+function check_logined()
+{
+    safe_session_start();
+
+    if (!isset($_SESSION["id"])) {
+        header("location:login.php");
+        exit();
+    }
+}

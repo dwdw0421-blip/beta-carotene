@@ -1,4 +1,7 @@
 <?php
+
+safe_session_start();
+
 //コース情報を取得
 $sql = "SELECT m_courses.id as courses_id,m_courses.name as courses_name, start_date,m_classrooms.name as classroom_name FROM m_courses INNER JOIN m_classrooms ON m_courses.classroom_id = m_classrooms.id  ORDER BY start_date ASC";
 
@@ -9,7 +12,7 @@ $course_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <aside class="admin-sidebar-wrapper">
-    <p>ログイン中のユーザー：--TODO:ここにセッションに保存されている名前を表示--</p>
+    <p>ログイン中のユーザー：<?php echo isset($_SESSION['login_admin_id']) ? $_SESSION['staff_name'] : "未ログイン"; ?></p>
     <nav>
         <ul>
             <li><a href="staff.php">管理者一覧</a></li>
