@@ -51,13 +51,13 @@ try {
                         <td><?php echo h($data["last_name"] . $data["first_name"]); ?></td>
                         <td><?php echo h(format_date($data["created_at"], 1)); ?></td>
                         <td><?php echo h(format_date($data["updated_at"], 1)); ?></td>
-                        <td><a href="staff_edit.php?id=<?php echo h($data["id"]); ?>">変更</a></td>
-                        <td><a href="staff_del_do.php?id=<?php echo h($data["id"]); ?>">削除</a></td>
+                        <td><a href="carcon_staff_edit.php?id=<?php echo h($data["id"]); ?>">変更</a></td>
+                        <td><a href="carcon_staff_del_do.php?id=<?php echo h($data["id"]); ?>">削除</a></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
-        <a href="staff_add.php">管理者を追加</a>
+        <a href="carcon_staff_add.php">管理者を追加</a>
     </section>
 </body>
 
