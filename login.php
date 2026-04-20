@@ -40,7 +40,7 @@ $type = ['danger', 'primary'];
 
         <div class="user-wrapper user-card px-4 py-5 shadow">
             <h2 class="mb-5 text-center fw-bold">キャリコン予約</h2>
-            <form action="check_login.php" method="post" class="d-flex flex-column align-items-center">
+            <form action="login_do.php" method="post" class="d-flex flex-column align-items-center">
                 <div class="mb-4">
                     <label for="login_id" class="mb-2 form-label">
                         | ログインID
