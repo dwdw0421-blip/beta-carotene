@@ -83,7 +83,7 @@ $room = get_classrooms_list();
                     <tr>
                         <th scope="col">出席番号</th>
                         <th scope="col">名前</th>
-                        <th scope="col">ユーザーID</th>
+                        <th scope="col">ログインID</th>
                         <th scope="col">パスワード</th>
                         <th scope="col">最新の予約日時</th>
                         <th scope="col">在籍状況</th>
@@ -102,7 +102,7 @@ $room = get_classrooms_list();
                         <tr>
                             <th scope="row"><?php echo h($student['student_no']) ?></th>
                             <td><?php echo h($student['last_name']) ?>&ensp;<?php echo h($student['first_name']) ?></td>
-                            <td><?php echo h(format_date($result['start_date'], 5)) ?><?php echo h(format_date($result['start_date'], 6)) ?><?php echo h($course['classroom_name']) ?><?php echo h(sprintf('%02d', $student['student_no'])) ?></td>
+                            <td><?php echo h($student['login_id']) ?></td>
                             <td><?php echo h($student['password']) ?></td>
                             <td>
                                 <?php if (!empty($reservation_result)): ?>
@@ -141,6 +141,7 @@ $room = get_classrooms_list();
                 <input type="hidden" name="start_month" value="<?php echo h(format_date($result['start_date'], 6)); ?>">
                 <input type="hidden" name="room" value="<?php echo h($room[$result['classroom_id']]); ?>">
                 <button type="submit" class="btn btn-outline-secondary  d-inline-block">学生を追加（CSV読み込み）</button>
+                <p>※予約が既に入っている場合はCSVでの読み込みを実行できません</p>
             </form>
 
         </div>
