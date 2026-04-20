@@ -55,7 +55,7 @@ $rooms = get_classrooms_list();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <!-- style.css -->
     <link rel="stylesheet" href="../css/style.css">
-    <title>コース情報を修正</title>
+    <title>コース情報を編集</title>
 </head>
 
 <body class="admin-wrapper">
@@ -127,6 +127,7 @@ $rooms = get_classrooms_list();
             </div>
 
             <!-- 確認画面へ -->
+            <input type="hidden" name="courses_id" value="<?php echo h($courses_id) ?>">
             <input class="btn btn-primary" type="submit" value="入力内容を確認">
 
 

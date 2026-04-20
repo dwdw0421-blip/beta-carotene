@@ -1,6 +1,6 @@
 <?php
 //コース情報を取得
-$sql = "SELECT m_courses.id as courses_id,m_courses.name as courses_name, start_date,m_classrooms.name as classroom_name FROM m_courses INNER JOIN m_classrooms ON m_courses.classroom_id = m_classrooms.id  ORDER BY start_date ASC";
+$sql = "SELECT m_courses.id as courses_id,m_courses.name as courses_name, m_courses.is_deleted as m_courses_is_deleted,start_date,m_classrooms.name as classroom_name FROM m_courses INNER JOIN m_classrooms ON m_courses.classroom_id = m_classrooms.id  ORDER BY start_date ASC";
 
 
 $stmt = $db->prepare($sql);
@@ -22,7 +22,9 @@ $course_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php
                 foreach ($course_list as $course):
                 ?>
-                    <li><a href="student.php?courses_id=<?php echo h($course['courses_id']) ?>"><?php echo h($course['classroom_name']) ?>(<?php echo h(format_date($course['start_date'], 2)) ?>開講)</a></li>
+                    <?php if ($course['m_courses_is_deleted'] == 0): ?>
+                        <li><a href="student.php?courses_id=<?php echo h($course['courses_id']) ?>"><?php echo h($course['classroom_name']) ?>(<?php echo h(format_date($course['start_date'], 2)) ?>開講)</a></li>
+                    <?php endif; ?>
                 <?php endforeach; ?>
             </ul>
             <a href="course_add.php">コースを追加</a>
