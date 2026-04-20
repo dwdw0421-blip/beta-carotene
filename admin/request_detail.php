@@ -28,6 +28,13 @@ try {
         exit();
     }
 
+    // 申請中以外のステータスなら戻す
+    // 申請中のデータしかDetailでは確認しない方向に倒す
+    if ($request_data["request_status_id"] !== RequestStatus::Pending->value) {
+        header("location: index.php");
+        exit();
+    }
+
     // 変更側の詳細データがない＝リクエスト側だけのデータ（自分のデータ変更は「形式」のみ）
     // 二人分のデータの交換・入れ替えが発生するかどうか（ture: データの交換が発生する false: 申請者のデータ更新・形式変更のみ）
     $is_exchange_data = !is_null($request_data["change_carcon_reservation_detail_id"]);
