@@ -3,7 +3,7 @@ require_once __DIR__ . '/../includes/functions.php';
 
 try {
     $db = db_connect();
-    $sql = "SELECT * FROM m_admin_staffs";
+    $sql = "SELECT * FROM m_admin_staffs WHERE is_deleted=0";
 
     $stmt = $db->prepare($sql);
     $stmt->execute();
