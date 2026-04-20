@@ -74,8 +74,10 @@ $course_type = $_POST['course_type'];
             </div>
 
 
+            <input class="btn btn-outline-secondary  d-inline-block" type="button" value="前の画面に戻る" onclick="history.back()">
 
-            <button type="submit" class="btn btn-primary">コースを追加</button>
+
+            <button type="submit" class="btn btn-primary  d-inline-block">コースを追加</button>
         </form>
     </section>
 </body>

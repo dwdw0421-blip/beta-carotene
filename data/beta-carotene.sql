@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- ホスト: 127.0.0.1
--- 生成日時: 2026-04-20 04:10:24
+-- 生成日時: 2026-04-20 04:52:53
 -- サーバのバージョン： 10.4.32-MariaDB
 -- PHP のバージョン: 8.2.12
 
@@ -79,7 +79,8 @@ INSERT INTO `carcon_request_reservations` (`id`, `request_carcon_reservation_det
 (3, 5, NULL, 2, NULL, 2, 0, NULL, '2026-04-13 16:04:44', '2026-04-17 16:10:32'),
 (4, 6, NULL, 1, NULL, 1, 0, NULL, '2026-04-15 11:35:37', '2026-04-15 11:35:37'),
 (5, 7, NULL, 2, NULL, 2, 0, NULL, '2026-04-15 11:35:58', '2026-04-15 11:35:58'),
-(6, 8, NULL, 2, NULL, 3, 0, NULL, '2026-04-15 11:36:13', '2026-04-15 11:36:13');
+(6, 8, NULL, 2, NULL, 3, 0, NULL, '2026-04-15 11:36:13', '2026-04-15 11:36:13'),
+(7, 9, NULL, NULL, NULL, 1, 1, NULL, '2026-04-20 11:52:16', '2026-04-20 11:52:16');
 
 -- --------------------------------------------------------
 
@@ -511,7 +512,7 @@ ALTER TABLE `carcon_lines`
 -- テーブルの AUTO_INCREMENT `carcon_request_reservations`
 --
 ALTER TABLE `carcon_request_reservations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- テーブルの AUTO_INCREMENT `carcon_reservations`
