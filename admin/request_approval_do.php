@@ -19,7 +19,8 @@ try {
                 change_carcon_reservation_detail_id,
                 request_meeting_type,
                 change_meeting_type,
-                request_status_id 
+                request_status_id,
+                request_type
             FROM carcon_request_reservations WHERE id=:id";
     $stmt = $db->prepare($sql);
     $stmt->bindParam(":id", $id, PDO::PARAM_INT);
@@ -36,8 +37,16 @@ try {
 
     // 変更側の詳細データがない＝リクエスト側だけのデータ（自分のデータ変更は「形式」のみ）
     $is_exchange_data = !is_null($request_data["change_carcon_reservation_detail_id"]);
+    // キャンセルの申請かどうか
+    $is_cancel_data = $request_data["request_type"] === 1;
 
-    if ($is_exchange_data) {
+    if ($is_cancel_data) {
+        // キャンセル申請なので予約詳細からデータを削除
+        $delete_sql = "DELETE FROM carcon_reservation_details WHERE id=:id";
+        $d_stmt = $db->prepare($delete_sql);
+        $d_stmt->bindParam(":id", $request_data["request_carcon_reservation_detail_id"], PDO::PARAM_INT);
+        $d_stmt->execute();
+    } else if ($is_exchange_data) {
         // 二つデータがあるケース
         $detail_idA = $request_data["request_carcon_reservation_detail_id"];
         $detail_idB = $request_data["change_carcon_reservation_detail_id"];
