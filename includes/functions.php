@@ -172,3 +172,9 @@ function check_logined()
         exit();
     }
 }
+
+// パスワードの書式チェック（4桁以上英数字のみ）
+function check_preg_password($pw)
+{
+    return preg_match('/^[a-zA-Z0-9]{4,}$/', $pw);
+}
