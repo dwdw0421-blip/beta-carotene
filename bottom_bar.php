@@ -18,7 +18,7 @@
             <span class="material-symbols-outlined d-block">
                 edit_document
             </span>
-            <small>申請</small>
+            <small>変更・取消</small>
         </a>
 
         <a class="nav-link text-center" href="./history.php">
