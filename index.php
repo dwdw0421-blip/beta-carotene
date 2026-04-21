@@ -98,20 +98,16 @@ try {
                 ?>
                     <!-- 必須キャリコン -->
                     <div class="user-card px-4 py-4 shadow mb-4 rounded-4">
-                        <h3 class="mb-4 fw-bold">キャリコン</h3>
+                        <h3 class="mb-4 fw-bold">キャリコン(必須面談)</h3>
                         <dl>
                             <div class="mb-3">
                                 <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
                                 <div class="fw-bold fs-5">
                                     <dd>
-                                        <?php if (!empty($reservation_result)): ?>
-                                            <?php
-                                            $latest_reservation = $reservation_result[0];
-                                            echo h(format_date($latest_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($latest_reservation['slot_index']));
-                                            ?>
-                                        <?php else: ?>
-                                            予約はありません
-                                        <?php endif; ?>
+                                        <?php
+                                        $latest_reservation = $reservation_result[0];
+                                        echo h(format_date($latest_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($latest_reservation['slot_index']));
+                                        ?>
                                     </dd>
                                 </div>
                             </div>
@@ -119,14 +115,10 @@ try {
                             <div>
                                 <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
                                 <dd class="fw-bold fs-5">
-                                    <?php if (!empty($reservation_result)): ?>
-                                        <?php
-                                        $latest_reservation = $reservation_result[0];
-                                        echo h($latest_reservation['meeting_type_name']);
-                                        ?>
-                                    <?php else: ?>
-                                        予約はありません
-                                    <?php endif; ?>
+                                    <?php
+                                    $latest_reservation = $reservation_result[0];
+                                    echo h($latest_reservation['meeting_type_name']);
+                                    ?>
                                 </dd>
                             </div>
                         </dl>
@@ -134,7 +126,7 @@ try {
 
                     <!-- キャリコンプラス -->
                     <div class="user-card  px-4 py-4 shadow rounded-4">
-                        <h3 class="mb-4 fw-bold">キャリコンプラス</h3>
+                        <h3 class="mb-4 fw-bold">キャリコンプラス(任意面談)</h3>
                         <dl>
                             <?php if ($reservation_result[0]['is_plus_carcon'] === 1): ?>
                                 <div class="mb-3">
@@ -158,17 +150,27 @@ try {
                                         ?>
                                     </dd>
                                 </div>
+
                             <?php else: ?>
                                 <div class="d-flex flex-column align-items-center">
                                     <p class="text-secondary fs-5 mb-4">
                                         キャリコンプラスの予約はありません。
                                     </p>
-                                    <a class="btn btn-primary m-0" href="./reserve.php">予約はこちら</a>
+                                    <a class="btn btn-primary px-4 py-2 m-0" href="./reserve.php">予約はこちら</a>
                                 </div>
                             <?php endif; ?>
+
+                            <div class="d-flex flex-column align-items-center gap-2 mt-5 text-danger fw-bold">
+                                <span class="material-symbols-outlined">
+                                    warning
+                                </span>
+                                <p class="mb-0">
+                                    キャリコンプラスは仕様上、直接の日時変更ができません。<br />
+                                    お手数ですが、現在の予約を一度取り消した上で、再度ご希望の日時でご予約をお願いいたします。
+                                </p>
+                            </div>
                         </dl>
                     </div>
-
 
                 <?php
                 //公共職業訓練だったら...    
@@ -176,7 +178,7 @@ try {
                 ?>
                     <!-- キャリコンプラス -->
                     <div class="user-card  px-4 py-4 shadow rounded-4">
-                        <h3 class="mb-4 fw-bold">キャリコンプラス</h3>
+                        <h3 class="mb-4 fw-bold">キャリコンプラス(任意面談)</h3>
                         <dl>
                             <?php if ($reservation_result[0]['is_plus_carcon'] === 1): ?>
                                 <div class="mb-3">
@@ -205,9 +207,19 @@ try {
                                     <p class="text-secondary fs-5 mb-4">
                                         キャリコンプラスの予約はありません。
                                     </p>
-                                    <a class="btn btn-primary m-0" href="./reserve.php">予約はこちら</a>
+                                    <a class="btn btn-primary px-4 py-2 m-0" href="./reserve.php">予約はこちら</a>
                                 </div>
                             <?php endif; ?>
+
+                            <div class="d-flex flex-column align-items-center gap-2 mt-5 text-danger fw-bold">
+                                <span class="material-symbols-outlined">
+                                    warning
+                                </span>
+                                <p class="mb-0">
+                                    キャリコンプラスは仕様上、直接の日時変更ができません。<br />
+                                    お手数ですが、現在の予約を一度取り消した上で、再度ご希望の日時でご予約をお願いいたします。
+                                </p>
+                            </div>
                         </dl>
                     </div>
                 <?php endif; ?>
