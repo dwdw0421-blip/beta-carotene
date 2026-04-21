@@ -85,7 +85,7 @@ $room = get_classrooms_list();
                         <th scope="col">出席番号</th>
                         <th scope="col">名前</th>
                         <th scope="col">ログインID</th>
-                        <th scope="col">パスワード</th>
+
                         <th scope="col">最新の予約日時</th>
                         <th scope="col">在籍状況</th>
                         <th scope="col">変更</th>
@@ -104,7 +104,7 @@ $room = get_classrooms_list();
                             <th scope="row"><?php echo h($student['student_no']) ?></th>
                             <td><?php echo h($student['last_name']) ?>&ensp;<?php echo h($student['first_name']) ?></td>
                             <td><?php echo h($student['login_id']) ?></td>
-                            <td><?php echo h($student['password']) ?></td>
+
                             <td>
                                 <?php if (!empty($reservation_result)): ?>
                                     <?php foreach ($reservation_result as $reserve): ?>

@@ -25,7 +25,7 @@ try {
 $type = get_course_types_list();
 $rooms = get_classrooms_list();
 
-
+$course_id = $student_result['course_id'];
 
 ?>
 <!DOCTYPE html>
@@ -72,7 +72,7 @@ $rooms = get_classrooms_list();
             <!-- パスワード-->
             <div class="mb-2">
                 <label class="form-label" for="password">パスワード</label>
-                <input class="form-control" type="password" name="password" value="<?php echo h($student_result['password']) ?>">
+                <input class="form-control" type="password" name="password">
             </div>
 
             <!-- 在籍ステータス -->
@@ -91,7 +91,8 @@ $rooms = get_classrooms_list();
 
 
             <!-- 確認画面へ -->
-            <input type="hidden" name="courses_id" value="<?php echo h($courses_id) ?>">
+            <input type="hidden" name="course_id" value="<?php echo h($course_id) ?>">
+            <input type="hidden" name="student_id" value="<?php echo h($student_id) ?>">
             <input class="btn btn-primary" type="submit" value="入力内容を確認">
 
 
