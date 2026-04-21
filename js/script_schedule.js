@@ -1,90 +1,6 @@
-window.addEventListener('DOMContentLoaded', async () => {
-  // イベントリスナーの登録
-  setupEventListener();
-  init();
-});
-
-// 初期化関数
-async function init() {
-  
-  console.log("初期化開始: ドラッグ＆ドロップを設定します");
-
-  // ドラッグ可能なアイテムすべてにイベントを設定
-  document.querySelectorAll('.task-item').forEach(task => {
-    task.addEventListener('dragstart', handleDragStart);
-  });
-
-  // ドロップ先の枠すべてにイベントを設定
-  document.querySelectorAll('.drop-zone').forEach(zone => {
-    zone.addEventListener('dragover', (e) => e.preventDefault());
-    zone.addEventListener('drop', handleDrop);
-  });
-}
-
-// 最後に init を実行
-init();
-
-
-
-//  11で追加　差し替え
 document.addEventListener('DOMContentLoaded', () => {
-  const zones = document.querySelectorAll('.drop-target');
-
-  // ドラッグ開始
-  document.addEventListener('dragstart', (e) => {
-    if (e.target.classList.contains('task-item')) {
-      e.dataTransfer.setData('text/plain', e.target.id);
-      e.target.style.opacity = '0.5';
-    }
-  });
-
-  document.addEventListener('dragend', (e) => {
-    if (e.target.classList.contains('task-item')) {
-      e.target.style.opacity = '1';
-    }
-  });
-
-  zones.forEach(zone => {
-    zone.addEventListener('dragover', (e) => {
-      e.preventDefault(); // ドロップを許可
-      zone.style.backgroundColor = 'rgba(0,0,0,0.05)';
-    });
-
-    zone.addEventListener('dragleave', () => {
-      zone.style.backgroundColor = 'transparent';
-    });
-
-    zone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      zone.style.backgroundColor = 'transparent';
-      
-      // 1枠1タスク制限：すでにタスクがあれば拒否
-      if (zone.querySelector('.task-item')) {
-        return;
-      }
-
-      const id = e.dataTransfer.getData('text/plain');
-      const taskEl = document.getElementById(id);
-      if (!taskEl) return;
-
-      const originZone = taskEl.parentElement;
-
-      // 移動先の「空き」文字を消してタスクを追加
-      const placeholder = zone.querySelector('.placeholder-text');
-      if (placeholder) placeholder.remove();
-      zone.appendChild(taskEl);
-
-      // 元の場所を「空き」表示に戻す
-      if (originZone && originZone !== zone) {
-        originZone.innerHTML = '<span class="placeholder-text text-muted" style="font-size: 0.7rem;">777777777</span>';
-      }
-
-      // DB更新（必要であれば関数を呼び出す）
-      const taskId = taskEl.dataset.taskId;
-      const statusId = zone.dataset.statusId;
-      console.log(`Saved: Task ${taskId} to Status ${statusId}`);
-    });
-  });
+  setupEventListener();
+  setupDeleteButtons(); 
 });
 
 // -------------------------------------
@@ -132,12 +48,20 @@ function setupEventListener() {
       const originZone = dragItem.parentElement;
       const placeholder = targetSlot.querySelector('span');
       if (placeholder) placeholder.remove();
+
       targetSlot.appendChild(dragItem);
 
+      //空き表示
       if (originZone && originZone !== targetSlot) {
-        originZone.innerHTML = '<span class="text-muted" style="font-size: 0.6rem; opacity: 0.4;">+</span>';
+        originZone.innerHTML = '<span class="text-muted" style="font-size: 0.65rem;">【 空き 】</span>';
       }
-      updateDatabase(taskId, targetSlot.dataset.statusId, targetSlot.dataset.slotIndex);
+
+      //DBの更新
+      updateDatabase(
+        dragItem.dataset.taskId, 
+        targetSlot.dataset.statusId, 
+        targetSlot.dataset.slotIndex
+      );
     }
   });
 
@@ -147,12 +71,6 @@ function setupEventListener() {
   const cancelBtn = document.getElementById('cancel-btn');
   const modal = document.getElementById('modal');
   
-  // キャリコン+ボタンを追加したので、データ取得をidからclassに変更
-  // const openLineBtn = document.getElementById('open-line-btn');
-  // const addLineBtn = document.getElementById('add-line-btn'); // ID注意
-  // const cancelLineBtn = document.getElementById('cancel-line-btn');
-  // const modalLine = document.getElementById('modal-line');
-
   const openLineBtn = document.querySelectorAll('.open-line-btn');
   const addLineBtn = document.getElementById('add-line-btn'); // ID注意 これはidが確実
   const cancelLineBtn = document.querySelector('.cancel-line-btn');//モーダルは一つなのでALL無しのquerySelector単数形で
@@ -160,18 +78,15 @@ function setupEventListener() {
 
 
   if(openBtn) openBtn.onclick = () => modal.showModal();
+  if(cancelBtn) cancelBtn.onclick = () => modal.close();
+  if(cancelLineBtn) cancelLineBtn.onclick = () => modalLine.close();
 
   //querySelectorAllで取得すると配列のような感じになるので、forEachで全部のボタンに命令する
   openLineBtn.forEach(btn => {
     btn.onclick = () => modalLine.showModal();
   });
 
-
-  // if(openLineBtn) openLineBtn.onclick = () => modalLine.showModal();
-  // if(openLineBtn) openLineBtn.onclick = () => modalLine.showModal();
-
-  if(cancelBtn) cancelBtn.onclick = () => modal.close();
-  if(cancelLineBtn) cancelLineBtn.onclick = () => modalLine.close();
+  
 
   // タスク登録ボタン
   if(addBtn) {
@@ -190,53 +105,50 @@ function setupEventListener() {
       await addLine({ date: lineTitle, classroom_id: null}); //追加時はnullを登録
     };
   }
-
-
-// キャリコンラインの追加
-// addBtn.addEventListener('click', () => {
-//   const newLineData = {
-//     date: document.getElementById('line-date').value,
-//     classroom_id: document.getElementById('line-classroom-id').value
-//   };
-
-//   addLine(newLineData);
-// });
-
-
-
-// 教室情報登録ボタン 
-  // if (addHeldBtn) {
-  //   addHeldBtn.onclick = async () => {
-  //     const heldTitle = document.getElementById('held-title').value;
-  //     if (!heldTitle) return alert('名前を入力してください');
-  //     await addHeld({ title: heldTitle });
-  //   };
-  // }
-
-
 }
-
-
 
 
 // --- 3. 通信系関数 ---
 
-function deleteTask(taskId) {
-  const id = parseInt(String(taskId).replace(/[^\d]/g, ''));
-  if (!id) return;
+// データベース更新
+async function updateDatabase(taskId, statusId, slotIndex) {
+  const cleanId = typeof taskId === 'string' ? taskId.replace('task-', '') : taskId;
+  const data = {
+    id: parseInt(cleanId),
+    status: parseInt(statusId),
+    slot_index: parseInt(slotIndex)
+  };
 
-  // 1. 命令を出す（結果を一切待たない）
-  fetch('schedule_student_delete_do.php', { //ファイルパス注意
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id: id }),
-    keepalive: true  // ページ遷移中も通信を維持する設定
-  });
-
-  // 2. 待機せずに即座に強制リロード
-  window.location.reload();
+  try {
+    const res = await fetch('schedule_student_update_do.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    showMsg(result); // 更新成功メッセージ表示
+  } catch (error) {
+    console.error('保存失敗:', error);
+  }
 }
 
+
+async function deleteTask(taskId) {
+  const id = parseInt(String(taskId).replace(/[^\d]/g, ''));
+  const res = await fetch('schedule_student_delete_task_do.php', {//ファイルパス注意
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: id })
+  });
+  const json = await res.json();
+  
+  // メッセージを出して、OKを押したらリロード
+  alert(json.msg); 
+  location.reload();
+}
+
+
+// 新規タスク送信
 async function addTask(newTaskData) {
   try {
     
@@ -251,7 +163,7 @@ async function addTask(newTaskData) {
 }
 
 
-
+// ライン追加
 async function addLine(newLineData) {
   try {
     // PHPファイル名を「my_add_line.php」に統一
@@ -273,116 +185,6 @@ async function addLine(newLineData) {
     console.error('通信エラー:', error);
     alert('サーバーと通信できませんでした');
   }
-}
-
-
-
-
-
-
-
-
-
-
-// /**
-//  * タスクを取得する非同期関数
-//  *  * @returns {Array} タスクのJSONデータ
-//  */
-// async function getTaskData() {
-//   try {
-//     let res = await fetch('./get_task_data.php');//ファイルパス注意 ◎
-//     if (!res.ok) throw new Error('タスクデータの取得に失敗しました');
-//     let json = await res.json();
-//     return json;
-//   } catch (error) {
-//     console.error(error);
-//     showMsg({ msg: 'エラー: ' + error.message });
-//   }
-// }
-
-// /**
-//  * ステータスを取得する非同期関数
-//  * @returns ステータスのJSONデータ
-//  */
-// async function getStatusData() {
-//   try {
-//     let res = await fetch('./get_status_data.php');//ファイルパス注意 ◎
-//     if (!res.ok) throw new Error('ステータスデータの取得に失敗しました');
-//     let json = await res.json();
-//     return json;
-//   } catch (error) {
-//     console.error(error);
-//     showMsg({ msg: 'エラー: ' + error.message });
-//   }
-// }
-
-
-
-/**
- * tasksテーブルを更新する非同期関数
- * @param {Object} dataObject DB更新に必要な値の配列
- */
-async function updateTask(dataObject) {
-  try {
-    const res = await fetch('./schedule_student_update_do.php', {//ファイルパス注意
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(dataObject), // JSON文字列を送信
-    });
-    if (!res.ok) throw new Error('更新に失敗しました');
-    const json = await res.json();
-    showMsg(json);
-  } catch (error) {
-    console.error(error);
-    showMsg({ msg: 'エラー: ' + error.message });
-  }
-}
-
-async function deleteTask(taskId) {
-  const id = parseInt(String(taskId).replace(/[^\d]/g, ''));
-  const res = await fetch('schedule_student_delete_task_do.php', {//ファイルパス注意
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id: id })
-  });
-  const json = await res.json();
-  
-  // メッセージを出して、OKを押したらリロード
-  alert(json.msg); 
-  location.reload();
-}
-
-// メッセージの表示
-function showMsg(json) {
-  const toast = document.createElement('div');
-  toast.popover = 'manual';
-  toast.classList.add('msg-toast', 'alert', 'alert-success', 'shadow', 'p-3');
-  toast.textContent = json.msg;
-
-  document.body.append(toast);
-  toast.showPopover();
-
-  repositionToasts();
-
-  setTimeout(() => {
-    if (document.body.contains(toast)) {
-      toast.hidePopover();
-      toast.remove();
-      repositionToasts();
-    }
-  }, 3000);
-}
-
-// トーストの位置調整用関数
-function repositionToasts() {
-  const toasts = Array.from(document.querySelectorAll('.msg-toast'));
-  let currentOffset = 20;
-  toasts.forEach(toast => {
-    toast.style.bottom = `${currentOffset}px`;
-    currentOffset += toast.offsetHeight + 10;
-  });
 }
 
 
@@ -426,112 +228,61 @@ function setupDeleteButtons() {
   });
 }
 
-// 最初の読み込み時に実行
-setupDeleteButtons();
+
+// メッセージの表示
+// function showMsg(json) {
+//   const toast = document.createElement('div');
+//   toast.popover = 'manual';
+//   toast.classList.add('msg-toast', 'alert', 'alert-success', 'shadow', 'p-3');
+//   toast.textContent = json.msg;
+
+//   document.body.append(toast);
+//   toast.showPopover();
+
+//   repositionToasts();
+
+//   setTimeout(() => {
+//     if (document.body.contains(toast)) {
+//       toast.hidePopover();
+//       toast.remove();
+//       repositionToasts();
+//     }
+//   }, 3000);
+// }
+
+// トーストの位置調整用関数
+// function repositionToasts() {
+//   const toasts = Array.from(document.querySelectorAll('.msg-toast'));
+//   let currentOffset = 20;
+//   toasts.forEach(toast => {
+//     toast.style.bottom = `${currentOffset}px`;
+//     currentOffset += toast.offsetHeight + 10;
+//   });
+// }
 
 
 
 
-// 11で追加
-
-// ドラッグ開始時：タスクのIDを保存
-function handleDragStart(e) {
-  e.dataTransfer.setData("text/plain", e.target.id);
-}
-
-// ドロップ時：要素の移動とDB保存
-async function handleDrop(e) {
-  e.preventDefault();
-  const zone = e.currentTarget;
-
-  // すでにタスクが入っているスロットなら中断
-  if (zone.querySelector('.task-item')) return;
-
-  const id = e.dataTransfer.getData("text/plain");
-  const taskEl = document.getElementById(id);
-  if (!taskEl) return;
-
-  const originZone = taskEl.parentElement;
-
-  // 1. 移動先の「空き」文字を消してタスクを配置
-  const placeholder = zone.querySelector('span');
-  if (placeholder) placeholder.remove();
-  zone.appendChild(taskEl);
-
-  // 2. 移動元の枠を「空き」表示に戻す
-  if (originZone && originZone !== zone) {
-    originZone.innerHTML = '<span class="text-muted small" style="font-size: 0.65rem;">99999999</span>';
-  }
-
-  // 3. データベース更新処理 (JSON送信)
-  const taskId = taskEl.dataset.taskId;
-  const newStatusId = zone.dataset.statusId;
-  
-  // await updateDatabase(taskId, newStatusId);
-
-  // 本番データベースで修正追加
-  const newSlotIndex = [...zone.children].indexOf(taskEl); // 例：何番目かを取得
-  await updateDatabase(taskId, newStatusId, newSlotIndex);
-}
-
-async function updateDatabase(taskId, statusId, slotIndex) {
-  // 「task-123」のような文字列から「123」だけを取り出して数値にする
-  const cleanId = typeof taskId === 'string' ? taskId.replace('task-', '') : taskId;
-
-  const data = {
-    id: parseInt(cleanId),
-    status: parseInt(statusId),
-    slot_index: parseInt(slotIndex)
-  };
-
-  console.log("送信データ:", data); // デバッグ用
-
+/**
+ * tasksテーブルを更新する非同期関数
+ * @param {Object} dataObject DB更新に必要な値の配列
+ */
+async function updateTask(dataObject) {
   try {
-    const response = await fetch('schedule_student_update_do.php', {//ファイルパス注意
+    const res = await fetch('./schedule_student_update_do.php', {//ファイルパス注意
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dataObject), // JSON文字列を送信
     });
-    const result = await response.json();
-    console.log('成功:', result.msg);
+    if (!res.ok) throw new Error('更新に失敗しました');
+    const json = await res.json();
+    showMsg(json);
   } catch (error) {
-    console.error('保存失敗:', error);
+    console.error(error);
+    showMsg({ msg: 'エラー: ' + error.message });
   }
 }
-
-
-
-
-async function handleDrop(e) {
-  e.preventDefault();
-  const zone = e.currentTarget;
-  if (zone.querySelector('.task-item')) return;
-
-  const idStr = e.dataTransfer.getData("text/plain");
-  const taskEl = document.getElementById(idStr);
-  if (!taskEl) return;
-
-  const originZone = taskEl.parentElement;
-  const placeholder = zone.querySelector('span');
-  if (placeholder) placeholder.remove();
-  zone.appendChild(taskEl);
-
-  if (originZone && originZone !== zone) {
-    originZone.innerHTML = '<span class="text-muted small" style="font-size: 0.65rem;">【 空き 】</span>';
-  }
-
-  // 送信データ作成
-  const taskId = taskEl.dataset.taskId;
-  const newStatusId = zone.dataset.statusId;
-  const newSlotIndex = zone.dataset.slotIndex; // 追加
-
-  // updateDatabaseを呼び出し（JSON形式）
-  updateDatabase(taskId, newStatusId, newSlotIndex);
-}
-
-
-
-
-
 
 
