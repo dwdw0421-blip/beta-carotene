@@ -3,24 +3,16 @@
 require_once __DIR__ . '/../includes/functions.php';
 
 $db = db_connect();
-$courses_id = htmlspecialchars($_GET['courses_id']);
+$course_id = $_POST['course_id'];
 
 try {
     // コース情報を取得
-    $sql = 'SELECT * FROM m_courses WHERE m_courses.id  = :courses_id AND m_courses.is_deleted = 0';
+    $sql = 'SELECT * FROM m_courses WHERE m_courses.id  = :course_id AND m_courses.is_deleted = 0';
     $stmt = $db->prepare($sql);
-    $stmt->bindParam(':courses_id', $courses_id, PDO::PARAM_INT);
+    $stmt->bindParam(':course_id', $course_id, PDO::PARAM_INT);
     // SQLの実行
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    //学生情報を取得
-    $sql = 'SELECT * FROM m_students WHERE m_students.course_id  = :courses_id AND m_students.is_deleted = 0';
-    $stmt = $db->prepare($sql);
-    $stmt->bindParam(':courses_id', $courses_id, PDO::PARAM_INT);
-    // SQLの実行
-    $stmt->execute();
-    $student_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     exit('エラー:' . $e->getMessage());
 }
@@ -52,7 +44,7 @@ $room = get_classrooms_list();
             (<?php echo h(format_date($result['start_date'], 2)) ?>開講｜<?php echo h($room[$result['classroom_id']]) ?>)
         </p>
 
-        <form action="./required_add_confirm.php" method="post">
+        <form action="./required_add_do.php" method="post">
             <div>
                 <!-- 1回目A -->
                 <div class="mb-2">
@@ -91,9 +83,9 @@ $room = get_classrooms_list();
                 </div>
             </div>
             <!-- 確認画面へ -->
+            <input class="btn btn-outline-secondary  d-inline-block" type="button" value="前の画面に戻る" onclick="history.back()">
 
-            <input type="hidden" name="course_id" value="<?php echo h($courses_id) ?>">
-            <input class="btn btn-primary" type="submit" value="入力内容を確認">
+            <input class="btn btn-primary" type="submit" value="この日程で予約する">
 
         </form>
 

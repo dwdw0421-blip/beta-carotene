@@ -146,7 +146,7 @@ $room = get_classrooms_list();
             </form>
 
         </div>
-        <a href="./required_add.php" class="btn btn-outline-secondary d-inline-block mt-2 mb-2">必須キャリコンの一括予約</a>
+        <a href="./required_add.php?courses_id=<?php echo h($result['id']) ?>" class="btn btn-outline-secondary d-inline-block mt-2 mb-2">必須キャリコンの一括予約</a>
     </section>
 </body>
 
