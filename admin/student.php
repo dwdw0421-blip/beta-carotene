@@ -153,7 +153,7 @@ $room = get_classrooms_list();
                     <p>※予約が既に入っている場合はCSVでの読み込みを実行できません</p>
                 </form>
             <?php else: ?>
-                <p class="opacity-50 p-2 m-1 bg-secondary text-light fw-bold rounded">既に予約が作成されているため、CSVでの読み込みは実行できません</p>
+                <p class="opacity-50 p-2 m-1 bg-secondary text-light fw-bold rounded">既に予約が作成されているため、一括での予約は実行できません</p>
             <?php endif; ?>
 
         </div>
