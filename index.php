@@ -159,9 +159,12 @@ try {
                                     </dd>
                                 </div>
                             <?php else: ?>
-                                <p class="text-secondary text-center fs-5">
-                                    キャリコンプラスの予約はありません。
-                                </p>
+                                <div class="d-flex flex-column align-items-center">
+                                    <p class="text-secondary fs-5 mb-4">
+                                        キャリコンプラスの予約はありません。
+                                    </p>
+                                    <a class="btn btn-primary m-0" href="./reserve.php">予約はこちら</a>
+                                </div>
                             <?php endif; ?>
                         </dl>
                     </div>
@@ -175,35 +178,36 @@ try {
                     <div class="user-card  px-4 py-4 shadow rounded-4">
                         <h3 class="mb-4 fw-bold">キャリコンプラス</h3>
                         <dl>
-                            <div class="mb-3">
-                                <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
-                                <div class="fw-bold fs-5">
-                                    <dd>
-                                        <?php if (!empty($reservation_result)): ?>
+                            <?php if ($reservation_result[0]['is_plus_carcon'] === 1): ?>
+                                <div class="mb-3">
+                                    <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
+                                    <div class="fw-bold fs-5">
+                                        <dd>
                                             <?php
                                             $latest_reservation = $reservation_result[0];
                                             echo h(format_date($latest_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($latest_reservation['slot_index']));
                                             ?>
-                                        <?php else: ?>
-                                            予約はありません
-                                        <?php endif; ?>
-                                    </dd>
+                                        </dd>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
-                                <dd class="fw-bold fs-5">
-                                    <?php if (!empty($reservation_result)): ?>
+                                <div>
+                                    <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
+                                    <dd class="fw-bold fs-5">
                                         <?php
                                         $latest_reservation = $reservation_result[0];
                                         echo h($latest_reservation['meeting_type_name']);
                                         ?>
-                                    <?php else: ?>
-                                        予約はありません
-                                    <?php endif; ?>
-                                </dd>
-                            </div>
+                                    </dd>
+                                </div>
+                            <?php else: ?>
+                                <div class="d-flex flex-column align-items-center">
+                                    <p class="text-secondary fs-5 mb-4">
+                                        キャリコンプラスの予約はありません。
+                                    </p>
+                                    <a class="btn btn-primary m-0" href="./reserve.php">予約はこちら</a>
+                                </div>
+                            <?php endif; ?>
                         </dl>
                     </div>
                 <?php endif; ?>
