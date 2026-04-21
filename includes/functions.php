@@ -112,6 +112,28 @@ function get_enrollments_list()
     }
 }
 
+
+//面談形式IDから面談形式名を返す関数
+function get_meeting_type_list()
+{
+    $meeting_types = array();
+    try {
+        //m_meeting_typesテーブルから全レコードを取得
+        $db = db_connect();
+        $sql = 'SELECT * FROM m_meeting_types';
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($result as $row) {
+            $meeting_types[$row['id']] = $row['name'];
+        }
+        return $meeting_types;
+    } catch (PDOException $e) {
+        exit('エラー: ' . $e->getMessage());
+    }
+}
+
 //slot_indexから時間枠を返す関数
 function get_slot_list()
 {
