@@ -1,5 +1,4 @@
 <?php
-
 require_once __DIR__ . '/../includes/functions.php';
 
 if (!empty($_POST)) {
@@ -51,14 +50,26 @@ if (!empty($_POST)) {
                 $stmt->bindParam(":student_no", $student_no, PDO::PARAM_STR);
                 $stmt->bindParam(":last_name", $last_name, PDO::PARAM_STR);
                 $stmt->bindParam(":first_name", $first_name, PDO::PARAM_STR);
-                $stmt->bindParam(":login_id", $login_id, PDO::PARAM_INT);
+                $stmt->bindParam(":login_id", $login_id, PDO::PARAM_STR);
                 $stmt->bindParam(":enrollment_id", $enrollment_id, PDO::PARAM_INT);
                 if (!empty($pw_hash)) {
                     $stmt->bindParam(":password", $pw_hash, PDO::PARAM_STR);
                 }
                 $stmt->execute();
             } catch (PDOException $e) {
-                exit($e->getMessage());
+                $msg = ($e->getCode() == '23000')
+                    ? "学生番号が重複しているため、変更できませんでした。"
+                    : "エラーが発生したため、変更できませんでした。";
+
+                $redirectUrl = 'student.php?courses_id=' . $course_id;
+
+                echo "<script src='../js/message.js'></script>";
+                echo "<script>
+        window.onload = function() {
+            showErrorAlert('" . addslashes($msg) . "', '" . $redirectUrl . "');
+        };
+    </script>";
+                exit;
             }
         }
     }
