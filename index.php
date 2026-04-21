@@ -10,6 +10,9 @@ require_once __DIR__ . '/./includes/functions.php';
 
 $db = db_connect();
 $login_id = $_SESSION['id'];
+$message = $_SESSION['res_message'] ?? '';
+unset($_SESSION['res_message']);
+$type = ['danger', 'primary'];
 
 try {
     //学生情報を取得
@@ -86,6 +89,16 @@ try {
     ?>
 
     <main class="mt-5 d-md-flex flex-row">
+        <div class="user-wrapper message-area">
+            <?php if ($message !== ''): ?>
+                <div class="alert alert-<?php echo $type[$message['type']]; ?> alert-dismissible" role="alert">
+                    <div>
+                        <?php echo $message['msg']; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+
         <div class="col-md-6">
             <!-- 次回の予約日時sec -->
             <section class="user-wrapper mb-7">
