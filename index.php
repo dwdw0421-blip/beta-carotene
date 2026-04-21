@@ -104,14 +104,10 @@ try {
                                 <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
                                 <div class="fw-bold fs-5">
                                     <dd>
-                                        <?php if (!empty($reservation_result)): ?>
-                                            <?php
-                                            $latest_reservation = $reservation_result[0];
-                                            echo h(format_date($latest_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($latest_reservation['slot_index']));
-                                            ?>
-                                        <?php else: ?>
-                                            予約はありません
-                                        <?php endif; ?>
+                                        <?php
+                                        $latest_reservation = $reservation_result[0];
+                                        echo h(format_date($latest_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($latest_reservation['slot_index']));
+                                        ?>
                                     </dd>
                                 </div>
                             </div>
@@ -119,14 +115,10 @@ try {
                             <div>
                                 <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
                                 <dd class="fw-bold fs-5">
-                                    <?php if (!empty($reservation_result)): ?>
-                                        <?php
-                                        $latest_reservation = $reservation_result[0];
-                                        echo h($latest_reservation['meeting_type_name']);
-                                        ?>
-                                    <?php else: ?>
-                                        予約はありません
-                                    <?php endif; ?>
+                                    <?php
+                                    $latest_reservation = $reservation_result[0];
+                                    echo h($latest_reservation['meeting_type_name']);
+                                    ?>
                                 </dd>
                             </div>
                         </dl>
