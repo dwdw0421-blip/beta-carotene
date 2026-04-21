@@ -34,6 +34,9 @@ function setupEventListener() {
 
     // A. 削除エリアへのドロップ
     const deleteArea = e.target.closest('.delete-area');
+
+    const originSlot = dragItem.parentElement;
+
     if (deleteArea) {
       deleteArea.classList.remove('bg-danger', 'text-white');
       if (confirm('本当に削除して大丈夫ですか？')) {
@@ -44,17 +47,30 @@ function setupEventListener() {
 
     // B. スロット(drop-zone)へのドロップ
     const targetSlot = e.target.closest('.drop-zone');
-    if (targetSlot && !targetSlot.querySelector('.task-item')) {
-      const originZone = dragItem.parentElement;
+    if (targetSlot) {
+      const originZone = dragItem.parentElement; //移動前の枠
+      const existingItem = targetSlot.querySelector('.task-item');//移動先タスク
+      
+    //入替処理
+      if (existingItem) {
+        originSlot.appendChild(existingItem); // 相手を自分の元いた場所へ
+        updateDatabase(
+          existingItem.dataset.taskId, 
+          originSlot.dataset.statusId, 
+          originSlot.dataset.slotIndex
+        ); // 相手の分を保存
+      }else{
+            //空き表示
+            if (originZone && originZone !== targetSlot) {
+                originZone.innerHTML = '<span class="text-muted" style="font-size: 0.65rem;">【 空き 】</span>';
+            }
+      }
+
+      // 移動先の「空き」文字を消して自分が入る
       const placeholder = targetSlot.querySelector('span');
       if (placeholder) placeholder.remove();
-
       targetSlot.appendChild(dragItem);
-
-      //空き表示
-      if (originZone && originZone !== targetSlot) {
-        originZone.innerHTML = '<span class="text-muted" style="font-size: 0.65rem;">【 空き 】</span>';
-      }
+      
 
       //DBの更新
       updateDatabase(
@@ -126,7 +142,10 @@ async function updateDatabase(taskId, statusId, slotIndex) {
       body: JSON.stringify(data)
     });
     const result = await res.json();
-    showMsg(result); // 更新成功メッセージ表示
+    console.log('保存成功:', result);
+
+    // showMsg(result); // 更新成功メッセージ表示
+    
   } catch (error) {
     console.error('保存失敗:', error);
   }
