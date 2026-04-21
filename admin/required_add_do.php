@@ -4,7 +4,10 @@ require_once __DIR__ . '/../includes/functions.php';
 
 if (!empty($_POST)) {
 
-    if (!empty($_POST['first_a']) && !empty($_POST['first_b']) && !empty($_POST['second_a']) && !empty($_POST['second_b']) && !empty($_POST['third_a']) && !empty($_POST['third_b'])) {
+    if (
+        !empty($_POST['first_a']) && !empty($_POST['first_b']) && !empty($_POST['second_a']) && !empty($_POST['second_b']) && !empty($_POST['third_a']) && !empty($_POST['third_b']) &&
+        !empty($_POST['course_id'])
+    ) {
 
         //入力日程を取得
         $first_a = $_POST['first_a'];
@@ -13,6 +16,7 @@ if (!empty($_POST)) {
         $second_b = $_POST['second_b'];
         $third_a = $_POST['third_a'];
         $third_b = $_POST['third_b'];
+        $course_id = $_POST['course_id'];
 
         $dates = [
             $first_a,
@@ -28,6 +32,17 @@ if (!empty($_POST)) {
 
             try {
                 $db = db_connect();
+
+                // すでにこのクラスで一括予約が作成されていないか確認する
+                $checkSql = "SELECT 1 FROM carcon_reservations r INNER JOIN carcon_reservation_details d ON r.carcon_reservation_detail_id = d.id INNER JOIN m_students s ON d.student_id = s.id WHERE s.course_id = :course_id LIMIT 1";
+                $checkStmt = $db->prepare($checkSql);
+                $checkStmt->bindValue(':course_id', $course_id, PDO::PARAM_INT);
+                $checkStmt->execute();
+
+                if ($checkStmt->fetch()) {
+                    throw new Exception('このクラスは既に一括予約が作成されています。再実行できません。');
+                }
+
                 $db->beginTransaction();
                 //入れ込みたい学生の配列づくり
                 $course_id = $_POST['course_id'];
@@ -124,11 +139,14 @@ if (!empty($_POST)) {
                 }
 
                 $db->commit();
+                header('location:student.php?courses_id=' . $course_id);
             } catch (Exception $e) {
-                $db->rollBack();
+                if (isset($db) && $db->inTransaction()) {
+                    $db->rollBack();
+                }
                 echo $e->getMessage();
+                exit;
             }
         }
     }
 }
-header('location:student.php?courses_id=' . $course_id);
