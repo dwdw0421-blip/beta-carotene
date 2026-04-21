@@ -1,0 +1,68 @@
+<?php
+
+require_once __DIR__ . '/../includes/functions.php';
+
+if (!empty($_POST)) {
+
+    if (!empty($_POST['course_id'])) {
+        $db = db_connect();
+
+        //コースIDから開始年と開始月、開催教室を取得
+        $course_id = $_POST['course_id'];
+        $sql = 'SELECT start_date,classroom_id FROM m_courses  WHERE m_courses.id = :course_id';
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':course_id', $course_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $course_result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $rooms = get_classrooms_list();
+
+        //ログインIDづくり
+        $login_id  = format_date($course_result['start_date'], 5) . format_date($course_result['start_date'], 6) . $rooms[$course_result['classroom_id']];
+
+
+        if (!empty($_POST["student_id"]) && !empty($_POST["student_no"]) && !empty($_POST["last_name"]) && !empty($_POST["first_name"]) && !empty($_POST["enrollment_id"])) {
+            $id = (int)$_POST["student_id"];
+
+            $student_no = sprintf('%02d', $_POST['student_no']);
+            $last_name = $_POST['last_name'];
+            $first_name = $_POST['first_name'];
+            $password = $_POST['password'];
+            $enrollment_id = $_POST['enrollment_id'];
+            $login_id .= $student_no;
+            $pw_hash = "";
+
+            if (!empty($password)) {
+                if (check_preg_password($password)) {
+                    $pw_hash = password_hash($password, PASSWORD_DEFAULT);
+                } else {
+                    header('location:student.php?courses_id=' . $course_id);
+                    exit();
+                }
+            }
+
+            try {
+                $db = db_connect();
+                $sql = empty($pw_hash) ?
+                    "UPDATE m_students SET student_no=:student_no,last_name=:last_name,first_name=:first_name,login_id=:login_id,enrollment_id=:enrollment_id WHERE id=:id" :
+                    "UPDATE m_students SET student_no=:student_no,last_name=:last_name,first_name=:first_name,login_id=:login_id,enrollment_id=:enrollment_id,password=:password WHERE id=:id";
+
+                $stmt = $db->prepare($sql);
+                $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+                $stmt->bindParam(":student_no", $student_no, PDO::PARAM_STR);
+                $stmt->bindParam(":last_name", $last_name, PDO::PARAM_STR);
+                $stmt->bindParam(":first_name", $first_name, PDO::PARAM_STR);
+                $stmt->bindParam(":login_id", $login_id, PDO::PARAM_INT);
+                $stmt->bindParam(":enrollment_id", $enrollment_id, PDO::PARAM_INT);
+                if (!empty($pw_hash)) {
+                    $stmt->bindParam(":password", $pw_hash, PDO::PARAM_STR);
+                }
+                $stmt->execute();
+            } catch (PDOException $e) {
+                exit($e->getMessage());
+            }
+        }
+    }
+}
+
+header('location:student.php?courses_id=' . $course_id);
+exit();

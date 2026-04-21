@@ -60,7 +60,7 @@ $courses_id = $_POST['courses_id'];
             <!-- パスワード-->
             <div class="mb-2">
                 <p class="form-label" for="password">パスワード</p>
-                <!-- <p><?php echo h($password); ?></p> -->
+                <p><?php echo h($password); ?></p>
                 <input class="form-control" type="hidden" name="password" value="<?php echo h($password); ?>">
             </div>
 
