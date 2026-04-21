@@ -53,47 +53,47 @@ $room = get_classrooms_list();
         </p>
 
         <form action="./required_add_confirm.php" method="post">
-            <div>
+            <div class="border p-2">
                 <!-- 1回目A -->
                 <div class="mb-2">
-                    <label class="form-label" for="start_date">1回目A</label>
-                    <input class="form-control" type="date" name="start_date" id="start_date">
+                    <label class="form-label" for="first_a">1回目A</label>
+                    <input class="form-control" type="date" name="first_a" id="start_date">
                 </div>
                 <!-- 1回目B -->
                 <div class="mb-2">
-                    <label class="form-label" for="start_date">1回目B</label>
-                    <input class="form-control" type="date" name="start_date" id="start_date">
+                    <label class="form-label" for="first_b">1回目B</label>
+                    <input class="form-control" type="date" name="first_b" id="start_date">
                 </div>
             </div>
-            <div>
+            <div class="border p-2">
                 <!-- 2回目A -->
                 <div class="mb-2">
-                    <label class="form-label" for="start_date">2回目A</label>
-                    <input class="form-control" type="date" name="start_date" id="start_date">
+                    <label class="form-label" for="second_a">2回目A</label>
+                    <input class="form-control" type="date" name="second_a" id="start_date">
                 </div>
                 <!-- 2回目B -->
                 <div class="mb-2">
-                    <label class="form-label" for="start_date">2回目B</label>
-                    <input class="form-control" type="date" name="start_date" id="start_date">
+                    <label class="form-label" for="second_b">2回目B</label>
+                    <input class="form-control" type="date" name="second_b" id="start_date">
                 </div>
             </div>
 
-            <div>
+            <div class="border p-2">
                 <!-- 3回目A -->
                 <div class="mb-2">
-                    <label class="form-label" for="start_date">3回目A</label>
-                    <input class="form-control" type="date" name="start_date" id="start_date">
+                    <label class="form-label" for="third_a">3回目A</label>
+                    <input class="form-control" type="date" name="third_a" id="start_date">
                 </div>
                 <!-- 3回目B -->
                 <div class="mb-2">
-                    <label class="form-label" for="start_date">3回目B</label>
-                    <input class="form-control" type="date" name="start_date" id="start_date">
+                    <label class="form-label" for="third_b">3回目B</label>
+                    <input class="form-control" type="date" name="third_b" id="start_date">
                 </div>
             </div>
             <!-- 確認画面へ -->
 
             <input type="hidden" name="course_id" value="<?php echo h($courses_id) ?>">
-            <input class="btn btn-primary" type="submit" value="入力内容を確認">
+            <input class="btn btn-primary d-inline-block mt-2" type="submit" value="入力内容を確認">
 
         </form>
 

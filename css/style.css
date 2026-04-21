@@ -6,7 +6,8 @@
 }
 
 .admin-sidebar-wrapper {
-    width: 20%;
+    width: max(300px, 20%);
+
 }
 
 .admin-main-wrapper {
