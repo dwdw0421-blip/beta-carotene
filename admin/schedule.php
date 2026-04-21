@@ -235,22 +235,7 @@ foreach ($students as $s) {
 <!-- 俺追加↓ -->
 <button type="button" class="open-line-btn btn btn-primary btn-sm text-nowrap py-4 px-4">キャリコン＋ 追加</button>
 
-    <dialog class="modal-line form p-5">
-      <div class="row mb-3">
-        <h5 class="fw-bold">キャリコン＋ 追加</h5>
-      </div>
-
-    <div class="row mb-3">
-    <div class="col-12 mb-3">
-      <label for="line-date" class="form-label">追加する日付</label>
-      <input type="date" id="line-date" class="line-date form-control" value="<?= date('Y-m-d') ?>">
-    </div>
-
-      <div class="d-flex gap-3">
-        <button class="cancel-line-btn btn btn-secondary flex-fill" type="button">キャンセル</button>
-        <button class="btn btn-primary flex-fill" id="add-line-btn" type="button">追加</button>
-      </div>
-    </dialog>
+    
 <!-- 俺追加↑ -->
 
 
@@ -369,9 +354,7 @@ $selected = ($class['id'] == $current_classroom_id) ? 'selected' : '';
               <div class="drop-zone border border-dashed rounded flex-grow-1 d-flex align-items-center justify-content-center" 
                    style="height: 30px; background: #fff; border-color: #ddd; overflow: hidden;"
                    data-status-id="<?= htmlspecialchars($line_id) ?>" 
-                   data-slot-index="<?= $i ?>"
-                   ondragover="event.preventDefault()" 
-                   ondrop="handleDrop(event)">
+                   data-slot-index="<?= $i ?>">
                 
                    <!-- data-task-id=には 誰を動かしたかわかるため reservation_idをいれる-->
                 <?php if ($task): ?>
@@ -381,7 +364,7 @@ $selected = ($class['id'] == $current_classroom_id) ? 'selected' : '';
 
                        
                        draggable="true" 
-                       ondragstart="handleDragStart(event)"
+                       
                        style="cursor: move; font-size: 0.75rem; font-weight: bold;">
                     <?= htmlspecialchars($task['classroom_name'] . ' ' . $task['student_no'] .' '. $task['last_name'] . $task['first_name']); ?>
                   </div>
@@ -400,14 +383,35 @@ $selected = ($class['id'] == $current_classroom_id) ? 'selected' : '';
   <?php 
 $prev_date = $current_date; // 今回の日付を保存
 endforeach; ?>
+
      
+     <dialog id="modal-line" class="modal-line form p-5 w-50">
+      <div class="row mb-3">
+        <h5 class="fw-bold">キャリコン＋ 追加</h5>
+      </div>
+
+    <div class="row mb-3">
+    <div class="col-12 mb-3">
+      <label for="line-date" class="form-label">追加する日付</label>
+      <input type="date" id="line-date" class="line-date form-control" value="<?= date('Y-m-d') ?>">
+    </div>
+
+      <div class="d-flex gap-3">
+        <button class="cancel-line-btn btn btn-secondary flex-fill" type="button">キャンセル</button>
+        <button class="btn btn-primary flex-fill" id="add-line-btn" type="button">追加</button>
+      </div>
+    </dialog>
+
 
     </main>
+
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
   <script src="../js/script_schedule.js"></script>
+
 </body>
+
 
 </html>
