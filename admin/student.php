@@ -120,7 +120,7 @@ $room = get_classrooms_list();
                                 <?php endif; ?>
                             </td>
                             <td><?php echo h($enrollments[$student['enrollment_id']]) ?></td>
-                            <td><a href="./student_edit.php?student_no=<?php echo h($student['student_no']) ?>" class="btn btn-primary d-inline-block">変更</a></td>
+                            <td><a href="./student_edit.php?student_id=<?php echo h($student['id']) ?>" class="btn btn-primary d-inline-block">変更</a></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
