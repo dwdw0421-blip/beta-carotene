@@ -55,7 +55,7 @@ $room = get_classrooms_list();
     ?>
     <section class="admin-main-wrapper">
         <h1><?php echo h($room[$result['classroom_id']]) ?>(<?php echo h(format_date($result['start_date'], 2)) ?>開講)</h1>
-        <form class="row card-body bg-light" action="./course_del_do.php" method="post" onsubmit="return confirm('このコースを削除してよろしいですか？')">
+        <form class="row card-body bg-light m-2" action="./course_del_do.php" method="post" onsubmit="return confirm('このコースを削除してよろしいですか？')">
             <dl>
                 <dt class="col-sm-3">コース名</dt>
                 <dd class="col-sm-9"><?php echo h($result['name']) ?></dd>
@@ -146,7 +146,7 @@ $room = get_classrooms_list();
             </form>
 
         </div>
-        <a href="./required_add.php" class="btn btn-outline-secondary d-inline-block mt-2 mb-2">必須キャリコンの一括予約</a>
+        <a href="./required_add.php?courses_id=<?php echo h($result['id']) ?>" class="btn btn-outline-secondary d-inline-block mt-2 mb-2">必須キャリコンの一括予約</a>
     </section>
 </body>
 

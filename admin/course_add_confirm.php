@@ -53,14 +53,14 @@ $course_type = $_POST['course_type'];
             <!-- 入校日 -->
             <div class="mb-2">
                 <p class="form-label" for="start_date">入校日</p>
-                <p><?php echo h($start_date); ?></p>
+                <p><?php echo h(format_date($start_date, 4)); ?></p>
                 <input type="hidden" name="start_date" id="start_date" value="<?php echo h($start_date) ?>">
             </div>
 
             <!-- 修了日 -->
             <div class="mb-2">
                 <p class="form-label" for="end_date">修了日</p>
-                <p><?php echo h($end_date); ?></p>
+                <p><?php echo h(format_date($end_date, 4)); ?></p>
                 <input type="hidden" name="end_date" id="end_date" value="<?php echo h($end_date) ?>">
             </div>
 
