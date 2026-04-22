@@ -86,38 +86,39 @@ try {
     ?>
     <main>
         <section class="wrapper">
-            <h1>申請・申請履歴</h1>
+            <h2 class="user-section_title mb-5 text-center">申請・面談履歴</h2>
 
-            <h2>申請履歴</h2>
-            <div class="reserve-card">
-                <h3>変更申請</h3>
+            <h3 class="user-card_subtitle mb-2 fs-6 text-center">申請履歴</h3>
+            <div class="reserve-card user-card px-4 py-4 shadow mb-4 rounded-4">
+                <h4 class="mb-4 fw-bold">変更申請</h4>
                 <dl>
-                    <dt>申請日時</dt>
+                    <dt class="user-card_subtitle mb-2 fs-6">申請日時</dt>
                     <dd>TODO：日付を表示</dd>
-                    <dt>事務局からの回答日時</dt>
+                    <dt class="user-card_subtitle mb-2 fs-6">事務局からの回答日時</dt>
                     <dd>TODO：日付を表示</dd>
-                    <dt>ステータス</dt>
+                    <dt class="user-card_subtitle mb-2 fs-6">ステータス</dt>
                     <dd>TODO：ステータスを表示</dd>
-                    <dt>メッセージ</dt>
+                    <dt class="user-card_subtitle mb-2 fs-6">メッセージ</dt>
                     <dd>TODO：メッセージを表示</dd>
                 </dl>
             </div>
             <div class="reserve-card">
-                <h3>キャンセル申請</h3>
+                <h4 class="mb-4 fw-bold">キャンセル申請</h4>
                 <dl>
-                    <dt>申請日時</dt>
+                    <dt class="user-card_subtitle mb-2 fs-6">申請日時</dt>
                     <dd>TODO：日付を表示</dd>
-                    <dt>事務局からの回答日時</dt>
+                    <dt class="user-card_subtitle mb-2 fs-6">事務局からの回答日時</dt>
                     <dd>TODO：日付を表示</dd>
-                    <dt>ステータス</dt>
+                    <dt class="user-card_subtitle mb-2 fs-6">ステータス</dt>
                     <dd>TODO：ステータスを表示</dd>
                     <!-- <dt>メッセージ</dt>
                     <dd>TODO：メッセージを表示</dd> -->
                 </dl>
             </div>
+
         </section>
         <section class="wrapper">
-            <h2>申請履歴</h2>
+            <h3 class="user-card_subtitle mb-2 fs-6 text-center">面談履歴</h3>
             <p>（今までに行った面談:TODO-DBから表示）</p>
             <p>（今までに行った必須キャリコン：:TODO-DBから表示）</p>
             <ul>
