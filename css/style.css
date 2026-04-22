@@ -14,6 +14,81 @@
     width: 80%;
 }
 
+/* 日程表 */
+
+.details {
+    transition: .3s;
+    overflow: hidden;
+    margin-top: -10px;
+    padding-bottom: 20px;
+
+    &:last-of-type {
+        margin-bottom: 0;
+    }
+}
+
+.details[open] {
+    margin-top: 0;
+    padding-bottom: 10px;
+}
+
+.details-summary {
+    display: block;
+    padding: 15px;
+    transition: .3s;
+    transform: translateY(10px);
+    background-color: #9d9d9d;
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.details-summary::-webkit-details-marker {
+    display: none;
+}
+
+.details[open] .details-summary {
+    transform: translateY(0);
+}
+
+.details-content {
+    padding: 20px;
+    background-color: #e0e0e0;
+    border-bottom: 2px solid #9d9d9d;
+    border-left: 2px solid #9d9d9d;
+    border-right: 2px solid #9d9d9d;
+}
+
+/* アコーディオン タイトル */
+.accordion__title {
+    position: relative;
+    padding: 15px 60px 15px 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* +アイコン */
+.accordion__title::before,
+.accordion__title::after {
+    content: "";
+    position: absolute;
+    right: 20px;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    background-color: #ffffff;
+    width: 20px;
+    height: 4px;
+    transition: all 0.3s;
+}
+
+.accordion__title::after {
+    transform: rotate(90deg);
+}
 
 /* -- user -- */
 /* --------------------
