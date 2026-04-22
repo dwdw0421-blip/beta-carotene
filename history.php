@@ -1,5 +1,5 @@
 <?php
-// session_start();
+session_start();
 require_once __DIR__ . '/./includes/functions.php';
 
 //ログインしていない場合はログイン画面へ
@@ -8,8 +8,13 @@ require_once __DIR__ . '/./includes/functions.php';
 //     exit();
 // }
 
+
 $db = db_connect();
-// $login_id = $_SESSION['id'];
+$login_id = $_SESSION['id'];
+$message = $_SESSION['res_message'] ?? '';
+unset($_SESSION['res_message']);
+$type = ['danger', 'primary'];
+
 
 try {
     //学生情報を取得
@@ -39,12 +44,31 @@ try {
     INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id
     INNER JOIN m_meeting_types ON carcon_reservation_details.meeting_type = m_meeting_types.id
     WHERE carcon_reservation_details.student_id = :student_id
-    ORDER BY carcon_lines.date';
+    ORDER BY carcon_lines.date ASC';
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':student_id', $login_id, PDO::PARAM_INT);
     // SQLの実行
     $stmt->execute();
     $reservation_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    //学生の予約件数を取得(必須キャリコンのみ)
+    $sql = 'SELECT COUNT(carcon_reservation_details.id) FROM carcon_reservation_details INNER JOIN carcon_reservations ON  carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id WHERE student_id = :student_id AND carcon_reservation_details.is_plus_carcon = 0 AND carcon_lines.date < NOW();';
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':student_id', $login_id, PDO::PARAM_INT);
+    // SQLの実行
+    $stmt->execute();
+    $reserve_required_count = $stmt->fetch(PDO::FETCH_COLUMN);
+
+
+
+    //学生の予約件数を取得(キャリコン＋のみ)
+    $sql = 'SELECT COUNT(carcon_reservation_details.id) FROM carcon_reservation_details INNER JOIN carcon_reservations ON  carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id WHERE student_id = :student_id AND carcon_reservation_details.is_plus_carcon = 1 AND carcon_lines.date < NOW();';
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':student_id', $login_id, PDO::PARAM_INT);
+    // SQLの実行
+    $stmt->execute();
+    $reserve_count = $stmt->fetch(PDO::FETCH_COLUMN);
+
 
     //学生の変更・キャンセル申請情報を取得
     $sql = 'SELECT 
@@ -53,18 +77,19 @@ try {
     carcon_request_reservations.reject_message as reject_message,
     carcon_request_reservations.created_at as request_date,
     carcon_request_reservations.request_type as request_type,
-    m_request_statuses.name as request_status
+    m_request_statuses.name as request_status,
+    carcon_request_reservations.updated_at as updated_at
     FROM carcon_request_reservations 
     INNER JOIN carcon_reservation_details ON carcon_request_reservations.request_carcon_reservation_detail_id = carcon_reservation_details.id
     INNER JOIN m_request_statuses ON carcon_request_reservations.request_status_id = m_request_statuses.id
     WHERE carcon_reservation_details.student_id = :student_id
     ORDER BY carcon_request_reservations.created_at DESC
-    LIMIT 1';
+   ';
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':student_id', $login_id, PDO::PARAM_INT);
     // SQLの実行
     $stmt->execute();
-    $request_result = $stmt->fetch(PDO::FETCH_ASSOC);
+    $request_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     exit('エラー:' . $e->getMessage());
 }
@@ -86,44 +111,70 @@ try {
     ?>
     <main>
         <section class="wrapper">
-            <h1>申請・申請履歴</h1>
+            <h2 class="user-section_title mb-5 text-center">申請・面談履歴</h2>
+            <ul class="nav  d-flex justify-content-center mb-5">
+                <li class="nav-item btn btn-outline-dark me-2"><a href="#request" class="nav-link">申請履歴</a></li>
+                <li class="nav-item btn btn-outline-dark"><a href="#reserve" class="nav-link">面談履歴</a></li>
+            </ul>
+            <h3 class="user-card_subtitle mb-2 fs-6 text-center" id="request">申請履歴</h3>
+            <?php foreach ($request_result as $request): ?>
+                <div class="reserve-card user-card px-4 py-4 shadow mb-4 rounded-4">
+                    <h4 class="mb-4 fw-bold">
+                        <?php echo ($request['request_type'] == 0 ? "変更申請" : "キャンセル申請") ?>
+                    </h4>
+                    <dl>
+                        <dt class="user-card_subtitle mb-2 fs-6">申請日時</dt>
+                        <dd><?php echo h(format_date($request['request_date'], 1)) ?></dd>
+                        <dt class="user-card_subtitle mb-2 fs-6">事務局からの回答日時</dt>
+                        <dd>
+                            <?php if ($request['updated_at'] !== $request['request_date']): ?>
+                                <?php echo h(format_date($request['updated_at'], 1)) ?>
+                            <?php else: ?>
+                                順次対応中です。しばらくお待ちください。
+                            <?php endif; ?>
+                        </dd>
+                        <dt class="user-card_subtitle mb-2 fs-6">ステータス</dt>
+                        <dd><?php echo h($request['request_status']) ?></dd>
+                        <?php if (!empty($request['reject_message'])): ?>
+                            <dt class="user-card_subtitle mb-2 fs-6">メッセージ</dt>
+                            <dd><?php echo h($request['reject_message']) ?></dd>
+                        <?php endif; ?>
+                    </dl>
+                </div>
+            <?php endforeach; ?>
 
-            <h2>申請履歴</h2>
-            <div class="reserve-card">
-                <h3>変更申請</h3>
-                <dl>
-                    <dt>申請日時</dt>
-                    <dd>TODO：日付を表示</dd>
-                    <dt>事務局からの回答日時</dt>
-                    <dd>TODO：日付を表示</dd>
-                    <dt>ステータス</dt>
-                    <dd>TODO：ステータスを表示</dd>
-                    <dt>メッセージ</dt>
-                    <dd>TODO：メッセージを表示</dd>
-                </dl>
-            </div>
-            <div class="reserve-card">
-                <h3>キャンセル申請</h3>
-                <dl>
-                    <dt>申請日時</dt>
-                    <dd>TODO：日付を表示</dd>
-                    <dt>事務局からの回答日時</dt>
-                    <dd>TODO：日付を表示</dd>
-                    <dt>ステータス</dt>
-                    <dd>TODO：ステータスを表示</dd>
-                    <!-- <dt>メッセージ</dt>
-                    <dd>TODO：メッセージを表示</dd> -->
-                </dl>
-            </div>
+
         </section>
-        <section class="wrapper">
-            <h2>申請履歴</h2>
-            <p>（今までに行った面談:TODO-DBから表示）</p>
-            <p>（今までに行った必須キャリコン：:TODO-DBから表示）</p>
+        <section class="wrapper mt-5">
+            <h3 class="user-card_subtitle mb-2 fs-6 text-center" id="reserve">面談履歴</h3>
+            <div class="text-secondary fs-6 text-center">
+
+
+                <?php if ($student_result['course_type'] = 2): ?>
+                    <p> 今までに実施したキャリコン（必須）:
+                        <?php echo h($reserve_required_count) ?></p>
+                    <p>今までに実施したキャリコン＋（任意）：
+                        <?php echo h($reserve_count) ?> </p>
+                <?php elseif ($student_result['course_type'] = 1): ?>
+                    <p> 今までに実施したキャリコン＋（任意）：
+                        <?php echo h($reserve_count) ?>
+                    </p>
+                <?php endif; ?>
+
+            </div>
             <ul>
-                <li class="reserve-card">
-                    <p>必須/キャリコン＋</p>TODO-DBから表示
-                </li>
+                <?php foreach ($reservation_result as $reserve): ?>
+                    <li class="reserve-card d-flex flex-row gap-2">
+                        <!-- is_plus_carconが0なら必須、1なら＋（任意） -->
+                        <?php if ($reserve['is_plus_carcon'] == 0): ?>
+                            <p class="category category--required">キャリコン(必須)</p>
+                        <?php elseif ($reserve['is_plus_carcon'] == 1): ?>
+                            <p class="category">キャリコン＋(任意)</p>
+                        <?php endif; ?>
+                        <p class="history-item"><?php echo h(format_date($reserve['date'], 4)) ?>&nbsp<?php echo h(get_slot_time_by_index($reserve['slot_index'])) ?></p>
+
+                    </li>
+                <?php endforeach; ?>
             </ul>
         </section>
     </main>

@@ -140,12 +140,23 @@ h1 {
 }
 
 .category {
+    font-size: 14px;
     color: #fff;
     background: #CDCDCF;
     width: fit-content;
     padding: 7px 10px;
     margin: 0;
     border-radius: 12px;
+}
+
+.category--required {
+    background: #FF29A9;
+}
+
+.history-item {
+    font-size: 20px;
+    margin-block: auto;
+    align-items: center;
 }
 
 .item {
