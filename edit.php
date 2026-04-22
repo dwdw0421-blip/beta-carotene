@@ -87,9 +87,9 @@ try {
 
     <main class="mt-5">
         <section class="user-wrapper mb-7">
-            <h1 class="user-section_title mb-5 text-center">
+            <h2 class="user-section_title mb-5 text-center">
                 変更・取消申請
-            </h1>
+            </h2>
             <div class="d-flex flex-column align-items-center gap-2 text-danger mb-5">
                 <span class="material-symbols-outlined">
                     warning
@@ -99,14 +99,14 @@ try {
                 </p>
             </div>
 
-            <h2 class="text-center mb-4">予約一覧</h2>
+            <h3 class="text-center mb-4">予約一覧</h3>
             <?php
             //求職者支援訓練だったら...
             if ($student_result['course_type'] === 2):
             ?>
                 <!-- 必須キャリコン -->
                 <div class="user-card px-4 py-4 shadow mb-4 rounded-4">
-                    <h3 class="mb-4 fw-bold">キャリコン(必須面談)</h3>
+                    <h3 class="mb-4 fw-bold">キャリコン（必須面談）</h3>
                     <dl>
                         <div class="mb-3">
                             <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
@@ -142,11 +142,12 @@ try {
                     </dl>
                 </div>
 
-                <!-- キャリコンプラス -->
-                <div class="user-card  px-4 py-4 shadow rounded-4">
-                    <h3 class="mb-4 fw-bold">キャリコンプラス(任意面談)</h3>
-                    <dl>
-                        <?php if ($reservation_result[0]['is_plus_carcon'] === 1): ?>
+                <!-- キャリコンプラスの予約があれば表示 -->
+                <?php if ($reservation_result[0]['is_plus_carcon'] === 1): ?>
+                    <div class="user-card  px-4 py-4 shadow rounded-4">
+                        <h3 class="titele-carconplus mb-4 fw-bold">キャリコン＋（任意面談）</h3>
+                        <dl>
+
                             <div class="mb-3">
                                 <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
                                 <div class="fw-bold fs-5">
@@ -159,7 +160,7 @@ try {
                                 </div>
                             </div>
 
-                            <div>
+                            <div class="mb-4">
                                 <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
                                 <dd class="fw-bold fs-5">
                                     <?php
@@ -169,36 +170,28 @@ try {
                                 </dd>
                             </div>
 
-                        <?php else: ?>
-                            <div class="d-flex flex-column align-items-center">
-                                <p class="text-secondary fs-5 mb-4">
-                                    キャリコンプラスの予約はありません。
-                                </p>
-                                <a class="btn btn-primary px-4 py-2 m-0" href="./reserve.php">予約はこちら</a>
-                            </div>
-                        <?php endif; ?>
+                            <div class="d-flex flex-row gap-2">
+                                <button class="btn btn-primary py-2 flex-fill w-100 d-block">
+                                    面談形式の変更
+                                </button>
 
-                        <div class="d-flex flex-column align-items-center gap-2 mt-5 text-danger fw-bold">
-                            <span class="material-symbols-outlined">
-                                warning
-                            </span>
-                            <p class="mb-0">
-                                キャリコンプラスは仕様上、直接の日時変更ができません。<br />
-                                お手数ですが、現在の予約を一度取り消した上で、再度ご希望の日時でご予約をお願いいたします。
-                            </p>
-                        </div>
-                    </dl>
-                </div>
+                                <button class="btn btn-danger py-2 flex-fill w-100 d-block text-white">
+                                    予約の取消
+                                </button>
+                            </div>
+                        </dl>
+                    </div>
+                <?php endif; ?>
 
             <?php
             //公共職業訓練だったら...    
             else:
             ?>
-                <!-- キャリコンプラス -->
-                <div class="user-card  px-4 py-4 shadow rounded-4">
-                    <h3 class="mb-4 fw-bold">キャリコンプラス(任意面談)</h3>
-                    <dl>
-                        <?php if ($reservation_result[0]['is_plus_carcon'] === 1): ?>
+                <!-- キャリコンプラスの予約があれば... -->
+                <?php if ($reservation_result[0]['is_plus_carcon'] === 1): ?>
+                    <div class="user-card  px-4 py-4 shadow rounded-4">
+                        <h3 class="titele-carconplus mb-4 fw-bold">キャリコン＋（任意面談）</h3>
+                        <dl>
                             <div class="mb-3">
                                 <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
                                 <div class="fw-bold fs-5">
@@ -220,26 +213,26 @@ try {
                                     ?>
                                 </dd>
                             </div>
-                        <?php else: ?>
-                            <div class="d-flex flex-column align-items-center">
-                                <p class="text-secondary fs-5 mb-4">
-                                    キャリコンプラスの予約はありません。
-                                </p>
-                                <a class="btn btn-primary px-4 py-2 m-0" href="./reserve.php">予約はこちら</a>
-                            </div>
-                        <?php endif; ?>
 
-                        <div class="d-flex flex-column align-items-center gap-2 mt-5 text-danger fw-bold">
-                            <span class="material-symbols-outlined">
-                                warning
-                            </span>
-                            <p class="mb-0">
-                                キャリコンプラスは仕様上、直接の日時変更ができません。<br />
-                                お手数ですが、現在の予約を一度取り消した上で、再度ご希望の日時でご予約をお願いいたします。
-                            </p>
-                        </div>
-                    </dl>
-                </div>
+                            <div class="d-flex flex-row gap-2">
+                                <button class="btn btn-primary py-2 flex-fill w-100 d-block">
+                                    面談形式の変更
+                                </button>
+
+                                <button class="btn btn-danger py-2 flex-fill w-100 d-block">
+                                    予約の取消
+                                </button>
+                            </div>
+                        </dl>
+                    </div>
+                    <!-- キャリコンプラスの予約がなければ... -->
+                <?php else: ?>
+                    <div class="d-flex flex-column align-items-center">
+                        <p class="text-secondary fs-5 mb-4">
+                            キャリコンプラスの予約はありません。
+                        </p>
+                    </div>
+                <?php endif; ?>
             <?php endif; ?>
         </section>
 
