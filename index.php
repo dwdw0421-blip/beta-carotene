@@ -139,7 +139,7 @@ try {
                         </div>
                         <!-- キャリコンプラス -->
                         <div class="user-card  px-4 py-4 shadow rounded-4">
-                            <h3 class="mb-4 fw-bold">キャリコン＋（任意面談）</h3>
+                            <h3 class="titele-carconplus mb-4 fw-bold">キャリコン＋（任意面談）</h3>
                             <dl>
                                 <?php if ($reservation_result[0]['is_plus_carcon'] === 1): ?>
                                     <div class="mb-3">
