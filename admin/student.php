@@ -142,22 +142,24 @@ $room = get_classrooms_list();
             </ul>
 
             <a href="./student_add.php?courses_id=<?php echo h($courses_id) ?>" class="btn btn-outline-secondary  d-inline-block">学生を追加（手入力）</a>
-            <?php if ($alreadyExists): ?>
-                <form action="student_import_do.php" method="post" enctype="multipart/form-data" class="card-body bg-light p-2">
-                    <input type="file" name="csv_file" accept=".csv" required>
-                    <input type="hidden" name="course_id" value="<?php echo h($courses_id); ?>">
-                    <input type="hidden" name="start_year" value="<?php echo h(format_date($result['start_date'], 5)); ?>">
-                    <input type="hidden" name="start_month" value="<?php echo h(format_date($result['start_date'], 6)); ?>">
-                    <input type="hidden" name="room" value="<?php echo h($room[$result['classroom_id']]); ?>">
-                    <button type="submit" class="btn btn-outline-secondary  d-inline-block">学生を追加（CSV読み込み）</button>
-                    <p>※予約が既に入っている場合はCSVでの読み込みを実行できません</p>
-                </form>
-            <?php else: ?>
-                <p class="opacity-50 p-2 m-1 bg-secondary text-light fw-bold rounded">既に予約が作成されているため、一括での予約は実行できません</p>
-            <?php endif; ?>
+
+            <form action="student_import_do.php" method="post" enctype="multipart/form-data" class="card-body bg-light p-2">
+                <input type="file" name="csv_file" accept=".csv" required>
+                <input type="hidden" name="course_id" value="<?php echo h($courses_id); ?>">
+                <input type="hidden" name="start_year" value="<?php echo h(format_date($result['start_date'], 5)); ?>">
+                <input type="hidden" name="start_month" value="<?php echo h(format_date($result['start_date'], 6)); ?>">
+                <input type="hidden" name="room" value="<?php echo h($room[$result['classroom_id']]); ?>">
+                <button type="submit" class="btn btn-outline-secondary  d-inline-block">学生を追加（CSV読み込み）</button>
+                <p>※予約が既に入っている場合はCSVでの読み込みを実行できません</p>
+            </form>
+
 
         </div>
-        <a href="./required_add.php?courses_id=<?php echo h($result['id']) ?>" class="btn btn-outline-secondary d-inline-block mt-2 mb-2">必須キャリコンの一括予約</a>
+        <?php if ($alreadyExists): ?>
+            <a href="./required_add.php?courses_id=<?php echo h($result['id']) ?>" class="btn btn-outline-secondary d-inline-block mt-2 mb-2">必須キャリコンの一括予約</a>
+        <?php else: ?>
+            <p class="opacity-50 p-2 m-1 bg-secondary text-light fw-bold rounded">既に予約が作成されているため、一括での予約は実行できません</p>
+        <?php endif; ?>
     </section>
 </body>
 
