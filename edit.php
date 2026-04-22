@@ -106,21 +106,36 @@ try {
 
     <main class="mt-5">
         <?php if (!empty($_SESSION['success'])): ?>
-            <div class="alert alert-success">取消申請を送信しました！</div>
+            <div class="alert alert-success user-wrapper mb-4 text-center" style="max-width: 250px;">
+                変更・取消申請を送信しました！
+            </div>
             <?php unset($_SESSION['success']); ?>
         <?php endif; ?>
 
-        <section class="user-wrapper mb-7">
+        <div class="user-wrapper mb-7">
             <h2 class="user-section_title mb-5 text-center">
                 変更・取消申請
             </h2>
-            <div class="d-flex flex-column align-items-center gap-2 text-danger mb-5">
-                <span class="material-symbols-outlined">
-                    warning
-                </span>
-                <p class="mb-0">
-                    変更・取消申請は、事務局の承認をもって確定となります。ご希望に沿えない場合もございますので、あらかじめご了承ください。
-                </p>
+
+            <div class="alert alert-danger bg-danger-subtle border-0 rounded-4 p-4 mb-6 shadow-sm m-auto" style="max-width: 400px;">
+                <div class="d-flex flex-column align-items-center gap-3 ">
+                    <div class="d-flex flex-row align-items-center gap-2 fs-5">
+                        <span class="material-symbols-outlined text-danger ">
+                            info
+                        </span>
+                        <p class="fw-bold mb-1 text-danger">
+                            申請に関する注意事項
+                        </p>
+                    </div>
+
+                    <ul class="mb-0 small text-secondary-emphasis">
+                        <li>申請は事務局の承認をもって確定となります。</li>
+                        <li>
+                            ご希望に沿えない場合もございますので、<br>
+                            あらかじめご了承ください。
+                        </li>
+                    </ul>
+                </div>
             </div>
 
             <h3 class="text-center mb-4">予約一覧</h3>
@@ -129,7 +144,7 @@ try {
             if ($student_result['course_type'] === 2):
             ?>
                 <!-- 必須キャリコン -->
-                <div class="user-card px-4 py-4 shadow mb-4 rounded-4">
+                <div class="user-card px-4 py-4 shadow mb-4 rounded-4 m-auto" style="max-width: 500px;">
                     <h3 class="mb-4 fw-bold">キャリコン（必須面談）</h3>
                     <dl>
                         <div class="mb-3">
@@ -180,8 +195,11 @@ try {
 
                 <!-- キャリコンプラスの予約があれば表示 -->
                 <?php if ($reservation_result[0]['is_plus_carcon'] === 1): ?>
-                    <div class="user-card  px-4 py-4 shadow rounded-4">
-                        <h3 class="titele-carconplus mb-4 fw-bold">キャリコン＋（任意面談）</h3>
+                    <div class="user-card px-4 py-4 shadow rounded-4 m-auto" style="max-width: 500px;">
+                        <h3 class="titele-carconplus mb-4 fw-bold">
+                            キャリコン＋（任意面談）
+                        </h3>
+
                         <dl>
 
                             <div class="mb-3">
@@ -231,8 +249,10 @@ try {
             ?>
                 <!-- キャリコンプラスの予約があれば... -->
                 <?php if ($reservation_result[0]['is_plus_carcon'] === 1): ?>
-                    <div class="user-card  px-4 py-4 shadow rounded-4">
+                    <div class="user-card  px-4 py-4 shadow rounded-4"
+                        style="max-width: 500px;">
                         <h3 class="titele-carconplus mb-4 fw-bold">キャリコン＋（任意面談）</h3>
+
                         <dl>
                             <div class="mb-3">
                                 <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
@@ -282,7 +302,7 @@ try {
                     </div>
                 <?php endif; ?>
             <?php endif; ?>
-        </section>
+        </div>
 
         <?php include_once("./modal_change_type.php"); ?>
         <?php include_once("./modal_change_detail.php"); ?>

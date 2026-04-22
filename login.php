@@ -28,7 +28,7 @@ $type = ['danger', 'primary'];
     ?>
 
     <main class="user-login d-flex flex-column justify-content-center">
-        <div class="user-wrapper message-area">
+        <div class="user-wrapper message-area text-center" style="max-width: 250px;">
             <?php if ($message !== ''): ?>
                 <div class="alert alert-<?php echo $type[$message['type']]; ?> alert-dismissible" role="alert">
                     <div>

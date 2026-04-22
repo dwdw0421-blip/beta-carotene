@@ -101,10 +101,6 @@ try {
                 echo $reservation_result[0]['is_plus_carcon'] === 0
                     ? '<h3 class="mb-4 fw-bold">キャリコン（必須面談）</h3>'
                     : ' <h3 class="titele-carconplus mb-4 fw-bold">キャリコン＋（任意面談）</h3>';
-
-                echo '<pre>';
-                var_dump($reservation_result);
-                echo '</pre>';
                 ?>
                 <p class="text-muted small mb-5 text-center">
                     内容を確認し、チェックを入れてください。
@@ -161,7 +157,7 @@ try {
                             <input class="form-check-input mt-0" type="checkbox" id="check_confirm_all" required>
                         </div>
 
-                        <input type="hidden" name="id" value="<?php echo h($reservation_result[0]['reservation_id']); ?>">
+                        <input type="hidden" name="id" value="<?php echo isset($reservation_result[0]['reservation_id']) ? h($reservation_result[0]['reservation_id']) : ''; ?>">
                         <button type="submit" class="btn btn-danger py-2 m-0">
                             取消申請を送信
                         </button>
