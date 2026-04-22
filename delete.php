@@ -28,6 +28,7 @@ try {
 
     //学生の予約情報を取得
     $sql = 'SELECT 
+    carcon_reservation_details.id as reservation_id,
     carcon_reservation_details.student_id as student_id,
     carcon_reservation_details.meeting_type as meeting_type_id,
     m_meeting_types.name as meeting_type_name,
@@ -94,13 +95,22 @@ try {
             <div
                 class="user-card px-4 py-4 shadow mb-4 rounded-4 m-auto d-flex flex-column align-items-center"
                 style="max-width: 500px;">
-                <h3 class="mb-4 fw-bold">キャリコン（必須面談）</h3>
-                <h3 class="titele-carconplus mb-4 fw-bold">キャリコン＋（任意面談）</h3>
+
+                <?php
+                //必須キャリコンがtrue
+                echo $reservation_result[0]['is_plus_carcon'] === 0
+                    ? '<h3 class="mb-4 fw-bold">キャリコン（必須面談）</h3>'
+                    : ' <h3 class="titele-carconplus mb-4 fw-bold">キャリコン＋（任意面談）</h3>';
+
+                echo '<pre>';
+                var_dump($reservation_result);
+                echo '</pre>';
+                ?>
                 <p class="text-muted small mb-5 text-center">
                     内容を確認し、チェックを入れてください。
                 </p>
 
-                <form action="request_do.php" method="POST">
+                <form action="delete_do.php" method="POST" onsubmit="return confirm('本当に取消申請を送信してもよろしいですか?')">
                     <dl>
                         <div class="mb-4">
                             <dt class="user-card_subtitle mb-2 fs-6 d-flex align-items-center gap-3">
@@ -108,7 +118,10 @@ try {
                                 <label class="form-check-label" for="check_date">予約日時</label>
                             </dt>
                             <dd class="fw-bold fs-5 ps-4">
-                                2026年 4月 18日
+                                <?php
+                                $latest_reservation = $reservation_result[0];
+                                echo h(format_date($latest_reservation['date'], 4));
+                                ?>
                             </dd>
                         </div>
 
@@ -118,29 +131,37 @@ try {
                                 <label class="form-check-label" for="check_time">予約時間</label>
                             </dt>
                             <dd class="fw-bold fs-5 ps-4">
-                                13:00～14:00
+                                <?php
+                                $latest_reservation = $reservation_result[0];
+                                echo h(get_slot_time_by_index($latest_reservation['slot_index']));
+                                ?>
                             </dd>
                         </div>
 
                         <div class="mb-5">
                             <dt class="user-card_subtitle mb-2 fs-6 d-flex align-items-center gap-3">
                                 <input class="form-check-input mt-0" type="checkbox" id="check_type" required>
-                                <label class="form-check-label" for="check_type">変更後の面談形式</label>
+                                <label class="form-check-label" for="check_type">面談形式</label>
                             </dt>
+
                             <dd class="fw-bold fs-5 ps-4">
-                                対面
+                                <?php
+                                $latest_reservation = $reservation_result[0];
+                                echo h($latest_reservation['meeting_type_name']);
+                                ?>
                             </dd>
                         </div>
                     </dl>
 
                     <div class="d-flex flex-column align-items-center">
                         <div class="mb-4 d-flex align-items-center">
-                            <label class="form-check-label" for="check_type">
+                            <label class="form-check-label" for="check_confirm_all">
                                 全ての内容を確認しました。
                             </label>
-                            <input class="form-check-input mt-0" type="checkbox" id="check_type" required>
+                            <input class="form-check-input mt-0" type="checkbox" id="check_confirm_all" required>
                         </div>
 
+                        <input type="hidden" name="id" value="<?php echo h($reservation_result[0]['reservation_id']); ?>">
                         <button type="submit" class="btn btn-danger py-2 m-0">
                             取消申請を送信
                         </button>
@@ -151,7 +172,7 @@ try {
 
     <!-- ボトムバー -->
     <?php
-    include('bottom_bar.php')
+    include('bottom_bar.php');
     ?>
 </body>
 

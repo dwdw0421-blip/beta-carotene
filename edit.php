@@ -86,6 +86,11 @@ try {
     ?>
 
     <main class="mt-5">
+        <?php if (!empty($_SESSION['success'])): ?>
+            <div class="alert alert-success">取消申請を送信しました！</div>
+            <?php unset($_SESSION['success']); ?>
+        <?php endif; ?>
+
         <section class="user-wrapper mb-7">
             <h2 class="user-section_title mb-5 text-center">
                 変更・取消申請

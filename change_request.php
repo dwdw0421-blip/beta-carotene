@@ -95,8 +95,12 @@ try {
             <div
                 class="user-card px-4 py-4 shadow mb-4 rounded-4 m-auto d-flex flex-column align-items-center"
                 style="max-width: 500px;">
-                <h3 class="mb-4 fw-bold">キャリコン（必須面談）</h3>
-                <h3 class="titele-carconplus mb-4 fw-bold">キャリコン＋（任意面談）</h3>
+                <?php
+                //必須キャリコンがtrue
+                echo $reservation_result[0]['is_plus_carcon'] === 0
+                    ? '<h3 class="mb-4 fw-bold">キャリコン（必須面談）</h3>'
+                    : ' <h3 class="titele-carconplus mb-4 fw-bold">キャリコン＋（任意面談）</h3>';
+                ?>
                 <p class="text-muted small mb-5 text-center">
                     内容を確認し、チェックを入れてください。
                 </p>
