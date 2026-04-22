@@ -59,7 +59,19 @@ if (!empty($_POST)) {
 
                 $stmt->execute();
             } catch (PDOException $e) {
-                exit('エラー: ' . $e->getMessage());
+                $msg = ($e->getCode() == '23000')
+                    ? "学生番号が重複しているため、変更できませんでした。"
+                    : "エラーが発生したため、変更できませんでした。";
+
+                $redirectUrl = 'student.php?courses_id=' . $course_id;
+
+                echo "<script src='../js/message.js'></script>";
+                echo "<script>
+        window.onload = function() {
+            showErrorAlert('" . addslashes($msg) . "', '" . $redirectUrl . "');
+        };
+    </script>";
+                exit;
             }
         }
     }

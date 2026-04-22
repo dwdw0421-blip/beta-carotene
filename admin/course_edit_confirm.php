@@ -10,7 +10,7 @@ $classroom_id = $_POST['classroom_id'];
 $start_date = $_POST['start_date'];
 $end_date = $_POST['end_date'];
 $course_type = $_POST['course_type'];
-$courses_id = $_POST['courses_id'];
+$course_id = $_POST['course_id'];
 
 ?>
 <!DOCTYPE html>
@@ -76,7 +76,7 @@ $courses_id = $_POST['courses_id'];
 
             <input class="btn btn-outline-secondary  d-inline-block" type="button" value="前の画面に戻る" onclick="history.back()">
 
-            <input type="hidden" name="courses_id" value="<?php echo h($courses_id) ?>">
+            <input type="hidden" name="course_id" value="<?php echo h($course_id) ?>">
             <button type="submit" class="btn btn-primary  d-inline-block">編集内容を確定</button>
         </form>
     </section>

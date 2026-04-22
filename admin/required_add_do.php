@@ -56,7 +56,7 @@ if (!empty($_POST)) {
                 //2分割する
                 $total = count($student_list);
                 if ($total === 0) {
-                    throw new Exception('対象の利用者がいません');
+                    throw new Exception('対象の学生がいません');
                 }
                 // 分割位置（前半の人数）
                 $splitIndex = (int)ceil($total / 2);
@@ -139,7 +139,7 @@ if (!empty($_POST)) {
                 }
 
                 $db->commit();
-                header('location:student.php?courses_id=' . $course_id);
+                header('location:student.php?course_id=' . $course_id);
             } catch (Exception $e) {
                 if (isset($db) && $db->inTransaction()) {
                     $db->rollBack();
