@@ -80,7 +80,7 @@ try {
     <?php
     include('head_link.php');
     ?>
-    <title>ユーザー｜TOP</title>
+    <title>ホーム</title>
 </head>
 
 <body class="mb-10">

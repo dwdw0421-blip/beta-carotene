@@ -19,7 +19,7 @@ $type = ['danger', 'primary'];
     <?php
     include('head_link.php');
     ?>
-    <title>ユーザー｜TOP</title>
+    <title>ログイン</title>
 </head>
 
 <body>
