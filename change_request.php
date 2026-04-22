@@ -91,9 +91,73 @@ try {
                 変更内容確認
             </h2>
 
-            <div class="user-card px-4 py-4 shadow mb-4 rounded-4">
+            <!-- 面談形式の変更 -->
+            <div
+                class="user-card px-4 py-4 shadow mb-4 rounded-4 m-auto d-flex flex-column align-items-center"
+                style="max-width: 500px;">
+                <?php
+                //必須キャリコンがtrue
+                echo $reservation_result[0]['is_plus_carcon'] === 0
+                    ? '<h3 class="mb-4 fw-bold">キャリコン（必須面談）</h3>'
+                    : ' <h3 class="titele-carconplus mb-4 fw-bold">キャリコン＋（任意面談）</h3>';
+                ?>
+                <p class="text-muted small mb-5 text-center">
+                    内容を確認し、チェックを入れてください。
+                </p>
+
+                <form action="request_do.php" method="POST">
+                    <dl>
+                        <div class="mb-4">
+                            <dt class="user-card_subtitle mb-2 fs-6 d-flex align-items-center gap-3">
+                                <input class="form-check-input mt-0" type="checkbox" id="check_date" required>
+                                <label class="form-check-label" for="check_date">予約日時</label>
+                            </dt>
+                            <dd class="fw-bold fs-5 ps-4">
+                                2026年 4月 18日
+                            </dd>
+                        </div>
+
+                        <div class="mb-4">
+                            <dt class="user-card_subtitle mb-2 fs-6 d-flex align-items-center gap-3">
+                                <input class="form-check-input mt-0" type="checkbox" id="check_time" required>
+                                <label class="form-check-label" for="check_time">予約時間</label>
+                            </dt>
+                            <dd class="fw-bold fs-5 ps-4">
+                                13:00～14:00
+                            </dd>
+                        </div>
+
+                        <div class="mb-5">
+                            <dt class="user-card_subtitle mb-2 fs-6 d-flex align-items-center gap-3">
+                                <input class="form-check-input mt-0" type="checkbox" id="check_type" required>
+                                <label class="form-check-label" for="check_type">変更後の面談形式</label>
+                            </dt>
+                            <dd class="fw-bold fs-5 ps-4">
+                                対面
+                            </dd>
+                        </div>
+                    </dl>
+
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="mb-4 d-flex align-items-center">
+                            <label class="form-check-label" for="check_type">
+                                全ての内容を確認しました。
+                            </label>
+                            <input class="form-check-input mt-0" type="checkbox" id="check_type" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary py-2 m-0">
+                            変更申請を送信
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <!-- 日時変更 -->
+            <div
+                class="user-card px-4 py-4 shadow mb-4 rounded-4 m-auto d-flex flex-column align-items-center"
+                style="max-width: 500px;">
                 <h3 class="mb-4 fw-bold">キャリコン（必須面談）</h3>
-                <p class="text-muted small mb-4 text-center">
+                <p class="text-muted small mb-5 text-center">
                     内容を確認し、チェックを入れてください。
                 </p>
 
@@ -119,7 +183,7 @@ try {
                             </dd>
                         </div>
 
-                        <div class="mb-4">
+                        <div class="mb-5">
                             <dt class="user-card_subtitle mb-2 fs-6 d-flex align-items-center gap-3">
                                 <input class="form-check-input mt-0" type="checkbox" id="check_target" required>
                                 <label class="form-check-label" for="check_target">交渉相手</label>
@@ -128,30 +192,20 @@ try {
                                 禍水 莱抽
                             </dd>
                         </div>
-
-                        <div class="mb-5">
-                            <dt class="user-card_subtitle mb-2 fs-6 d-flex align-items-center gap-3">
-                                <input class="form-check-input mt-0" type="checkbox" id="check_type" required>
-                                <label class="form-check-label" for="check_type">面談形式</label>
-                            </dt>
-                            <dd class="fw-bold fs-5 ps-4">
-                                対面
-                            </dd>
-                        </div>
-
-                        <div class="d-flex flex-column align-items-center">
-                            <div class="mb-4 d-flex align-items-center">
-                                <label class="form-check-label" for="check_type">
-                                    全ての内容を確認しました。
-                                </label>
-                                <input class="form-check-input mt-0" type="checkbox" id="check_type" required>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary py-2 m-0">
-                                変更申請を送信
-                            </button>
-                        </div>
                     </dl>
+
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="mb-4 d-flex align-items-center">
+                            <label class="form-check-label" for="check_type">
+                                全ての内容を確認しました。
+                            </label>
+                            <input class="form-check-input mt-0" type="checkbox" id="check_type" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary py-2 m-0">
+                            変更申請を送信
+                        </button>
+                    </div>
                 </form>
             </div>
     </main>
