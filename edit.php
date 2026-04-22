@@ -9,7 +9,7 @@ require_once __DIR__ . '/./includes/functions.php';
 // }
 
 $db = db_connect();
-$login_id = $_SESSION['id'];
+$login_id = 1;
 
 try {
     //学生情報を取得
@@ -28,6 +28,7 @@ try {
 
     //学生の予約情報を取得
     $sql = 'SELECT 
+    carcon_reservation_details.id as id,
     carcon_reservation_details.student_id as student_id,
     carcon_reservation_details.meeting_type as meeting_type_id,
     m_meeting_types.name as meeting_type_name,
@@ -65,6 +66,24 @@ try {
     // SQLの実行
     $stmt->execute();
     $request_result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // 同じクラスの人が設定している必須キャリコンのデータを取得
+    $sql = 'SELECT 
+                carcon_reservation_details.id AS detail_id,
+                CONCAT(m_students.last_name , " " , m_students.first_name) AS student_name,
+                carcon_lines.date AS date,
+                carcon_reservation_details.slot_index AS slot_index
+            FROM carcon_reservation_details
+            INNER JOIN carcon_reservations ON carcon_reservations.carcon_reservation_detail_id = carcon_reservation_details.id
+            INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id
+            INNER JOIN m_students ON m_students.id = carcon_reservation_details.student_id
+            WHERE m_students.course_id = :course_id
+            ';
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':course_id', $student_result["course_id"], PDO::PARAM_INT);
+    // SQLの実行
+    $stmt->execute();
+    $c_data_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     exit('エラー:' . $e->getMessage());
 }
@@ -131,11 +150,23 @@ try {
                         </div>
 
                         <div class="d-flex flex-row gap-2">
-                            <button class="btn btn-primary py-2 flex-fill w-100 d-block">
+                            <button type="button" class="btn btn-primary py-2 flex-fill w-100 d-block"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modal_change_type"
+                                data-id="<?php echo h($latest_reservation['id']); ?>"
+                                data-current-type="<?php echo h($latest_reservation['meeting_type_id']); ?>"
+                                data-date="<?php echo h(format_date($latest_reservation['date'], 4)); ?>"
+                                data-slot-text="<?php echo h(get_slot_time_by_index($latest_reservation['slot_index'])); ?>">
                                 面談形式の変更
                             </button>
 
-                            <button class="btn btn-success py-2 flex-fill w-100 d-block">
+                            <button class="btn btn-success py-2 flex-fill w-100 d-block"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modal_change_detail"
+                                data-id="<?php echo h($latest_reservation['id']); ?>"
+                                data-date="<?php echo h(format_date($latest_reservation['date'], 4)); ?>"
+                                data-slot-text="<?php echo h(get_slot_time_by_index($latest_reservation['slot_index']));  ?>"
+                                data-class-data-list="<?php echo h(json_encode($c_data_list)); ?>">
                                 日時変更
                             </button>
                         </div>
@@ -171,7 +202,13 @@ try {
                             </div>
 
                             <div class="d-flex flex-row gap-2">
-                                <button class="btn btn-primary py-2 flex-fill w-100 d-block">
+                                <button type="button" class="btn btn-primary py-2 flex-fill w-100 d-block"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modal_change_type"
+                                    data-id="<?php echo h($latest_reservation['id']); ?>"
+                                    data-current-type="<?php echo h($latest_reservation['meeting_type_id']); ?>"
+                                    data-date="<?php echo h(format_date($latest_reservation['date'], 4)); ?>"
+                                    data-slot-text="<?php echo h(get_slot_time_by_index($latest_reservation['slot_index'])); ?>">
                                     面談形式の変更
                                 </button>
 
@@ -215,7 +252,13 @@ try {
                             </div>
 
                             <div class="d-flex flex-row gap-2">
-                                <button class="btn btn-primary py-2 flex-fill w-100 d-block">
+                                <button type="button" class="btn btn-primary py-2 flex-fill w-100 d-block"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modal_change_type"
+                                    data-id="<?php echo h($latest_reservation['id']); ?>"
+                                    data-current-type="<?php echo h($latest_reservation['meeting_type_id']); ?>"
+                                    data-date="<?php echo h(format_date($latest_reservation['date'], 4)); ?>"
+                                    data-slot-text="<?php echo h(get_slot_time_by_index($latest_reservation['slot_index'])); ?>">
                                     面談形式の変更
                                 </button>
 
@@ -236,13 +279,15 @@ try {
             <?php endif; ?>
         </section>
 
-
+        <?php include_once("./modal_change_type.php"); ?>
+        <?php include_once("./modal_change_detail.php"); ?>
     </main>
 
     <!-- ボトムバー -->
     <?php
     include('bottom_bar.php')
     ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
