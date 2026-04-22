@@ -69,10 +69,25 @@ function setupEventListener() {
     if (targetSlot) {
       const originZone = dragItem.parentElement; //移動前の枠
       const existingItem = targetSlot.querySelector('.task-item');//移動先タスク
+
+
+    // ◎追加　座標の記録（アニメーション用）
+      const dragItemRect = dragItem.getBoundingClientRect();
+      const existingItemRect = existingItem ? existingItem.getBoundingClientRect() : null;
+
       
     //入替処理
       if (existingItem) {
         originSlot.appendChild(existingItem); // 相手を自分の元いた場所へ
+
+   
+    // ◎追加　相手（existingItem）をぷにゅプルンさせる　（アニメーション用）
+      const dx = targetSlot.getBoundingClientRect().left - originSlot.getBoundingClientRect().left;
+      const dy = targetSlot.getBoundingClientRect().top - originSlot.getBoundingClientRect().top;
+      applyPunyuSwap(existingItem, dx, dy);
+
+
+
         updateDatabase(
           existingItem.dataset.taskId, 
           originSlot.dataset.statusId, 
@@ -89,6 +104,12 @@ function setupEventListener() {
       const placeholder = targetSlot.querySelector('span');
       if (placeholder) placeholder.remove();
       targetSlot.appendChild(dragItem);
+
+
+    // ◎追加　自分（dragItem）をぷにゅプルンさせる　（アニメーション用）
+    const dx = dragItemRect.left - dragItem.getBoundingClientRect().left;
+    const dy = dragItemRect.top - dragItem.getBoundingClientRect().top;
+    applyPunyuSwap(dragItem, dx, dy);
       
 
       //DBの更新
@@ -324,3 +345,30 @@ async function updateTask(dataObject) {
 }
 
 
+
+
+
+/**
+ * ◎追加　要素を「ぷにゅプルン」と現在の位置へ戻す　（アニメーション用）
+ */
+function applyPunyuSwap(el, dx, dy) {
+  if (!el) return;
+  el.classList.remove('punyu-move');
+  el.style.transition = 'none';
+
+  // 相手のいた場所からスタート（少し潰す）
+  el.style.transform = `translate(${dx}px, ${dy}px) scale(1.2, 0.8)`;
+  el.style.borderRadius = "50%";
+
+  el.offsetHeight; // 強制描画
+
+  el.classList.add('punyu-move');
+  // 自分の本来の位置（0,0）へ戻る
+  el.style.transform = 'translate(0, 0) scale(1, 1)';
+  el.style.borderRadius = ""; // 元の形状に戻す
+
+  setTimeout(() => {
+    el.classList.remove('punyu-move');
+    el.style.transform = '';
+  }, 800);
+}
