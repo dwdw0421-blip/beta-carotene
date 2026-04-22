@@ -27,12 +27,11 @@ foreach ($data as $key => $row) {
         continue;
     }
 
-    $student_no = $row[0];
+    $student_no = sprintf('%02d', $row[0]);
     $last_name  = $row[1];
     $first_name = $row[2];
     $password = $row[3];
     $enrollment_id = $row[4];
-
 
 
     try {

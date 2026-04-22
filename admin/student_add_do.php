@@ -32,7 +32,7 @@ if (!empty($_POST)) {
 
         if (!empty($_POST['student_no']) && !empty($_POST['last_name']) && !empty($_POST['first_name']) && !empty($_POST['enrollment_id'])) {
 
-            $student_no = $_POST['student_no'];
+            $student_no = sprintf('%02d', $_POST['student_no']);
             $last_name = $_POST['last_name'];
             $first_name = $_POST['first_name'];
             $password = $_POST['password'];
