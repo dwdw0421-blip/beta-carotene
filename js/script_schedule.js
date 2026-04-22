@@ -16,19 +16,35 @@ function setupEventListener() {
   document.addEventListener('dragover', (e) => {
     e.preventDefault();
     const deleteArea = e.target.closest('.delete-area');
-   
     if (deleteArea) deleteArea.classList.add('bg-danger', 'text-white');
    
-    
+    // スロット（ドロップゾーン）の処理
+    const dropZone = e.target.closest('.drop-zone');
+    if (dropZone) dropZone.classList.add('drag-over'); 
+
   });
 
   document.addEventListener('dragleave', (e) => {
     const deleteArea = e.target.closest('.delete-area');
     if (deleteArea) deleteArea.classList.remove('bg-danger', 'text-white');
-  });
+
+     // スロット（ドロップゾーン）の処理
+    const dropZone = e.target.closest('.drop-zone');
+    // チラつき防止（枠の外に完全に出たときだけクラスを消す）
+    if (dropZone && !dropZone.contains(e.relatedTarget)) {
+      dropZone.classList.remove('drag-over'); //CSSのクラスを解除
+    }
+});
+  
 
   document.addEventListener('drop', async (e) => {
     e.preventDefault();
+
+    // ドロップした瞬間に、すべての枠の強調色（青）を消す
+    document.querySelectorAll('.drop-zone').forEach(zone => {
+      zone.classList.remove('drag-over');
+    });
+
     const elementId = e.dataTransfer.getData('text/plain');
     const dragItem = document.getElementById(elementId);
     if (!dragItem) return;

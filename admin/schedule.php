@@ -115,6 +115,7 @@ function day($datetime, $type)
       background-color: #e3f2fd !important;
       border-color: #0d6efd !important;
       border-style: solid !important;
+      border-width: 4px !important;
     }
 
     .item {
@@ -262,7 +263,8 @@ foreach ($students as $s) {
     </div>
 
   <!-- ブートストラップ対応　2. 再びカードを並べるための row を開始 -->
-    <div class="row row-cols-1 row-cols-md-5 g-3 w-100 px-3">
+   <!-- 横のカードの数の指定 row-cols-md- 1~6 ←これ -->
+    <div class="row row-cols-1 row-cols-md-4 g-3 w-100 px-3">
 
     <?php endif; ?>
 
