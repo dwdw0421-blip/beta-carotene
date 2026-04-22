@@ -16,7 +16,10 @@ function setupEventListener() {
   document.addEventListener('dragover', (e) => {
     e.preventDefault();
     const deleteArea = e.target.closest('.delete-area');
+   
     if (deleteArea) deleteArea.classList.add('bg-danger', 'text-white');
+   
+    
   });
 
   document.addEventListener('dragleave', (e) => {

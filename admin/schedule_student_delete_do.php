@@ -23,14 +23,31 @@ try {
         exit;
     }
 
+    // $pdo->beginTransaction(); // トランザクション開始
 
     $sql = 'DELETE FROM carcon_lines WHERE id = :id';
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
 
+    // 「このラインIDに関連付いている予約詳細ID」に一致する行を消す、という命令
+    // $sql_2 = 'DELETE FROM carcon_reservation_details 
+    //         WHERE id IN (
+    //               SELECT carcon_reservation_detail_id 
+    //               FROM carcon_reservations 
+    //               WHERE carcon_line_id = :id
+    //           )';
+    // $stmt_2 = $pdo->prepare($sql_2);
+    // $stmt_2->bindValue(':id', $id, PDO::PARAM_INT);
+    // $stmt_2->execute();
+
+    //  $pdo->commit(); // すべて成功したら確定
+
     echo json_encode(['status' => 'success', 'msg' => '予約枠を削除しました。']);
 } catch (PDOException $e) {
+
+    // $pdo->rollBack(); // エラーがあれば元に戻す
+
     echo json_encode(['status' => 'error', 'msg' => 'データベースエラーが発生しました。']);
 }
 
