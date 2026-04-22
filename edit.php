@@ -87,9 +87,9 @@ try {
 
     <main class="mt-5">
         <section class="user-wrapper mb-7">
-            <h1 class="user-section_title mb-5 text-center">
+            <h2 class="user-section_title mb-5 text-center">
                 変更・取消申請
-            </h1>
+            </h2>
             <div class="d-flex flex-column align-items-center gap-2 text-danger mb-5">
                 <span class="material-symbols-outlined">
                     warning
@@ -99,7 +99,7 @@ try {
                 </p>
             </div>
 
-            <h2 class="text-center mb-4">予約一覧</h2>
+            <h3 class="text-center mb-4">予約一覧</h3>
             <?php
             //求職者支援訓練だったら...
             if ($student_result['course_type'] === 2):
