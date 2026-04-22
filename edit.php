@@ -9,7 +9,7 @@ require_once __DIR__ . '/./includes/functions.php';
 // }
 
 $db = db_connect();
-$login_id = 1;
+$login_id = $_SESSION['id'];
 
 try {
     //学生情報を取得
