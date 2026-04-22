@@ -3,21 +3,21 @@
 require_once __DIR__ . '/../includes/functions.php';
 
 $db = db_connect();
-$courses_id = htmlspecialchars($_GET['courses_id']);
+$course_id = htmlspecialchars($_GET['course_id']);
 
 try {
     // コース情報を取得
-    $sql = 'SELECT * FROM m_courses WHERE m_courses.id  = :courses_id AND m_courses.is_deleted = 0';
+    $sql = 'SELECT * FROM m_courses WHERE m_courses.id  = :course_id AND m_courses.is_deleted = 0';
     $stmt = $db->prepare($sql);
-    $stmt->bindParam(':courses_id', $courses_id, PDO::PARAM_INT);
+    $stmt->bindParam(':course_id', $course_id, PDO::PARAM_INT);
     // SQLの実行
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     //学生情報を取得
-    $sql = 'SELECT * FROM m_students WHERE m_students.course_id  = :courses_id AND m_students.is_deleted = 0';
+    $sql = 'SELECT * FROM m_students WHERE m_students.course_id  = :course_id AND m_students.is_deleted = 0';
     $stmt = $db->prepare($sql);
-    $stmt->bindParam(':courses_id', $courses_id, PDO::PARAM_INT);
+    $stmt->bindParam(':course_id', $course_id, PDO::PARAM_INT);
     // SQLの実行
     $stmt->execute();
     $student_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -92,7 +92,7 @@ $room = get_classrooms_list();
             </div>
             <!-- 確認画面へ -->
 
-            <input type="hidden" name="course_id" value="<?php echo h($courses_id) ?>">
+            <input type="hidden" name="course_id" value="<?php echo h($course_id) ?>">
             <input class="btn btn-primary d-inline-block mt-2" type="submit" value="入力内容を確認">
 
         </form>

@@ -71,10 +71,10 @@ foreach ($data as $key => $row) {
             $stmt->bindParam(':enrollment_id', $enrollment_id, PDO::PARAM_INT);
             $stmt->execute();
             $login_id = $_POST['start_year'] . $_POST['start_month'] . $_POST['room'];
-            header('location:student.php?courses_id=' . $course_id);
+            header('location:student.php?course_id=' . $course_id);
         }
     } catch (PDOException $e) {
         exit('エラー: ' . $e->getMessage());
     }
 }
-header('location:student.php?courses_id=' . $course_id);
+header('location:student.php?course_id=' . $course_id);

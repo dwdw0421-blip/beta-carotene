@@ -9,7 +9,7 @@ $last_name = $_POST['last_name'];
 $first_name = $_POST['first_name'];
 $password = $_POST['password'];
 $enrollment_id = $_POST['enrollment_id'];
-$courses_id = $_POST['courses_id'];
+$course_id = $_POST['course_id'];
 
 
 
@@ -75,7 +75,7 @@ $courses_id = $_POST['courses_id'];
 
             <!-- 登録処理へ -->
             <input class="btn btn-outline-secondary  d-inline-block" type="button" value="前の画面に戻る" onclick="history.back()">
-            <input type="hidden" name="course_id" value="<?php echo h($courses_id) ?>">
+            <input type="hidden" name="course_id" value="<?php echo h($course_id) ?>">
             <input class="btn btn-primary  d-inline-block" type="submit" value="学生を追加">
 
         </form>

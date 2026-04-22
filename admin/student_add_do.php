@@ -35,7 +35,7 @@ if (!empty($_POST)) {
             if (check_preg_password($password)) {
                 $pw_hash = password_hash($password, PASSWORD_DEFAULT);
             } else {
-                header('location:student.php?courses_id=' . $course_id);
+                header('location:student.php?course_id=' . $course_id);
                 exit();
             }
 
@@ -59,9 +59,21 @@ if (!empty($_POST)) {
 
                 $stmt->execute();
             } catch (PDOException $e) {
-                exit('エラー: ' . $e->getMessage());
+                $msg = ($e->getCode() == '23000')
+                    ? "学生番号が重複しているため、変更できませんでした。"
+                    : "エラーが発生したため、変更できませんでした。";
+
+                $redirectUrl = 'student.php?course_id=' . $course_id;
+
+                echo "<script src='../js/message.js'></script>";
+                echo "<script>
+        window.onload = function() {
+            showErrorAlert('" . addslashes($msg) . "', '" . $redirectUrl . "');
+        };
+    </script>";
+                exit;
             }
         }
     }
 }
-header('location:student.php?courses_id=' . $course_id);
+header('location:student.php?course_id=' . $course_id);

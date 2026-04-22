@@ -3,7 +3,7 @@
 safe_session_start();
 
 //コース情報を取得
-$sql = "SELECT m_courses.id as courses_id,m_courses.name as courses_name, m_courses.is_deleted as m_courses_is_deleted,start_date,m_classrooms.name as classroom_name FROM m_courses INNER JOIN m_classrooms ON m_courses.classroom_id = m_classrooms.id  ORDER BY start_date ASC";
+$sql = "SELECT m_courses.id as course_id,m_courses.name as courses_name, m_courses.is_deleted as m_courses_is_deleted,start_date,m_classrooms.name as classroom_name FROM m_courses INNER JOIN m_classrooms ON m_courses.classroom_id = m_classrooms.id  ORDER BY start_date ASC";
 
 
 $stmt = $db->prepare($sql);
@@ -30,7 +30,7 @@ $course_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($course_list as $course):
                 ?>
                     <?php if ($course['m_courses_is_deleted'] == 0): ?>
-                        <li class="list-group-item"><a href="student.php?courses_id=<?php echo h($course['courses_id']) ?>"><?php echo h($course['classroom_name']) ?>(<?php echo h(format_date($course['start_date'], 2)) ?>開講)</a></li>
+                        <li class="list-group-item"><a href="student.php?course_id=<?php echo h($course['course_id']) ?>"><?php echo h($course['classroom_name']) ?>(<?php echo h(format_date($course['start_date'], 2)) ?>開講)</a></li>
                     <?php endif; ?>
                 <?php endforeach; ?>
             </ul>

@@ -3,21 +3,21 @@
 require_once __DIR__ . '/../includes/functions.php';
 
 $db = db_connect();
-$courses_id = htmlspecialchars($_GET['courses_id']);
+$course_id = htmlspecialchars($_GET['course_id']);
 
 try {
     // コース情報を取得
-    $sql = 'SELECT * FROM m_courses WHERE m_courses.id  = :courses_id AND m_courses.is_deleted = 0';
+    $sql = 'SELECT * FROM m_courses WHERE m_courses.id  = :course_id AND m_courses.is_deleted = 0';
     $stmt = $db->prepare($sql);
-    $stmt->bindParam(':courses_id', $courses_id, PDO::PARAM_INT);
+    $stmt->bindParam(':course_id', $course_id, PDO::PARAM_INT);
     // SQLの実行
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     //学生情報を取得
-    $sql = 'SELECT * FROM m_students WHERE m_students.course_id  = :courses_id AND m_students.is_deleted = 0';
+    $sql = 'SELECT * FROM m_students WHERE m_students.course_id  = :course_id AND m_students.is_deleted = 0';
     $stmt = $db->prepare($sql);
-    $stmt->bindParam(':courses_id', $courses_id, PDO::PARAM_INT);
+    $stmt->bindParam(':course_id', $course_id, PDO::PARAM_INT);
     // SQLの実行
     $stmt->execute();
     $student_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -33,9 +33,9 @@ try {
     // すでにこのクラスで一括予約が作成されていないか確認する
     $checkSql = "SELECT 1 FROM carcon_reservations r INNER JOIN carcon_reservation_details d ON r.carcon_reservation_detail_id = d.id INNER JOIN m_students s ON d.student_id = s.id WHERE s.course_id = :course_id LIMIT 1";
     $checkStmt = $db->prepare($checkSql);
-    $checkStmt->bindValue(':course_id', $courses_id, PDO::PARAM_INT);
+    $checkStmt->bindValue(':course_id', $course_id, PDO::PARAM_INT);
     $checkStmt->execute();
-    $alreadyExists = $stmt->fetch() ? true : false;
+    $alreadyExists = $checkStmt->fetch() ? true : false;
 } catch (PDOException $e) {
     exit('エラー:' . $e->getMessage());
 }
@@ -79,8 +79,8 @@ $room = get_classrooms_list();
                 <dd class="col-sm-9"><?php echo h($type[$result['course_type']]) ?></dd>
             </dl>
             <div>
-                <a href="./course_edit.php?courses_id=<?php echo h($result['id']) ?>" class="btn btn-outline-secondary  d-inline-block">情報を修正</a>
-                <input type="hidden" name="courses_id" value="<?php echo h($courses_id) ?>">
+                <a href="./course_edit.php?course_id=<?php echo h($result['id']) ?>" class="btn btn-outline-secondary  d-inline-block">情報を修正</a>
+                <input type="hidden" name="course_id" value="<?php echo h($course_id) ?>">
                 <input type="submit" class="btn btn-outline-danger d-inline-block" value="コースを削除">
             </div>
         </form>
@@ -141,11 +141,11 @@ $room = get_classrooms_list();
                 <li>支援不要OB：修了済でCC不要（就職退校含む）</li>
             </ul>
 
-            <a href="./student_add.php?courses_id=<?php echo h($courses_id) ?>" class="btn btn-outline-secondary  d-inline-block">学生を追加（手入力）</a>
+            <a href="./student_add.php?course_id=<?php echo h($course_id) ?>" class="btn btn-outline-secondary  d-inline-block">学生を追加（手入力）</a>
 
             <form action="student_import_do.php" method="post" enctype="multipart/form-data" class="card-body bg-light p-2">
                 <input type="file" name="csv_file" accept=".csv" required>
-                <input type="hidden" name="course_id" value="<?php echo h($courses_id); ?>">
+                <input type="hidden" name="course_id" value="<?php echo h($course_id); ?>">
                 <input type="hidden" name="start_year" value="<?php echo h(format_date($result['start_date'], 5)); ?>">
                 <input type="hidden" name="start_month" value="<?php echo h(format_date($result['start_date'], 6)); ?>">
                 <input type="hidden" name="room" value="<?php echo h($room[$result['classroom_id']]); ?>">
@@ -155,8 +155,11 @@ $room = get_classrooms_list();
 
 
         </div>
-        <?php if ($alreadyExists): ?>
-            <a href="./required_add.php?courses_id=<?php echo h($result['id']) ?>" class="btn btn-outline-secondary d-inline-block mt-2 mb-2">必須キャリコンの一括予約</a>
+
+        <?php if ($result['course_type'] == 1): ?>
+            <p class="opacity-50 p-2 m-1 bg-secondary text-light fw-bold rounded">対象のコースではないため、一括での予約は実行できません</p>
+        <?php elseif (!$alreadyExists): ?>
+            <a href="./required_add.php?course_id=<?php echo h($result['id']) ?>" class="btn btn-outline-secondary d-inline-block mt-2 mb-2">必須キャリコンの一括予約</a>
         <?php else: ?>
             <p class="opacity-50 p-2 m-1 bg-secondary text-light fw-bold rounded">既に予約が作成されているため、一括での予約は実行できません</p>
         <?php endif; ?>

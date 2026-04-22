@@ -10,7 +10,7 @@ $stmt = $db->prepare($sql);
 $stmt->execute();
 
 $classrooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$courses_id = htmlspecialchars($_GET['courses_id']);
+$course_id = htmlspecialchars($_GET['course_id']);
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -74,7 +74,7 @@ $courses_id = htmlspecialchars($_GET['courses_id']);
 
 
             <!-- 確認画面へ -->
-            <input type="hidden" name="courses_id" value="<?php echo h($courses_id) ?>">
+            <input type="hidden" name="course_id" value="<?php echo h($course_id) ?>">
             <input class="btn btn-primary" type="submit" value="入力内容を確認">
 
         </form>
