@@ -113,7 +113,7 @@ try {
                     ?>
                         <!-- 必須キャリコン -->
                         <div class="user-card px-4 py-4 shadow mb-4 rounded-4">
-                            <h3 class="mb-4 fw-bold">キャリコン(必須面談)</h3>
+                            <h3 class="mb-4 fw-bold">キャリコン（必須面談）</h3>
                             <dl>
                                 <div class="mb-3">
                                     <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
@@ -139,7 +139,7 @@ try {
                         </div>
                         <!-- キャリコンプラス -->
                         <div class="user-card  px-4 py-4 shadow rounded-4">
-                            <h3 class="mb-4 fw-bold">キャリコンプラス(任意面談)</h3>
+                            <h3 class="mb-4 fw-bold">キャリコン＋（任意面談）</h3>
                             <dl>
                                 <?php if ($reservation_result[0]['is_plus_carcon'] === 1): ?>
                                     <div class="mb-3">
@@ -187,7 +187,7 @@ try {
                     ?>
                         <!-- キャリコンプラス -->
                         <div class="user-card  px-4 py-4 shadow rounded-4">
-                            <h3 class="mb-4 fw-bold">キャリコンプラス(任意面談)</h3>
+                            <h3 class="mb-4 fw-bold">キャリコン＋（任意面談）</h3>
                             <dl>
                                 <?php if ($reservation_result[0]['is_plus_carcon'] === 1): ?>
                                     <div class="mb-3">
