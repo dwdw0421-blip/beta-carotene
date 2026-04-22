@@ -22,14 +22,22 @@ if (!empty($_POST)) {
 
         $login_id  = format_date($course_result['start_date'], 5) . format_date($course_result['start_date'], 6) . $rooms[$course_result['classroom_id']];
 
+        //ログインIDの準備（主キーの取得）
+        $sql = 'SELECT id FROM m_students ORDER BY id DESC';
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $lastId_result =  $stmt->fetch(PDO::FETCH_ASSOC);
+        $lastId = (int)$lastId_result['id'] + 1;
+
+
         if (!empty($_POST['student_no']) && !empty($_POST['last_name']) && !empty($_POST['first_name']) && !empty($_POST['enrollment_id'])) {
 
-            $student_no = sprintf('%02d', $_POST['student_no']);
+            $student_no = $_POST['student_no'];
             $last_name = $_POST['last_name'];
             $first_name = $_POST['first_name'];
             $password = $_POST['password'];
             $enrollment_id = $_POST['enrollment_id'];
-            $login_id .= $student_no;
+            $login_id .= $lastId;
             $pw_hash = "";
 
             if (check_preg_password($password)) {

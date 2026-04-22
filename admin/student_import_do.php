@@ -17,6 +17,8 @@ move_uploaded_file($fileTmpName, $filePath);
 $data = array_map('str_getcsv', file($filePath));
 
 
+
+
 // m_studentsテーブルにデータを挿入する
 foreach ($data as $key => $row) {
 
@@ -30,11 +32,18 @@ foreach ($data as $key => $row) {
     $first_name = $row[2];
     $password = $row[3];
     $enrollment_id = $row[4];
-    $login_id = $login_id . sprintf('%02d', $row[0]);
+
 
 
     try {
         $db = db_connect();
+        //ログインIDの準備（主キーの取得）
+        $sql = 'SELECT id FROM m_students ORDER BY id DESC';
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $lastId_result =  $stmt->fetch(PDO::FETCH_ASSOC);
+        $lastId = (int)$lastId_result['id'] + 1;
+        $login_id .= $lastId;
 
         //ユーザーID被りがいないか確認
         $sql = 'SELECT COUNT(login_id) FROM m_students WHERE login_id=:login_id';
