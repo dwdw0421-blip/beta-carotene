@@ -88,7 +88,8 @@ try {
     include('header.php');
     ?>
 
-    <main class="mt-5 d-md-flex flex-row">
+    <main class="mt-5">
+        <!-- ログイン成功メッセージ表示 -->
         <div class="user-wrapper message-area">
             <?php if ($message !== ''): ?>
                 <div class="alert alert-<?php echo $type[$message['type']]; ?> alert-dismissible" role="alert">
@@ -99,243 +100,231 @@ try {
             <?php endif; ?>
         </div>
 
-        <div class="col-md-6">
-            <!-- 次回の予約日時sec -->
-            <section class="user-wrapper mb-7">
+        <div class="d-md-flex flex-row">
+            <div class="col-md-6">
+                <!-- 次回の予約日時sec -->
+                <section class="user-wrapper mb-7">
+                    <h2 class="user-section_title mb-5 text-center">
+                        次回の予約日時
+                    </h2>
+                    <?php
+                    //求職者支援訓練だったら...
+                    if ($student_result['course_type'] === 2):
+                    ?>
+                        <!-- 必須キャリコン -->
+                        <div class="user-card px-4 py-4 shadow mb-4 rounded-4">
+                            <h3 class="mb-4 fw-bold">キャリコン(必須面談)</h3>
+                            <dl>
+                                <div class="mb-3">
+                                    <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
+                                    <div class="fw-bold fs-5">
+                                        <dd>
+                                            <?php
+                                            $latest_reservation = $reservation_result[0];
+                                            echo h(format_date($latest_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($latest_reservation['slot_index']));
+                                            ?>
+                                        </dd>
+                                    </div>
+                                </div>
+                                <div>
+                                    <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
+                                    <dd class="fw-bold fs-5">
+                                        <?php
+                                        $latest_reservation = $reservation_result[0];
+                                        echo h($latest_reservation['meeting_type_name']);
+                                        ?>
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+                        <!-- キャリコンプラス -->
+                        <div class="user-card  px-4 py-4 shadow rounded-4">
+                            <h3 class="mb-4 fw-bold">キャリコンプラス(任意面談)</h3>
+                            <dl>
+                                <?php if ($reservation_result[0]['is_plus_carcon'] === 1): ?>
+                                    <div class="mb-3">
+                                        <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
+                                        <div class="fw-bold fs-5">
+                                            <dd>
+                                                <?php
+                                                $latest_reservation = $reservation_result[0];
+                                                echo h(format_date($latest_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($latest_reservation['slot_index']));
+                                                ?>
+                                            </dd>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
+                                        <dd class="fw-bold fs-5">
+                                            <?php
+                                            $latest_reservation = $reservation_result[0];
+                                            echo h($latest_reservation['meeting_type_name']);
+                                            ?>
+                                        </dd>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="d-flex flex-column align-items-center">
+                                        <p class="text-secondary fs-5 mb-4">
+                                            キャリコンプラスの予約はありません。
+                                        </p>
+                                        <a class="btn btn-primary px-4 py-2 m-0" href="./reserve.php">予約はこちら</a>
+                                    </div>
+                                <?php endif; ?>
+                                <div class="d-flex flex-column align-items-center gap-2 mt-5 text-danger fw-bold">
+                                    <span class="material-symbols-outlined">
+                                        warning
+                                    </span>
+                                    <p class="mb-0">
+                                        キャリコンプラスは仕様上、直接の日時変更ができません。<br />
+                                        お手数ですが、現在の予約を一度取り消した上で、再度ご希望の日時でご予約をお願いいたします。
+                                    </p>
+                                </div>
+                            </dl>
+                        </div>
+                    <?php
+                    //公共職業訓練だったら...
+                    else:
+                    ?>
+                        <!-- キャリコンプラス -->
+                        <div class="user-card  px-4 py-4 shadow rounded-4">
+                            <h3 class="mb-4 fw-bold">キャリコンプラス(任意面談)</h3>
+                            <dl>
+                                <?php if ($reservation_result[0]['is_plus_carcon'] === 1): ?>
+                                    <div class="mb-3">
+                                        <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
+                                        <div class="fw-bold fs-5">
+                                            <dd>
+                                                <?php
+                                                $latest_reservation = $reservation_result[0];
+                                                echo h(format_date($latest_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($latest_reservation['slot_index']));
+                                                ?>
+                                            </dd>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
+                                        <dd class="fw-bold fs-5">
+                                            <?php
+                                            $latest_reservation = $reservation_result[0];
+                                            echo h($latest_reservation['meeting_type_name']);
+                                            ?>
+                                        </dd>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="d-flex flex-column align-items-center">
+                                        <p class="text-secondary fs-5 mb-4">
+                                            キャリコンプラスの予約はありません。
+                                        </p>
+                                        <a class="btn btn-primary px-4 py-2 m-0" href="./reserve.php">予約はこちら</a>
+                                    </div>
+                                <?php endif; ?>
+                                <div class="d-flex flex-column align-items-center gap-2 mt-5 text-danger fw-bold">
+                                    <span class="material-symbols-outlined">
+                                        warning
+                                    </span>
+                                    <p class="mb-0">
+                                        キャリコンプラスは仕様上、直接の日時変更ができません。<br />
+                                        お手数ですが、現在の予約を一度取り消した上で、再度ご希望の日時でご予約をお願いいたします。
+                                    </p>
+                                </div>
+                            </dl>
+                        </div>
+                    <?php endif; ?>
+                </section>
+                <!-- 申請ステータスsec -->
+                <section class="user-wrapper mb-7">
+                    <h2 class="user-section_title text-center mb-5">申請ステータス</h2>
+                    <!-- 変更申請 -->
+                    <div class="user-card px-4 py-4 shadow mb-4 rounded-4">
+                        <h3 class="mb-4 fw-bold">変更申請</h3>
+                        <dl>
+                            <?php
+                            //変更申請があれば...
+                            if ($request_result['request_type'] === 0):
+                            ?>
+                                <div class="mb-3">
+                                    <dt class="user-card_subtitle mb-2 fs-6">申請日時</dt>
+                                    <div class="d-flex flex-row fw-bold fs-5">
+                                        <dd>
+                                            <?php
+                                            $latest_request = $request_result;
+                                            echo h(format_date($latest_request['request_date'], 4));
+                                            ?>
+                                        </dd>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <dt class="user-card_subtitle mb-2 fs-6">ステータス</dt>
+                                    <dd class="fw-bold fs-5">
+                                        <?php
+                                        $latest_request = $request_result;
+                                        echo h($latest_request['request_status']);
+                                        ?>
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="user-card_subtitle mb-2 fs-6">メッセージ</dt>
+                                    <dd class="fw-bold fs-5">
+                                        <?php
+                                        $latest_request = $request_result;
+                                        echo h($latest_request['reject_message']);
+                                        ?>
+                                    </dd>
+                                </div>
+                            <?php else: ?>
+                                <p class="text-secondary text-center fs-5">
+                                    変更申請はありません。
+                                </p>
+                            <?php endif; ?>
+                        </dl>
+                    </div>
+                    <!-- 取消申請 -->
+                    <div class="user-card px-4 py-4 shadow mb-4 rounded-4">
+                        <h3 class="mb-4 fw-bold">取消申請</h3>
+                        <dl>
+                            <?php
+                            //取消申請があれば...
+                            if ($request_result['request_type'] === 1):
+                            ?>
+                                <div class="mb-2">
+                                    <dt class="user-card_subtitle mb-2 fs-6">申請日時</dt>
+                                    <div class="d-flex flex-row gap-4 fw-bold fs-5">
+                                        <dd>
+                                            <?php
+                                            $latest_request = $request_result;
+                                            echo h(format_date($latest_request['request_date'], 4));
+                                            ?>
+                                        </dd>
+                                    </div>
+                                </div>
+                                <div>
+                                    <dt class="user-card_subtitle mb-2 fs-6">ステータス</dt>
+                                    <dd class="fw-bold fs-5">
+                                        <?php
+                                        $latest_request = $request_result;
+                                        echo h($latest_request['request_status']);
+                                        ?>
+                                    </dd>
+                                </div>
+                            <?php else: ?>
+                                <p class="text-secondary text-center fs-5">
+                                    取消申請はありません。
+                                </p>
+                            <?php endif; ?>
+                        </dl>
+                    </div>
+                </section>
+            </div>
+
+            <!-- カレンダーsec -->
+            <div class="col-md-6">
                 <h2 class="user-section_title mb-5 text-center">
-                    次回の予約日時
+                    カレンダーから予約
                 </h2>
                 <?php
-                //求職者支援訓練だったら...
-                if ($student_result['course_type'] === 2):
+                include('calendar.php')
                 ?>
-                    <!-- 必須キャリコン -->
-                    <div class="user-card px-4 py-4 shadow mb-4 rounded-4">
-                        <h3 class="mb-4 fw-bold">キャリコン(必須面談)</h3>
-                        <dl>
-                            <div class="mb-3">
-                                <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
-                                <div class="fw-bold fs-5">
-                                    <dd>
-                                        <?php
-                                        $latest_reservation = $reservation_result[0];
-                                        echo h(format_date($latest_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($latest_reservation['slot_index']));
-                                        ?>
-                                    </dd>
-                                </div>
-                            </div>
-
-                            <div>
-                                <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
-                                <dd class="fw-bold fs-5">
-                                    <?php
-                                    $latest_reservation = $reservation_result[0];
-                                    echo h($latest_reservation['meeting_type_name']);
-                                    ?>
-                                </dd>
-                            </div>
-                        </dl>
-                    </div>
-
-                    <!-- キャリコンプラス -->
-                    <div class="user-card  px-4 py-4 shadow rounded-4">
-                        <h3 class="mb-4 fw-bold">キャリコンプラス(任意面談)</h3>
-                        <dl>
-                            <?php if ($reservation_result[0]['is_plus_carcon'] === 1): ?>
-                                <div class="mb-3">
-                                    <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
-                                    <div class="fw-bold fs-5">
-                                        <dd>
-                                            <?php
-                                            $latest_reservation = $reservation_result[0];
-                                            echo h(format_date($latest_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($latest_reservation['slot_index']));
-                                            ?>
-                                        </dd>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
-                                    <dd class="fw-bold fs-5">
-                                        <?php
-                                        $latest_reservation = $reservation_result[0];
-                                        echo h($latest_reservation['meeting_type_name']);
-                                        ?>
-                                    </dd>
-                                </div>
-
-                            <?php else: ?>
-                                <div class="d-flex flex-column align-items-center">
-                                    <p class="text-secondary fs-5 mb-4">
-                                        キャリコンプラスの予約はありません。
-                                    </p>
-                                    <a class="btn btn-primary px-4 py-2 m-0" href="./reserve.php">予約はこちら</a>
-                                </div>
-                            <?php endif; ?>
-
-                            <div class="d-flex flex-column align-items-center gap-2 mt-5 text-danger fw-bold">
-                                <span class="material-symbols-outlined">
-                                    warning
-                                </span>
-                                <p class="mb-0">
-                                    キャリコンプラスは仕様上、直接の日時変更ができません。<br />
-                                    お手数ですが、現在の予約を一度取り消した上で、再度ご希望の日時でご予約をお願いいたします。
-                                </p>
-                            </div>
-                        </dl>
-                    </div>
-
-                <?php
-                //公共職業訓練だったら...    
-                else:
-                ?>
-                    <!-- キャリコンプラス -->
-                    <div class="user-card  px-4 py-4 shadow rounded-4">
-                        <h3 class="mb-4 fw-bold">キャリコンプラス(任意面談)</h3>
-                        <dl>
-                            <?php if ($reservation_result[0]['is_plus_carcon'] === 1): ?>
-                                <div class="mb-3">
-                                    <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
-                                    <div class="fw-bold fs-5">
-                                        <dd>
-                                            <?php
-                                            $latest_reservation = $reservation_result[0];
-                                            echo h(format_date($latest_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($latest_reservation['slot_index']));
-                                            ?>
-                                        </dd>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
-                                    <dd class="fw-bold fs-5">
-                                        <?php
-                                        $latest_reservation = $reservation_result[0];
-                                        echo h($latest_reservation['meeting_type_name']);
-                                        ?>
-                                    </dd>
-                                </div>
-                            <?php else: ?>
-                                <div class="d-flex flex-column align-items-center">
-                                    <p class="text-secondary fs-5 mb-4">
-                                        キャリコンプラスの予約はありません。
-                                    </p>
-                                    <a class="btn btn-primary px-4 py-2 m-0" href="./reserve.php">予約はこちら</a>
-                                </div>
-                            <?php endif; ?>
-
-                            <div class="d-flex flex-column align-items-center gap-2 mt-5 text-danger fw-bold">
-                                <span class="material-symbols-outlined">
-                                    warning
-                                </span>
-                                <p class="mb-0">
-                                    キャリコンプラスは仕様上、直接の日時変更ができません。<br />
-                                    お手数ですが、現在の予約を一度取り消した上で、再度ご希望の日時でご予約をお願いいたします。
-                                </p>
-                            </div>
-                        </dl>
-                    </div>
-                <?php endif; ?>
-            </section>
-
-            <!-- 申請ステータスsec -->
-            <section class="user-wrapper mb-7">
-                <h2 class="user-section_title text-center mb-5">申請ステータス</h2>
-                <!-- 変更申請 -->
-                <div class="user-card px-4 py-4 shadow mb-4 rounded-4">
-                    <h3 class="mb-4 fw-bold">変更申請</h3>
-                    <dl>
-                        <?php
-                        //変更申請があれば... 
-                        if ($request_result['request_type'] === 0):
-                        ?>
-                            <div class="mb-3">
-                                <dt class="user-card_subtitle mb-2 fs-6">申請日時</dt>
-                                <div class="d-flex flex-row fw-bold fs-5">
-                                    <dd>
-                                        <?php
-                                        $latest_request = $request_result;
-                                        echo h(format_date($latest_request['request_date'], 4));
-                                        ?>
-                                    </dd>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <dt class="user-card_subtitle mb-2 fs-6">ステータス</dt>
-                                <dd class="fw-bold fs-5">
-                                    <?php
-                                    $latest_request = $request_result;
-                                    echo h($latest_request['request_status']);
-                                    ?>
-                                </dd>
-                            </div>
-
-                            <div>
-                                <dt class="user-card_subtitle mb-2 fs-6">メッセージ</dt>
-                                <dd class="fw-bold fs-5">
-                                    <?php
-                                    $latest_request = $request_result;
-                                    echo h($latest_request['reject_message']);
-                                    ?>
-                                </dd>
-                            </div>
-                        <?php else: ?>
-                            <p class="text-secondary text-center fs-5">
-                                変更申請はありません。
-                            </p>
-                        <?php endif; ?>
-                    </dl>
-                </div>
-
-                <!-- 取消申請 -->
-                <div class="user-card px-4 py-4 shadow mb-4 rounded-4">
-                    <h3 class="mb-4 fw-bold">取消申請</h3>
-                    <dl>
-                        <?php
-                        //取消申請があれば... 
-                        if ($request_result['request_type'] === 1):
-                        ?>
-                            <div class="mb-2">
-                                <dt class="user-card_subtitle mb-2 fs-6">申請日時</dt>
-                                <div class="d-flex flex-row gap-4 fw-bold fs-5">
-                                    <dd>
-                                        <?php
-                                        $latest_request = $request_result;
-                                        echo h(format_date($latest_request['request_date'], 4));
-                                        ?>
-                                    </dd>
-                                </div>
-                            </div>
-
-                            <div>
-                                <dt class="user-card_subtitle mb-2 fs-6">ステータス</dt>
-                                <dd class="fw-bold fs-5">
-                                    <?php
-                                    $latest_request = $request_result;
-                                    echo h($latest_request['request_status']);
-                                    ?>
-                                </dd>
-                            </div>
-                        <?php else: ?>
-                            <p class="text-secondary text-center fs-5">
-                                取消申請はありません。
-                            </p>
-                        <?php endif; ?>
-                    </dl>
-                </div>
-            </section>
-        </div>
-
-        <!-- カレンダーsec -->
-        <div class="col-md-6">
-            <h2 class="user-section_title mb-5 text-center">
-                カレンダーから予約
-            </h2>
-
-            <?php
-            include('calendar.php')
-            ?>
+            </div>
         </div>
     </main>
 
