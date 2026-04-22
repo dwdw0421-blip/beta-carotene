@@ -166,6 +166,18 @@ function day($datetime, $type)
         translate: 0 0;
       }
     }
+
+
+
+/* ぷにゅプルンのアニメーション設定 */
+.punyu-move {
+  transition: 
+    transform 0.8s cubic-bezier(0.5, 1.75, 0.3, 0.8),
+    border-radius 0.8s cubic-bezier(0.5, 1.75, 0.3, 0.8) !important;
+}
+
+
+
   </style>
 </head>
 
