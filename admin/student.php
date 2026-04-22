@@ -156,7 +156,7 @@ $room = get_classrooms_list();
 
         </div>
 
-        <?php if ($result['course_type'] == 2): ?>
+        <?php if ($result['course_type'] == 1): ?>
             <p class="opacity-50 p-2 m-1 bg-secondary text-light fw-bold rounded">対象のコースではないため、一括での予約は実行できません</p>
         <?php elseif (!$alreadyExists): ?>
             <a href="./required_add.php?course_id=<?php echo h($result['id']) ?>" class="btn btn-outline-secondary d-inline-block mt-2 mb-2">必須キャリコンの一括予約</a>
