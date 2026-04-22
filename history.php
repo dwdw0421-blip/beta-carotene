@@ -114,7 +114,7 @@ try {
             <h2 class="user-section_title mb-5 text-center">申請・面談履歴</h2>
             <ul class="nav  d-flex justify-content-center mb-5">
                 <li class="nav-item btn btn-outline-dark me-2"><a href="#request" class="nav-link">申請履歴</a></li>
-                <li class="nav-item btn btn-outline-dark"><a href="#reserve" class="nav-link">面談履歴</a></li>
+                <li class="nav-item btn btn-outline-dark"><a href="#reserve_log" class="nav-link">面談履歴</a></li>
             </ul>
             <h3 class="user-card_subtitle mb-2 fs-6 text-center" id="request">申請履歴</h3>
             <?php foreach ($request_result as $request): ?>
@@ -146,7 +146,7 @@ try {
 
         </section>
         <section class="wrapper mt-5">
-            <h3 class="user-card_subtitle mb-2 fs-6 text-center" id="reserve">面談履歴</h3>
+            <h3 class="user-card_subtitle mb-2 fs-6 text-center" id="reserve_log">面談履歴</h3>
             <div class="text-secondary fs-6 text-center">
 
 
