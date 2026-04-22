@@ -332,6 +332,8 @@ try {
     <?php
     include('bottom_bar.php')
     ?>
+
+    <script src="./js/logout.js"></script>
 </body>
 
 </html>

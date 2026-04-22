@@ -27,10 +27,10 @@
             </span>
             <small>履歴</small>
         </a>
-        <a class="nav-link text-center" href="./logout.php">
+        <bottom class="nav-link text-center"  id="logout">
             <img src="./img/logout-icon.svg" alt="ログアウト" style="width: 24px; height: 24px;" class="d-block mx-auto">
             <small>ログアウト</small>
-        </a>
+        </bottom>
 
 
     </div>
