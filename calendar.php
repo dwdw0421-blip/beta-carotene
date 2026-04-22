@@ -1,4 +1,47 @@
 <?php
+try {
+    $line_sql = "SELECT id, date FROM carcon_lines";
+    $stmt = $db->prepare($line_sql);
+    $stmt->execute();
+    $line_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $cell_sql = "SELECT
+                    carcon_lines.id AS line_id,
+                    carcon_lines.date AS date,
+                    carcon_reservation_details.slot_index AS slot_index
+                FROM carcon_reservations 
+                INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id
+                INNER JOIN carcon_reservation_details ON carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id";
+    $stmt = $db->prepare($cell_sql);
+    $stmt->execute();
+    $cell_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $result_calender = [];
+    foreach ($line_result as $line) {
+        $result_calender[$line["id"]] = [
+            "id" => $line["id"],
+            "date" => $line["date"],
+            // 枠全体を初期化
+            "slot_index" => [
+                0 => false,
+                1 => false,
+                2 => false,
+                3 => false,
+                4 => false,
+                5 => false,
+            ],
+        ];
+        // 枠が存在しているところだけtureに変更
+        foreach ($cell_result as $waku) {
+            if ($waku["line_id"] === $line["id"]) {
+                $result_calender[$line["id"]]["slot_index"][$waku["slot_index"]] = true;
+            }
+        }
+    }
+} catch (PDOException $e) {
+    exit($e->getMessage());
+}
+
 // 1. 年月の取得（デフォルトは現在）
 $year = isset($_GET['y']) ? (int)$_GET['y'] : date('Y');
 $month = isset($_GET['m']) ? (int)$_GET['m'] : date('n');
@@ -26,15 +69,6 @@ foreach ($period as $date) {
     }
 }
 
-// 4. 表示する時間枠の定義
-$timeSlots = [
-    "10:00~",
-    "11:00~",
-    "12:00~",
-    "14:00~",
-    "15:00~",
-    "16:00~"
-];
 ?>
 
 <section class="user-wrapper calendar shadow rounded-4">
@@ -71,16 +105,35 @@ $timeSlots = [
             </thead>
 
             <tbody>
-                <?php foreach ($timeSlots as $slot): ?>
+                <?php
+                // 時間枠の数
+                $timeSlots = 6;
+                for ($i = 0; $i < $timeSlots; $i++) : ?>
                     <tr class="">
-                        <td><?= $slot ?></td>
+                        <td><?= get_slot_time_by_index($i) ?></td>
                         <?php foreach ($saturdays as $date): ?>
                             <td class="text-center bg-white rounded-2">
-                                <a href="./reserve.php">○</a>
+                                <?php
+                                // 現在の予約枠のデータを取得して、同じ日付の枠が一つでも存在する場合は
+                                // 「予約可能」と表示する
+                                foreach ($result_calender as $result_line):
+                                    $res_date = new DateTime($result_line["date"]);
+                                    $res_text = '✕<br>予約不可';
+                                    // 同じ日付チェック
+                                    if ($res_date->format('Y-m-d') === $date->format('Y-m-d')) {
+                                        // 既に枠が埋まってないかチェック（埋まってなかったら予約可能にしてbreak）
+                                        if (!$result_line["slot_index"][$i]) {
+                                            $res_text = '<a href="./reserve.php?date=' . $date->format('Y-m-d') . '&slot_index=' . $i . '">○<br>予約可能</a>';
+                                            break;
+                                        }
+                                    }
+                                ?>
+                                <?php endforeach; ?>
+                                <?php echo $res_text; ?>
                             </td>
                         <?php endforeach; ?>
                     </tr>
-                <?php endforeach; ?>
+                <?php endfor; ?>
             </tbody>
         </table>
     </div>
