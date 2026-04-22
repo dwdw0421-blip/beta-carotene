@@ -18,7 +18,8 @@ $sql_student =
     std.student_no,
     std.last_name,
     std.first_name,
-    det.slot_index
+    det.slot_index,
+    is_plus_carcon
 FROM
     carcon_lines AS lin
 LEFT JOIN
@@ -242,8 +243,10 @@ foreach ($students as $s) {
   <!-- 日付ライン -->
           <div class="flex-grow-1 d-flex align-items-center">
                 <div class="border-top border-secondary opacity-50 flex-grow-1"></div>
-                <span class="mx-3 fw-bold text-secondary text-nowrap" style="font-size: 1.5rem;">
-        <?= htmlspecialchars($current_date) ?>
+                <span class="mx-3 fw-bold text-secondary text-nowrap" style="font-size: 1.0rem;">
+
+              <?= htmlspecialchars($current_date) ?>
+       
         </span>
                 <div class="border-top border-secondary opacity-50 flex-grow-1"></div>
         </div>
@@ -358,7 +361,8 @@ $selected = ($class['id'] == $current_classroom_id) ? 'selected' : '';
                 
                    <!-- data-task-id=には 誰を動かしたかわかるため reservation_idをいれる-->
                 <?php if ($task): ?>
-                  <div class="card bg-warning w-100 h-100 task-item border-0 shadow-none d-flex align-items-center justify-content-center" 
+                  <div class="card 
+                  <?php if($task['is_plus_carcon'] === 0): echo 'bg-warning'; else: echo 'bg-info'; endif; ?> w-100 h-100 task-item border-0 shadow-none d-flex align-items-center justify-content-center" 
                        id="task-<?= htmlspecialchars($task['reservation_id']) ?>" 
                        data-task-id="<?= htmlspecialchars($task['reservation_id']) ?>" 
 
@@ -366,6 +370,7 @@ $selected = ($class['id'] == $current_classroom_id) ? 'selected' : '';
                        draggable="true" 
                        
                        style="cursor: move; font-size: 0.75rem; font-weight: bold;">
+                       <?php if($task['is_plus_carcon'] === 0): echo '必 / '; else: echo '＋ / '; endif; ?>
                     <?= htmlspecialchars($task['classroom_name'] . ' ' . $task['student_no'] .' '. $task['last_name'] . $task['first_name']); ?>
                   </div>
                 <?php else: ?>
