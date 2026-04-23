@@ -236,9 +236,9 @@ try {
                                     面談形式の変更
                                 </button>
 
-                                <button class="btn btn-danger py-2 flex-fill w-100 d-block text-white">
+                                <a href="./delete.php?id=<?php echo h($latest_reservation["id"]); ?>" class="btn btn-danger py-2 flex-fill w-100 d-block text-white">
                                     予約の取消
-                                </button>
+                                </a>
                             </div>
                         </dl>
                     </div>
