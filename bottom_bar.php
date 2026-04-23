@@ -27,11 +27,12 @@
             </span>
             <small>履歴</small>
         </a>
-        <bottom class="nav-link text-center"  id="logout">
-            <img src="./img/logout-icon.svg" alt="ログアウト" style="width: 24px; height: 24px;" class="d-block mx-auto">
+
+        <bottom class="nav-link text-center" id="logout">
+            <span class="material-symbols-outlined  d-block">
+                logout
+            </span>
             <small>ログアウト</small>
         </bottom>
-
-
     </div>
 </nav>
