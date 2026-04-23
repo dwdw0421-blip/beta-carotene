@@ -11,26 +11,15 @@ require_once __DIR__ . '/./includes/functions.php';
 $db = db_connect();
 $login_id = $_SESSION['id'];
 
+$id = isset($_GET["id"]) ? (int)$_GET["id"] : "";
+if (empty($id)) {
+    header("location: edit.php");
+    exit();
+}
+
 try {
-    //学生情報を取得
-    $sql = 'SELECT 
-    m_students.*,
-    m_courses.course_type as course_type
-    FROM m_students 
-    INNER JOIN m_courses ON m_students.course_id = m_courses.id 
-    WHERE m_students.id  = :id';
-    $stmt = $db->prepare($sql);
-    $stmt->bindParam(':id', $login_id, PDO::PARAM_INT);
-    // SQLの実行
-    $stmt->execute();
-    $student_result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-
-    //学生の予約情報を取得
     $sql = 'SELECT 
     carcon_reservation_details.id as reservation_id,
-    carcon_reservation_details.student_id as student_id,
-    carcon_reservation_details.meeting_type as meeting_type_id,
     m_meeting_types.name as meeting_type_name,
     carcon_reservation_details.slot_index as slot_index,
     carcon_reservation_details.is_plus_carcon as is_plus_carcon,
@@ -39,33 +28,12 @@ try {
     INNER JOIN carcon_reservations ON carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id 
     INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id
     INNER JOIN m_meeting_types ON carcon_reservation_details.meeting_type = m_meeting_types.id
-    WHERE carcon_reservation_details.student_id = :student_id
-    ORDER BY carcon_lines.date';
+    WHERE carcon_reservation_details.id = :id';
     $stmt = $db->prepare($sql);
-    $stmt->bindParam(':student_id', $login_id, PDO::PARAM_INT);
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     // SQLの実行
     $stmt->execute();
     $reservation_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    //学生の変更・キャンセル申請情報を取得
-    $sql = 'SELECT 
-    carcon_request_reservations.request_carcon_reservation_detail_id as request_id,
-    carcon_request_reservations.request_status_id as request_status_id,
-    carcon_request_reservations.reject_message as reject_message,
-    carcon_request_reservations.created_at as request_date,
-    carcon_request_reservations.request_type as request_type,
-    m_request_statuses.name as request_status
-    FROM carcon_request_reservations 
-    INNER JOIN carcon_reservation_details ON carcon_request_reservations.request_carcon_reservation_detail_id = carcon_reservation_details.id
-    INNER JOIN m_request_statuses ON carcon_request_reservations.request_status_id = m_request_statuses.id
-    WHERE carcon_reservation_details.student_id = :student_id
-    ORDER BY carcon_request_reservations.created_at DESC
-    LIMIT 1';
-    $stmt = $db->prepare($sql);
-    $stmt->bindParam(':student_id', $login_id, PDO::PARAM_INT);
-    // SQLの実行
-    $stmt->execute();
-    $request_result = $stmt->fetch(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     exit('エラー:' . $e->getMessage());
 }

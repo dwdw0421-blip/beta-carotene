@@ -3,6 +3,7 @@
 /* -- admin -- */
 .admin-wrapper {
     display: flex;
+
 }
 
 .admin-sidebar-wrapper {
@@ -12,6 +13,15 @@
 
 .admin-main-wrapper {
     width: 80%;
+    padding-inline: 20px;
+    padding-block-start: 20px;
+    margin-inline-start: max(300px, 20%);
+    ;
+}
+
+aside {
+    position: fixed;
+
 }
 
 /* 日程表 */

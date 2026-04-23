@@ -61,16 +61,16 @@ $done_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
     require dirname(__FILE__) . '/sidebar.php';
     ?>
     <section class="admin-main-wrapper">
-        <h1>申請内容一覧</h1>
-        <div>
-            <p>承認待ちリスト</p>
-            <table>
+        <h1 class="display-5 fw-bold text-center">申請内容一覧</h1>
+        <div class="border p-2">
+            <h2>承認待ちリスト</h2>
+            <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>学生名</th>
-                        <th>コース名</th>
-                        <th>ステータス</th>
-                        <th>詳細</th>
+                        <th scope="col">学生名</th>
+                        <th scope="col">コース名</th>
+                        <th scope="col">ステータス</th>
+                        <th scope="col">詳細</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -79,21 +79,21 @@ $done_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <td><?php echo h($data["student_name"]); ?></td>
                             <td><?php echo h($data["course_name"]); ?></td>
                             <td><?php echo h($data["request_status_name"]); ?></td>
-                            <td><a href="request_detail.php?id=<?php echo h($data["request_id"]); ?>">詳細</a></td>
+                            <td><a href="request_detail.php?id=<?php echo h($data["request_id"]); ?>" class="btn btn-primary d-inline-block">詳細</a></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
-        <div>
-            <p>対応済みリスト</p>
-            <table>
+        <div class="border p-2 mt-5 mb-5">
+            <h2>対応済みリスト</h2>
+            <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>学生名</th>
-                        <th>コース名</th>
-                        <th>ステータス</th>
-                        <th>更新日</th>
+                        <th scope="col">学生名</th>
+                        <th scope="col">コース名</th>
+                        <th scope="col">ステータス</th>
+                        <th scope="col">更新日</th>
                     </tr>
                 </thead>
                 <tbody>

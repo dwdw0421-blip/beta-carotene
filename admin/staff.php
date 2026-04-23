@@ -32,17 +32,17 @@ try {
     require dirname(__FILE__) . '/sidebar.php';
     ?>
     <section class="admin-main-wrapper">
-        <h1>管理者一覧</h1>
-        <table>
+        <h1 class="display-5 fw-bold text-center">管理者一覧</h1>
+        <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>管理ID</th>
-                    <th>スタッフID</th>
-                    <th>スタッフ名</th>
-                    <th>追加日時</th>
-                    <th>更新日時</th>
-                    <th>変更</th>
-                    <th>削除</th>
+                    <th scope="col">管理ID</th>
+                    <th scope="col">スタッフID</th>
+                    <th scope="col">スタッフ名</th>
+                    <th scope="col">追加日時</th>
+                    <th scope="col">更新日時</th>
+                    <th scope="col">変更</th>
+                    <th scope="col">削除</th>
                 </tr>
             </thead>
             <tbody>
@@ -53,13 +53,13 @@ try {
                         <td><?php echo h($data["last_name"] . $data["first_name"]); ?></td>
                         <td><?php echo h(format_date($data["created_at"], 1)); ?></td>
                         <td><?php echo h(format_date($data["updated_at"], 1)); ?></td>
-                        <td><a href="staff_edit.php?id=<?php echo h($data["id"]); ?>">変更</a></td>
-                        <td><a href="staff_del_do.php?id=<?php echo h($data["id"]); ?>" onclick="return confirm('削除してよろしいですか？');">削除</a></td>
+                        <td><a href="staff_edit.php?id=<?php echo h($data["id"]); ?>" class="btn btn-primary d-inline-block">変更</a></td>
+                        <td><a href="staff_del_do.php?id=<?php echo h($data["id"]); ?>" onclick="return confirm('削除してよろしいですか？');" class="btn btn-danger d-inline-block">削除</a></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
-        <a href="staff_add.php">管理者を追加</a>
+        <a href="staff_add.php" class="btn btn-primary d-inline-block">管理者を追加</a>
     </section>
 </body>
 

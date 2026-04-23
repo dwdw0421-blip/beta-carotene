@@ -53,7 +53,7 @@ $room = get_classrooms_list();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <!-- style.css -->
     <link rel="stylesheet" href="../css/style.css">
-    <title><?php echo h($result['name']) ?></title>
+    <title><?php echo h($result['name']) ?>｜<?php echo h($room[$result['classroom_id']]) ?>(<?php echo h(format_date($result['start_date'], 2)) ?>開講)</title>
 </head>
 
 <body class="admin-wrapper">
@@ -61,7 +61,7 @@ $room = get_classrooms_list();
     require dirname(__FILE__) . '/sidebar.php';
     ?>
     <section class="admin-main-wrapper">
-        <h1><?php echo h($room[$result['classroom_id']]) ?>(<?php echo h(format_date($result['start_date'], 2)) ?>開講)</h1>
+        <h1><?php echo h($result['name']) ?>｜<?php echo h($room[$result['classroom_id']]) ?>(<?php echo h(format_date($result['start_date'], 2)) ?>開講)</h1>
         <form class="row card-body bg-light m-2" action="./course_del_do.php" method="post" onsubmit="return confirm('このコースを削除してよろしいですか？')">
             <dl>
                 <dt class="col-sm-3">コース名</dt>
