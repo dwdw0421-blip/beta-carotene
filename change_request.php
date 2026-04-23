@@ -28,6 +28,7 @@ try {
                 carcon_lines.date,
                 carcon_reservation_details.slot_index,
                 carcon_reservation_details.is_plus_carcon,
+                m_meeting_types.name AS meeting_type,
                 CONCAT(m_students.last_name , " " , m_students.first_name) AS student_name
             FROM carcon_reservation_details 
             INNER JOIN carcon_reservations ON carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id 
@@ -75,20 +76,18 @@ try {
 
             <?php if ($is_request_meeting_type === 1): ?>
                 <!-- 面談形式の変更 -->
-                <div
-                    class="user-card px-4 py-4 shadow mb-4 rounded-4 m-auto d-flex flex-column align-items-center"
-                    style="max-width: 500px;">
+                <div class="user-card px-4 py-4 shadow mb-4 rounded-4 m-auto d-flex flex-column align-items-center" style="max-width: 500px;">
                     <?php
                     //必須キャリコンがtrue
                     echo $reservation_result['is_plus_carcon'] === 0
-                        ? '<h3 class="mb-4 fw-bold">キャリコン（必須面談）</h3>'
-                        : ' <h3 class="titele-carconplus mb-4 fw-bold">キャリコン＋（任意面談）</h3>';
+                        ? '<h3 class="titele-carcon mb-4 fw-bold">キャリコン（必須面談）</h3>'
+                        : ' <h3 class="mb-4 fw-bold">キャリコン＋（任意面談）</h3>';
                     ?>
                     <p class="text-muted small mb-5 text-center">
                         内容を確認し、チェックを入れてください。
                     </p>
 
-                    <form action="change_do.php" method="POST">
+                    <form action="./chage_meetingtype_do.php" method="POST">
                         <dl>
                             <div class="mb-4">
                                 <dt class="user-card_subtitle mb-2 fs-6 d-flex align-items-center gap-3">
@@ -116,7 +115,7 @@ try {
                                     <label class="form-check-label" for="check_type">変更後の面談形式</label>
                                 </dt>
                                 <dd class="fw-bold fs-5 ps-4">
-                                    対面
+                                    <?php echo h($reservation_result["meeting_type"]); ?>
                                 </dd>
                             </div>
                         </dl>
@@ -158,7 +157,7 @@ try {
                         内容を確認し、チェックを入れてください。
                     </p>
 
-                    <form action="change_do.php" method="POST">
+                    <form action="./chage_date_do.php" method="POST">
                         <dl>
                             <div class="mb-4">
                                 <dt class="user-card_subtitle mb-2 fs-6 d-flex align-items-center gap-3">
@@ -191,13 +190,19 @@ try {
                             </div>
                         </dl>
 
-                        <div class="d-flex flex-column align-items-center">
-                            <div class="mb-4 d-flex align-items-center">
-                                <label class="form-check-label" for="check_type">
-                                    全ての内容を確認しました。
-                                </label>
-                                <input class="form-check-input mt-0" type="checkbox" id="check_type" required>
-                            </div>
+                        <div class="mb-4 d-flex align-items-center gap-2">
+                            <input class="form-check-input mt-0" type="checkbox" id="check_type" required>
+
+                            <label class="form-check-label" for="check_type">
+                                全ての内容を確認しました。
+                            </label>
+                        </div>
+
+
+                        <div class="d-flex flex-row gap-3">
+                            <a class="btn btn-secondary py-2 " href="./edit.php">
+                                戻る
+                            </a>
 
                             <input type="hidden" name="id" value="<?php echo $id; ?>">
                             <input type="hidden" name="change_detail_id" value="<?php echo $change_detail_id; ?>">

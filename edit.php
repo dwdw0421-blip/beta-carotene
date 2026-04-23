@@ -109,11 +109,17 @@ try {
     ?>
 
     <main class="mt-5">
-        <?php if (!empty($_SESSION['success'])): ?>
+        <?php if (!empty($_SESSION['change'])): ?>
             <div class="alert alert-success user-wrapper mb-4 text-center" style="max-width: 250px;">
-                変更・取消申請を送信しました！
+                変更申請を送信しました！
             </div>
-            <?php unset($_SESSION['success']); ?>
+            <?php unset($_SESSION['change']); ?>
+
+        <?php elseif (!empty($_SESSION['delete'])): ?>
+            <div class="alert alert-success user-wrapper mb-4 text-center" style="max-width: 250px;">
+                取消申請を送信しました！
+            </div>
+            <?php unset($_SESSION['delete']); ?>
         <?php endif; ?>
 
         <div class="user-wrapper mb-7">
@@ -207,7 +213,6 @@ try {
                         </h3>
 
                         <dl>
-
                             <div class="mb-3">
                                 <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
                                 <div class="fw-bold fs-5">

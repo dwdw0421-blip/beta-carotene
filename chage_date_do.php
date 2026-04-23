@@ -8,6 +8,7 @@ if (!empty($_POST)) {
     if (!empty($_POST['id'])) {
         // TODO: idのチェック（空の場合）
         $id = $_POST['id'];
+        $change_detail = $_POST['change_detail_id'];
         // DBに接続
         try {
             $db = db_connect();
@@ -21,7 +22,7 @@ if (!empty($_POST)) {
             ) VALUES (
                 :reservation_id, 
                 1, 
-                1, 
+                0, 
                 NOW(), 
                 NOW()
             )';
@@ -31,7 +32,7 @@ if (!empty($_POST)) {
             $stmt->execute();
 
             //成功メッセージをセットして遷移
-            $_SESSION['delete'] = '取消申請を送信';
+            $_SESSION['change'] = '変更申請を送信';
             header('location:edit.php');
             exit();
         } catch (PDOException $e) {

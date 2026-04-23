@@ -28,11 +28,11 @@
             <small>履歴</small>
         </a>
 
-        <bottom class="nav-link text-center" id="logout">
-            <span class="material-symbols-outlined  d-block">
+        <a class="nav-link text-center" href="./logout.php" onclick="return confirm('ログアウトしますか？')">
+            <span class="material-symbols-outlined d-block">
                 logout
             </span>
             <small>ログアウト</small>
-        </bottom>
+        </a>
     </div>
 </nav>

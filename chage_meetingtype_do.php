@@ -8,30 +8,34 @@ if (!empty($_POST)) {
     if (!empty($_POST['id'])) {
         // TODO: idのチェック（空の場合）
         $id = $_POST['id'];
+        $meeting_type = $_POST['change_meeting_type'];
         // DBに接続
         try {
             $db = db_connect();
             // carcon_request_reservationsテーブルに1行挿入するSQL
             $sql = 'INSERT INTO `carcon_request_reservations` (
                 `request_carcon_reservation_detail_id`, 
+                `request_meeting_type`,
                 `request_status_id`, 
                 `request_type`, 
                 `created_at`, 
                 `updated_at`
             ) VALUES (
                 :reservation_id, 
+                :meeting_type_id, 
                 1, 
-                1, 
+                0, 
                 NOW(), 
                 NOW()
             )';
             $stmt = $db->prepare($sql);
             // idをプレースホルダへバインド
             $stmt->bindParam(':reservation_id', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':meeting_type_id', $meeting_type, PDO::PARAM_INT);
             $stmt->execute();
 
             //成功メッセージをセットして遷移
-            $_SESSION['success'] = '変更申請を送信';
+            $_SESSION['change'] = '変更申請を送信';
             header('location:edit.php');
             exit();
         } catch (PDOException $e) {
