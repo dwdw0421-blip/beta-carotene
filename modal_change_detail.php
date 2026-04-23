@@ -10,16 +10,16 @@
                 <div class="modal-body">
                     <p>現在の予約日</p>
                     <p id="currentDateDetail"></p>
-                    <select id="detailDataList" class="form-select form-select-sm" aria-label="Small select example">
+                    <select id="changeDetailData" name="changeDetailData" class="form-select form-select-sm" aria-label="Small select example">
                         <option selected>変更相手を選択してください</option>
                     </select>
                 </div>
                 <div class="modal-footer justify-content-end">
                     <!-- 変更元のID -->
                     <input type="hidden" name="currentDetailId_detail" id="currentDetailId_detail" value="">
-                    <input type="hidden" name="request_type" id="request_type" value="detail">
+                    <input type="hidden" name="request_detail" id="request_detail" value=1>
                     <button type="button" class="btn btn-secondary ms-2" data-bs-dismiss="modal">閉じる</button>
-                    <button type="button" class="btn btn-primary ms-2">確認画面に進む</button>
+                    <button type="submit" class="btn btn-primary ms-2">確認画面に進む</button>
                 </div>
             </form>
         </div>
@@ -46,7 +46,7 @@
             // モーダル内の要素に反映
             document.getElementById("currentDateDetail").textContent = date + " " + slotText;
             // 選択肢に表示する予約済み枠設定
-            const select = document.getElementById("detailDataList");
+            const select = document.getElementById("changeDetailData");
             classDataList.forEach((data, i) => {
                 const option = document.createElement("option");
                 option.value = data.detail_id;

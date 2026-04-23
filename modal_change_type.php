@@ -11,13 +11,13 @@
                     <p>現在の予約日</p>
                     <p id="currentDate"></p>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="radioType" id="radioType1">
+                        <input class="form-check-input" type="radio" name="radioType" id="radioType1" value="1">
                         <label class="form-check-label" for="radioType1">
                             対面
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="radioType" id="radioType2">
+                        <input class="form-check-input" type="radio" name="radioType" id="radioType2" value="2">
                         <label class="form-check-label" for="radioType2">
                             ZOOM
                         </label>
@@ -25,10 +25,10 @@
                 </div>
                 <div class="modal-footer justify-content-end">
                     <!-- 変更元のID -->
-                    <input type="hidden" name="current_detail_id" id="currentDetailId_type" value="">
-                    <input type="hidden" name="request_type" id="request_type" value="type">
+                    <input type="hidden" name="currentDetailId_type" id="currentDetailId_type" value="">
+                    <input type="hidden" name="request_type" id="request_type" value=1>
                     <button type="button" class="btn btn-secondary ms-2" data-bs-dismiss="modal">閉じる</button>
-                    <button type="button" class="btn btn-primary ms-2">確認画面に進む</button>
+                    <button type="submit" class="btn btn-primary ms-2">確認画面に進む</button>
                 </div>
             </form>
         </div>

@@ -77,10 +77,11 @@ try {
             INNER JOIN carcon_reservations ON carcon_reservations.carcon_reservation_detail_id = carcon_reservation_details.id
             INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id
             INNER JOIN m_students ON m_students.id = carcon_reservation_details.student_id
-            WHERE m_students.course_id = :course_id
+            WHERE m_students.course_id = :course_id AND m_students.id != :student_id
             ';
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':course_id', $student_result["course_id"], PDO::PARAM_INT);
+    $stmt->bindParam(':student_id', $login_id, PDO::PARAM_INT);
     // SQLの実行
     $stmt->execute();
     $c_data_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
