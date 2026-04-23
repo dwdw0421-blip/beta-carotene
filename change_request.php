@@ -9,10 +9,10 @@ require_once __DIR__ . '/./includes/functions.php';
 // }
 
 $db = db_connect();
-$login_id = 1;
+$login_id = $_SESSION['id'];
 
 $is_request_detail = isset($_POST['request_detail']) ? (int)$_POST['request_detail'] : "";
-$is_request_type = isset($_POST['request_type']) ? (int)$_POST['request_type'] : "";
+$is_request_meeting_type = isset($_POST['request_type']) ? (int)$_POST['request_type'] : "";
 if ($is_request_detail === 1) {
     $id = isset($_POST['currentDetailId_detail']) ? $_POST['currentDetailId_detail'] : "";
     $change_detail_id = isset($_POST['changeDetailData']) ? (int)$_POST['changeDetailData'] : "";
