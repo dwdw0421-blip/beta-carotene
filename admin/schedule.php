@@ -85,7 +85,7 @@ function day($datetime, $type)
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ドラッグ＆ドロップ 発展編 -DB連携-</title>
+  <title>予約日程表</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="stylesheet" href="../css/style.css">
@@ -169,15 +169,12 @@ function day($datetime, $type)
 
 
 
-/* ぷにゅプルンのアニメーション設定 */
-.punyu-move {
-  transition: 
-    transform 0.8s cubic-bezier(0.5, 1.75, 0.3, 0.8),
-    border-radius 0.8s cubic-bezier(0.5, 1.75, 0.3, 0.8) !important;
-}
-
-
-
+    /* ぷにゅプルンのアニメーション設定 */
+    .punyu-move {
+      transition:
+        transform 0.8s cubic-bezier(0.5, 1.75, 0.3, 0.8),
+        border-radius 0.8s cubic-bezier(0.5, 1.75, 0.3, 0.8) !important;
+    }
   </style>
 </head>
 
@@ -188,7 +185,7 @@ function day($datetime, $type)
   ?>
 
 
-  <main class="container-fluid py-5">
+  <main class="container-fluid admin-main-wrapper">
     <header class=" mb-5">
       <h1 class="display-5 fw-bold text-center">予約日程表</h1>
 

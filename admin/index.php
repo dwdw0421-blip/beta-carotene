@@ -61,7 +61,7 @@ $done_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
     require dirname(__FILE__) . '/sidebar.php';
     ?>
     <section class="admin-main-wrapper">
-        <h1>申請内容一覧</h1>
+        <h1 class="display-5 fw-bold text-center">申請内容一覧</h1>
         <div>
             <p>承認待ちリスト</p>
             <table>

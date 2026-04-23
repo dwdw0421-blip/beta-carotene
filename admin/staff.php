@@ -32,7 +32,7 @@ try {
     require dirname(__FILE__) . '/sidebar.php';
     ?>
     <section class="admin-main-wrapper">
-        <h1>管理者一覧</h1>
+        <h1 class="display-5 fw-bold text-center">管理者一覧</h1>
         <table>
             <thead>
                 <tr>
