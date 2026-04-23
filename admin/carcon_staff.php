@@ -24,7 +24,7 @@ try {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <!-- style.css -->
     <link rel="stylesheet" href="../css/style.css">
-    <title>管理者一覧</title>
+    <title>キャリコン担当者一覧</title>
 </head>
 
 <body class="admin-wrapper">
@@ -32,7 +32,7 @@ try {
     require dirname(__FILE__) . '/sidebar.php';
     ?>
     <section class="admin-main-wrapper">
-        <h1>キャリコン担当者一覧</h1>
+        <h1 class="display-5 fw-bold text-center">キャリコン担当者一覧</h1>
         <table>
             <thead>
                 <tr>
