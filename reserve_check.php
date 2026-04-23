@@ -34,11 +34,10 @@ if ($day === "" && $time === "" && $type === "") {
             <h1>予約内容確認</h1>
 
             <div class="reserve-card">
-                <p class="category">任意</p>
                 <div class="confirm-item-list">
                     <div class="confirm-item">
                         <label class="con-item-name">面談希望日</label>
-                        <span class="select-item"><?php echo h($day); ?></span>
+                        <span class="select-item"><?php echo h(format_date($day, 4)); ?></span>
                     </div>
 
                     <div class="confirm-item">
@@ -58,11 +57,13 @@ if ($day === "" && $time === "" && $type === "") {
                     <input type="hidden" name="type" value="<?php echo h($type); ?>">
                     <div class="confirm-check" style="text-align: center; margin-bottom: 20px;">
                         <label>
-                            <input type="checkbox" name="check" style="accent-color: orange;" required> 全ての内容を確認した
+                            <input type="checkbox" name="check" style="accent-color: orange;" required> 全ての内容を確認しました。
                         </label>
                     </div>
-                    <div class="reserve-btn">
+                    <div class="btn">
+                        <button type="button" id="return-btn" onclick="history.back()">戻る</button>
                         <button type=" submit" id="reserve">予約する</button>
+
                     </div>
                 </form>
             </div>
