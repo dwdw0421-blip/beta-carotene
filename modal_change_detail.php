@@ -6,19 +6,22 @@
                 <h1 class="modal-title fs-5" id="modalLabelDetail">予約の変更</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <p>現在の予約日</p>
-                <p id="currentDateDetail"></p>
-                <select id="detailDataList" class="form-select form-select-sm" aria-label="Small select example">
-                    <option selected>変更相手を選択してください</option>
-                </select>
-            </div>
-            <div class="modal-footer justify-content-end">
-                <!-- 変更元のID -->
-                <input type="hidden" name="current_detail_id" id="currentDetailId" value="">
-                <button type="button" class="btn btn-secondary ms-2" data-bs-dismiss="modal">閉じる</button>
-                <button type="button" class="btn btn-primary ms-2">確認画面に進む</button>
-            </div>
+            <form action="./change_request.php" method="post">
+                <div class="modal-body">
+                    <p>現在の予約日</p>
+                    <p id="currentDateDetail"></p>
+                    <select id="changeDetailData" name="changeDetailData" class="form-select form-select-sm" aria-label="Small select example">
+                        <option selected>変更相手を選択してください</option>
+                    </select>
+                </div>
+                <div class="modal-footer justify-content-end">
+                    <!-- 変更元のID -->
+                    <input type="hidden" name="currentDetailId_detail" id="currentDetailId_detail" value="">
+                    <input type="hidden" name="request_detail" id="request_detail" value=1>
+                    <button type="button" class="btn btn-secondary ms-2" data-bs-dismiss="modal">閉じる</button>
+                    <button type="submit" class="btn btn-primary ms-2">確認画面に進む</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -27,7 +30,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const modal = document.getElementById("modal_change_detail");
-        const currentDetailId = document.getElementById("currentDetailId");
+        const currentDetailId = document.getElementById("currentDetailId_detail");
 
         modal.addEventListener("show.bs.modal", function(event) {
             const button = event.relatedTarget;
@@ -43,7 +46,7 @@
             // モーダル内の要素に反映
             document.getElementById("currentDateDetail").textContent = date + " " + slotText;
             // 選択肢に表示する予約済み枠設定
-            const select = document.getElementById("detailDataList");
+            const select = document.getElementById("changeDetailData");
             classDataList.forEach((data, i) => {
                 const option = document.createElement("option");
                 option.value = data.detail_id;
@@ -59,13 +62,3 @@
         });
     });
 </script>
-
-<form action="receive.php" method="post">
-    <select name="detail_id">
-        <option value="1" data-date="2026-04-18" data-slot_index="0" data-student_name="苗字_1_1 名前_1_1">
-            2026-04-18 0 | 苗字_1_1 名前_1_1
-        </option>
-    </select>
-
-    <button type="submit">送信</button>
-</form>
