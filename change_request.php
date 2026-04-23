@@ -121,13 +121,18 @@ try {
                             </div>
                         </dl>
 
-                        <div class="d-flex flex-column align-items-center">
-                            <div class="mb-4 d-flex align-items-center">
-                                <label class="form-check-label" for="check_type">
-                                    全ての内容を確認しました。
-                                </label>
-                                <input class="form-check-input mt-0" type="checkbox" id="check_type" required>
-                            </div>
+                        <div class="mb-4 d-flex align-items-center gap-2">
+                            <input class="form-check-input mt-0" type="checkbox" id="check_confirm_all" required>
+
+                            <label class="form-check-label" for="check_confirm_all">
+                                全ての内容を確認しました。
+                            </label>
+                        </div>
+
+                        <div class="d-flex flex-row gap-3">
+                            <a class="btn btn-secondary py-2 " href="./edit.php">
+                                戻る
+                            </a>
 
                             <input type="hidden" name="id" value="<?php echo $id; ?>">
                             <input type="hidden" name="change_meeting_type" value="<?php echo $change_meeting_type; ?>">
@@ -137,6 +142,7 @@ try {
                         </div>
                     </form>
                 </div>
+
             <?php elseif ($is_request_detail === 1): ?>
                 <!-- 日時変更 -->
                 <div
