@@ -85,6 +85,9 @@ try {
     // SQLの実行
     $stmt->execute();
     $c_data_list = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($c_data_list as $key => $data) {
+        $c_data_list[$key]["time"] = get_slot_time_by_index($data["slot_index"]);
+    }
 } catch (PDOException $e) {
     exit('エラー:' . $e->getMessage());
 }

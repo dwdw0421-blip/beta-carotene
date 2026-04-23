@@ -42,7 +42,7 @@ try {
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     } elseif ($is_request_detail === 1) {
         // 日時変更の時は相手の情報を表示
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':id', $change_detail_id, PDO::PARAM_INT);
     }
     // SQLの実行
     $stmt->execute();

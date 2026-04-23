@@ -10,7 +10,7 @@
                 <div class="modal-body">
                     <p>現在の予約日</p>
                     <p id="currentDateDetail"></p>
-                    <select id="changeDetailData" name="changeDetailData" class="form-select form-select-sm" aria-label="Small select example">
+                    <select id="changeDetailData" name="changeDetailData" class="form-select form-select-sm" aria-label="Small select example" required>
                         <option selected>変更相手を選択してください</option>
                     </select>
                 </div>
@@ -47,10 +47,13 @@
             document.getElementById("currentDateDetail").textContent = date + " " + slotText;
             // 選択肢に表示する予約済み枠設定
             const select = document.getElementById("changeDetailData");
+            select.options.length = 0;
+            const defaultOption = new Option("変更相手を選択してください", "");
+            select.appendChild(defaultOption);
             classDataList.forEach((data, i) => {
                 const option = document.createElement("option");
                 option.value = data.detail_id;
-                option.textContent = `${data.date} ${data.slot_index} | ${data.student_name}`;
+                option.textContent = `${data.date} ${data.time} | ${data.student_name}`;
 
                 // 必要ならJS用に保持
                 option.dataset.date = data.date;

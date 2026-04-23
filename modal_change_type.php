@@ -55,12 +55,11 @@
             // モーダル内の要素に反映
             document.getElementById("currentDate").textContent = date + " " + slotText;
             let radio;
-            if (currentType === 1) {
+            if (currentType == 1) {
                 radio = document.getElementById("radioType1");
             } else {
                 radio = document.getElementById("radioType2");
             }
-            console.log(radio);
             radio.checked = true;
         });
     });
