@@ -235,9 +235,12 @@ try {
                                     面談形式の変更
                                 </button>
 
-                                <button class="btn btn-danger py-2 flex-fill w-100 d-block text-white">
-                                    予約の取消
-                                </button>
+                                <form action="./delete.php" method="post" class="flex-fill w-100">
+                                    <input type="hidden" name="id">
+                                    <button type="submit" class="w-100 d-block btn btn-danger py-2">
+                                        予約の取消
+                                    </button>
+                                </form>
                             </div>
                         </dl>
                     </div>
@@ -289,7 +292,7 @@ try {
                                 </button>
 
                                 <form action="./delete.php" method="post">
-                                    <input type="hidden" name="id" value="<?php echo $user['id']; ?>">
+                                    <input type="hidden" name="id" value="<?php echo h($latest_reservation['id']); ?>">
                                     <button type="submit" class="btn btn-danger py-2 flex-fill w-100 d-block">
                                         予約の取消
                                     </button>

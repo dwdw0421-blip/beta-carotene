@@ -28,17 +28,15 @@ $type = ['danger', 'primary'];
     ?>
 
     <main class="user-login d-flex flex-column justify-content-center">
-        <div class="user-wrapper message-area text-center" style="max-width: 250px;">
+        <div class="user-wrapper message-area text-center" style="max-width: 450px;">
             <?php if ($message !== ''): ?>
-                <div class="alert alert-<?php echo $type[$message['type']]; ?> alert-dismissible" role="alert">
-                    <div>
-                        <?php echo $message['msg']; ?>
-                    </div>
+                <div class="alert alert-<?php echo $type[$message['type']]; ?> text-center w-100" role="alert">
+                    <?php echo $message['msg']; ?>
                 </div>
             <?php endif; ?>
         </div>
 
-        <div class="user-wrapper user-card px-4 py-5 shadow rounded-2">
+        <div class="user-wrapper user-card px-4 py-5 shadow rounded-2" style="max-width: 500px;">
             <h2 class="mb-5 text-center fw-bold">キャリコン予約</h2>
             <form action="login_do.php" method="post" class="d-flex flex-column align-items-center">
                 <div class="mb-4">
