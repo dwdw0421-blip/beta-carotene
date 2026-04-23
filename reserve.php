@@ -4,14 +4,28 @@ require_once __DIR__ . '/./includes/functions.php';
 $db = db_connect();
 
 $day = $_POST["day"] ?? "";
-$time = $_POST["time"] ?? "";
+$slot_time = get_slot_list();
+$select_time = $_SESSION['time'] ?? "";
 $selected_type = $_POST['radioDefault'] ?? "";
+$login_id = $_SESSION['id'];
 $error_msg = "";
 
-$sql = "SELECT * FROM m_meeting_types";
-$stmt = $db->prepare($sql);
-$stmt->execute();
-$types = $stmt->fetchAll(PDO::FETCH_ASSOC);
+/* 日付 */
+$sql_dates = "SELECT DISTINCT date FROM carcon_lines WHERE carcon_staff_id IS NOT NULL ORDER BY date ASC";
+$stmt_dates = $db->query($sql_dates);
+$dates = $stmt_dates->fetchAll(PDO::FETCH_ASSOC);
+
+/* 対面 or ZOOM */
+$sql_types = "SELECT * FROM m_meeting_types";
+$stmt_types = $db->query($sql_types);
+$types = $stmt_types->fetchAll(PDO::FETCH_ASSOC);
+
+$stmt_dates->execute();
+$stmt_types->execute();
+
+if (!isset($_SESSION['id'])) {
+    header("location:index.php");
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $is_valid = true;
@@ -26,6 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +61,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <form action="reserve_check.php" method="POST">
                 <div class="reserve-card">
-                    <p class="category">キャリコン</p>
 
                     <?php if (!empty($error_msg)): ?>
                         <p style="color: red; font-weight: bold;text-align: center;"><?php echo h($error_msg); ?></p>
@@ -56,20 +70,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="day-item">
                             <label class="item-name">面談希望日</label>
                             <select class="form-select" name="day" required>
-                                <option value="" <?php if ($day == "選択してください" || $day == "") echo 'selected'; ?> disabled>選択してください</option>
-                                <option value="1月" <?php if ($day == "1") echo 'selected'; ?>>sain</option>
-                                <option value="2月" <?php if ($day == "2") echo 'selected'; ?>>cosin</option>
-                                <option value="3月" <?php if ($day == "3") echo 'selected'; ?>>tangent</option>
+
+                                <?php if (empty($dates)): ?>
+                                    <option value="" selected disabled>現在予約可能な日はありません</option>
+                                <?php else: ?>
+                                    <option value="" <?php if ($day == "") echo 'selected'; ?> disabled>選択してください</option>
+
+                                    <?php foreach ($dates as $row): ?>
+                                        <option value="<?php echo h($row['date']); ?>" <?php if ($day == $row['date']) echo 'selected'; ?>>
+                                            <?php echo h($row['date']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </select>
                         </div>
 
                         <div class="time-item">
                             <label class="item-name">面談希望時刻</label>
                             <select class="form-select" name="time" required>
-                                <option value="" <?php if ($time == "選択してください" || $time == "") echo 'selected'; ?> disabled>選択してください</option>
-                                <option value="1" <?php if ($time == "1") echo 'selected'; ?>>sain</option>
-                                <option value="2" <?php if ($time == "2") echo 'selected'; ?>>cosin</option>
-                                <option value="3" <?php if ($time == "3") echo 'selected'; ?>>tangent</option>
+                                <option value="" <?php if ($select_time == "") echo 'selected'; ?> disabled>選択してください</option>
+
+                                <?php foreach ($slot_time as $key => $value): ?>
+                                    <option value="<?php echo h($value); ?>" <?php if ($select_time == $value) echo 'selected'; ?>>
+                                        <?php echo h($value); ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
@@ -105,7 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <!-- ボトムバー -->
     <?php
-    include('bottom_bar.php')
+    include('bottom_bar.php');
     ?>
 </body>
 
