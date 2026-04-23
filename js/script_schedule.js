@@ -372,3 +372,49 @@ function applyPunyuSwap(el, dx, dy) {
     el.style.transform = '';
   }, 800);
 }
+
+
+
+
+// セレクトボックスで同じものを選んだ時に色を付ける
+document.addEventListener('DOMContentLoaded', () => {
+  const allSelects = document.querySelectorAll('.group-select');
+
+  const checkDuplicates = (groupName) => {
+    const targetGroup = document.querySelectorAll(`.group-select[data-group="${groupName}"]`);
+    const values = Array.from(targetGroup).map(s => s.value).filter(v => v !== "");
+
+    targetGroup.forEach(s => {
+      const isDuplicate = values.filter(v => v === s.value).length > 1;
+      // セレクトボックスの次の要素（メッセージ用div）を取得
+      const msgElement = s.nextElementSibling;
+
+      if (isDuplicate && s.value !== "") {
+        s.style.backgroundColor = "#f8d7da";
+        s.style.borderColor = "#dc3545";
+        if (msgElement && msgElement.classList.contains('duplicate-msg')) {
+          msgElement.style.display = "block"; // メッセージを表示
+        }
+      } else {
+        s.style.backgroundColor = "";
+        s.style.borderColor = "";
+        if (msgElement && msgElement.classList.contains('duplicate-msg')) {
+          msgElement.style.display = "none"; // メッセージを隠す
+        }
+      }
+    });
+  };
+
+  allSelects.forEach(select => {
+    select.addEventListener('change', () => {
+      checkDuplicates(select.getAttribute('data-group'));
+    });
+  });
+
+  const groupNames = new Set(Array.from(allSelects).map(s => s.getAttribute('data-group')));
+  groupNames.forEach(name => checkDuplicates(name));
+});
+
+
+
+
