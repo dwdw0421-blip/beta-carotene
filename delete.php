@@ -60,16 +60,9 @@ try {
                 取消内容確認
             </h2>
 
-            <div
-                class="user-card px-4 py-4 shadow mb-4 rounded-4 m-auto d-flex flex-column align-items-center"
-                style="max-width: 500px;">
+            <div class="user-card px-4 py-4 shadow mb-3 rounded-4 m-auto d-flex flex-column align-items-center" style="max-width: 500px;">
 
-                <?php
-                //必須キャリコンがtrue
-                echo $reservation_result[0]['is_plus_carcon'] === 0
-                    ? '<h3 class="mb-4 fw-bold">キャリコン（必須面談）</h3>'
-                    : ' <h3 class="titele-carconplus mb-4 fw-bold">キャリコン＋（任意面談）</h3>';
-                ?>
+                <h3 class="mb-4 fw-bold">キャリコン＋（任意面談）</h3>
                 <p class="text-muted small mb-5 text-center">
                     内容を確認し、チェックを入れてください。
                 </p>
@@ -81,10 +74,10 @@ try {
                                 <input class="form-check-input mt-0" type="checkbox" id="check_date" required>
                                 <label class="form-check-label" for="check_date">予約日時</label>
                             </dt>
+
                             <dd class="fw-bold fs-5 ps-4">
                                 <?php
-                                $latest_reservation = $reservation_result[0];
-                                echo h(format_date($latest_reservation['date'], 4));
+                                echo h(format_date($reservation_result[0]['date'], 4));
                                 ?>
                             </dd>
                         </div>
@@ -117,16 +110,21 @@ try {
                         </div>
                     </dl>
 
-                    <div class="d-flex flex-column align-items-center">
-                        <div class="mb-4 d-flex align-items-center">
-                            <label class="form-check-label" for="check_confirm_all">
-                                全ての内容を確認しました。
-                            </label>
-                            <input class="form-check-input mt-0" type="checkbox" id="check_confirm_all" required>
-                        </div>
+                    <div class="mb-4 d-flex align-items-center gap-2">
+                        <input class="form-check-input mt-0" type="checkbox" id="check_confirm_all" required>
+
+                        <label class="form-check-label" for="check_confirm_all">
+                            全ての内容を確認しました。
+                        </label>
+                    </div>
+
+                    <div class="d-flex flex-row gap-3">
+                        <a class="btn btn-secondary py-2 " href="./edit.php">
+                            戻る
+                        </a>
 
                         <input type="hidden" name="id" value="<?php echo isset($reservation_result[0]['reservation_id']) ? h($reservation_result[0]['reservation_id']) : ''; ?>">
-                        <button type="submit" class="btn btn-danger py-2 m-0">
+                        <button type="submit" class="btn btn-danger py-2">
                             取消申請を送信
                         </button>
                     </div>

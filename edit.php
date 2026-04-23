@@ -143,17 +143,17 @@ try {
             <?php
             //求職者支援訓練だったら...
             if ($student_result['course_type'] === 2):
+                $latest_reservation = $reservation_result[0];
             ?>
                 <!-- 必須キャリコン -->
                 <div class="user-card px-4 py-4 shadow mb-4 rounded-4 m-auto" style="max-width: 500px;">
-                    <h3 class="mb-4 fw-bold">キャリコン（必須面談）</h3>
+                    <h3 class="titele-carcon mb-4 fw-bold">キャリコン（必須面談）</h3>
                     <dl>
                         <div class="mb-3">
                             <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
                             <div class="fw-bold fs-5">
                                 <dd>
                                     <?php
-                                    $latest_reservation = $reservation_result[0];
                                     echo h(format_date($latest_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($latest_reservation['slot_index']));
                                     ?>
                                 </dd>
@@ -164,7 +164,6 @@ try {
                             <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
                             <dd class="fw-bold fs-5">
                                 <?php
-                                $latest_reservation = $reservation_result[0];
                                 echo h($latest_reservation['meeting_type_name']);
                                 ?>
                             </dd>
@@ -195,9 +194,12 @@ try {
                 </div>
 
                 <!-- キャリコンプラスの予約があれば表示 -->
-                <?php if ($reservation_result[0]['is_plus_carcon'] === 1): ?>
+                <?php
+                if ($reservation_result[0]['is_plus_carcon'] === 1):
+                    $latest_reservation = $reservation_result[0];
+                ?>
                     <div class="user-card px-4 py-4 shadow rounded-4 m-auto" style="max-width: 500px;">
-                        <h3 class="titele-carconplus mb-4 fw-bold">
+                        <h3 class="mb-4 fw-bold">
                             キャリコン＋（任意面談）
                         </h3>
 
@@ -208,7 +210,6 @@ try {
                                 <div class="fw-bold fs-5">
                                     <dd>
                                         <?php
-                                        $latest_reservation = $reservation_result[0];
                                         echo h(format_date($latest_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($latest_reservation['slot_index']));
                                         ?>
                                     </dd>
@@ -219,7 +220,6 @@ try {
                                 <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
                                 <dd class="fw-bold fs-5">
                                     <?php
-                                    $latest_reservation = $reservation_result[0];
                                     echo h($latest_reservation['meeting_type_name']);
                                     ?>
                                 </dd>
@@ -236,9 +236,12 @@ try {
                                     面談形式の変更
                                 </button>
 
-                                <a href="./delete.php?id=<?php echo h($latest_reservation["id"]); ?>" class="btn btn-danger py-2 flex-fill w-100 d-block text-white">
-                                    予約の取消
-                                </a>
+                                <form action="./delete.php" method="post" class="flex-fill w-100">
+                                    <input type="hidden" name="id">
+                                    <button type="submit" class="w-100 d-block btn btn-danger py-2">
+                                        予約の取消
+                                    </button>
+                                </form>
                             </div>
                         </dl>
                     </div>
@@ -249,10 +252,13 @@ try {
             else:
             ?>
                 <!-- キャリコンプラスの予約があれば... -->
-                <?php if ($reservation_result[0]['is_plus_carcon'] === 1): ?>
+                <?php
+                if ($reservation_result[0]['is_plus_carcon'] === 1):
+                    $latest_reservation = $reservation_result[0]; ?>
+
                     <div class="user-card  px-4 py-4 shadow rounded-4"
                         style="max-width: 500px;">
-                        <h3 class="titele-carconplus mb-4 fw-bold">キャリコン＋（任意面談）</h3>
+                        <h3 class="mb-4 fw-bold">キャリコン＋（任意面談）</h3>
 
                         <dl>
                             <div class="mb-3">
@@ -260,7 +266,6 @@ try {
                                 <div class="fw-bold fs-5">
                                     <dd>
                                         <?php
-                                        $latest_reservation = $reservation_result[0];
                                         echo h(format_date($latest_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($latest_reservation['slot_index']));
                                         ?>
                                     </dd>
@@ -271,7 +276,6 @@ try {
                                 <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
                                 <dd class="fw-bold fs-5">
                                     <?php
-                                    $latest_reservation = $reservation_result[0];
                                     echo h($latest_reservation['meeting_type_name']);
                                     ?>
                                 </dd>
@@ -288,12 +292,16 @@ try {
                                     面談形式の変更
                                 </button>
 
-                                <button class="btn btn-danger py-2 flex-fill w-100 d-block">
-                                    予約の取消
-                                </button>
+                                <form action="./delete.php" method="post">
+                                    <input type="hidden" name="id" value="<?php echo h($latest_reservation['id']); ?>">
+                                    <button type="submit" class="btn btn-danger py-2 flex-fill w-100 d-block">
+                                        予約の取消
+                                    </button>
+                                </form>
                             </div>
                         </dl>
                     </div>
+
                     <!-- キャリコンプラスの予約がなければ... -->
                 <?php else: ?>
                     <div class="d-flex flex-column align-items-center">
