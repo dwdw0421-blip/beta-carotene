@@ -79,7 +79,7 @@ $done_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <td><?php echo h($data["student_name"]); ?></td>
                             <td><?php echo h($data["course_name"]); ?></td>
                             <td><?php echo h($data["request_status_name"]); ?></td>
-                            <td><a href="request_detail.php?id=<?php echo h($data["request_id"]); ?>">詳細</a></td>
+                            <td><a href="request_detail.php?id=<?php echo h($data["request_id"]); ?>" class="btn btn-primary d-inline-block">詳細</a></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
