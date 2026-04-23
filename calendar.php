@@ -11,7 +11,8 @@ try {
                     carcon_reservation_details.slot_index AS slot_index
                 FROM carcon_reservations 
                 INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id
-                INNER JOIN carcon_reservation_details ON carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id";
+                INNER JOIN carcon_reservation_details ON carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id
+                WHERE carcon_reservations.is_deleted = 0";
     $stmt = $db->prepare($cell_sql);
     $stmt->execute();
     $cell_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
