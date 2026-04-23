@@ -50,7 +50,7 @@
             classDataList.forEach((data, i) => {
                 const option = document.createElement("option");
                 option.value = data.detail_id;
-                option.textContent = `${data.date} ${data.slot_index} | ${data.student_name}`;
+                option.textContent = `${data.date} ${data.time} | ${data.student_name}`;
 
                 // 必要ならJS用に保持
                 option.dataset.date = data.date;
