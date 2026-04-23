@@ -3,9 +3,9 @@ session_start();
 require_once __DIR__ . '/./includes/functions.php';
 $db = db_connect();
 
-$day = $_POST["day"] ?? "";
+$day = $_GET["day"] ?? "";
 $slot_time = get_slot_list();
-$select_time = $_SESSION['time'] ?? "";
+$select_time = $_GET["time"] ?? "";
 $selected_type = $_POST['radioDefault'] ?? "";
 $login_id = $_SESSION['id'];
 $error_msg = "";
@@ -91,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <option value="" <?php if ($select_time == "") echo 'selected'; ?> disabled>選択してください</option>
 
                                 <?php foreach ($slot_time as $key => $value): ?>
-                                    <option value="<?php echo h($value); ?>" <?php if ($select_time == $value) echo 'selected'; ?>>
+                                    <option value="<?php echo h($key); ?>" <?php if ($select_time == $key) echo 'selected'; ?>>
                                         <?php echo h($value); ?>
                                     </option>
                                 <?php endforeach; ?>

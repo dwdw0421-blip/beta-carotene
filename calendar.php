@@ -123,7 +123,7 @@ foreach ($period as $date) {
                                     if ($res_date->format('Y-m-d') === $date->format('Y-m-d')) {
                                         // 既に枠が埋まってないかチェック（埋まってなかったら予約可能にしてbreak）
                                         if (!$result_line["slot_index"][$i]) {
-                                            $res_text = '<a href="./reserve.php?date=' . $date->format('Y-m-d') . '&slot_index=' . $i . '">○<br>予約可能</a>';
+                                            $res_text = '<a href="./reserve.php?day=' . $date->format('Y-m-d') . '&time=' . $i . '">○<br>予約可能</a>';
                                             break;
                                         }
                                     }
