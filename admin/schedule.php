@@ -271,7 +271,11 @@ function day($datetime, $type)
 
       $current_date = $student['line_date'];
 
-      ?>
+    //       echo '<pre>';
+    // print_r($current_date);
+    // echo '</pre>';
+    //  
+     ?>
 
 
       <?php
@@ -346,7 +350,7 @@ function day($datetime, $type)
               <input type="hidden" name="line_id" value="<?= htmlspecialchars($line_id) ?>">
               <div class="row g-2 mb-2">
                 <div class="col-6">
-                  <select name="classroom_id" class="form-select form-select-sm small">
+                  <select name="classroom_id" class="group-select form-select form-select-sm small" data-group="group-class-<?= htmlspecialchars($current_date) ?>">
                     <option value="">教室選択</option>
 
                     <?php foreach ($m_classrooms as $class):
@@ -358,10 +362,13 @@ function day($datetime, $type)
                       </option>
                     <?php endforeach; ?>
                   </select>
+
+                  <div class="duplicate-msg" style="color: #dc3545; font-size: 0.6rem; display: none;">重複しています</div>
+
                 </div>
 
                 <div class="col-6">
-                  <select name="staff_id" class="form-select form-select-sm small">
+                  <select name="staff_id" class="group-select form-select form-select-sm small" data-group="group-staff-<?= htmlspecialchars($current_date) ?>" >
                     <option value="">講師選択</option>
 
                     <?php foreach ($m_carcon_staffs as $staff):
@@ -372,6 +379,9 @@ function day($datetime, $type)
                       </option>
                     <?php endforeach; ?>
                   </select>
+
+                  <div class="duplicate-msg" style="color: #dc3545; font-size: 0.6rem; display: none;">重複しています</div>
+
                 </div>
               </div>
 
