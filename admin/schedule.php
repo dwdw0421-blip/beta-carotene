@@ -9,35 +9,42 @@ $sql_student =
     lin.id AS line_id,
     lin.date AS line_date,
 
-    lin.classroom_id,      -- 教室プルダウン用
-    lin.carcon_staff_id,   -- 講師プルダウン用
+    lin.classroom_id,      
+    lin.carcon_staff_id,   
 
-    -- rm(枠の教室)がNULLでも、rm2(コース経由)があれば表示
     rm2.name AS classroom_name, 
     res.id AS reservation_id,
     std.student_no,
     std.last_name,
     std.first_name,
     det.slot_index,
-    is_plus_carcon
+    det.is_plus_carcon,
+    res.is_deleted,
+    std.is_deleted
 FROM
     carcon_lines AS lin
 LEFT JOIN
     m_classrooms AS rm ON lin.classroom_id = rm.id
 LEFT JOIN
-    carcon_reservations AS res ON lin.id = res.carcon_line_id
+    carcon_reservations AS res 
+    ON lin.id = res.carcon_line_id 
+    AND res.is_deleted = 0 
+    
 LEFT JOIN
     carcon_reservation_details AS det ON res.carcon_reservation_detail_id = det.id
 LEFT JOIN
-    m_students AS std ON det.student_id = std.id
+    m_students AS std 
+    ON det.student_id = std.id
+    AND std.is_deleted = 0
 LEFT JOIN
     m_courses AS cou ON std.course_id = cou.id
 LEFT JOIN
-    m_classrooms AS rm2 ON cou.classroom_id = rm2.id 
+    m_classrooms AS rm2 ON cou.classroom_id = rm2.id
 ORDER BY
     lin.date ASC,
     lin.id ASC';
 // 日付順なおかつline_id順 これがないとupdateのとき毎回順番が変わる
+
 
 $stmt_student = $db->prepare($sql_student);
 $stmt_student->execute();
@@ -56,15 +63,20 @@ $stmt_classrooms = $db->prepare($sql_classrooms);
 $stmt_classrooms->execute();
 $m_classrooms = $stmt_classrooms->fetchAll(PDO::FETCH_ASSOC);
 
-$sql_staffs = 'SELECT * FROM m_carcon_staffs';
+$sql_staffs = 'SELECT * FROM m_carcon_staffs WHERE is_deleted = 0';
 $stmt_staffs = $db->prepare($sql_staffs);
 $stmt_staffs->execute();
 $m_carcon_staffs = $stmt_staffs->fetchAll(PDO::FETCH_ASSOC);
 
 
+
+
 // echo '<pre>';
 // print_r($m_carcon_staffs);
 // echo '</pre>';
+
+
+
 
 
 // 日付の曜日出し
@@ -380,7 +392,8 @@ function day($datetime, $type)
                 $task = null;
 
                 foreach ($tasks_in_line as $t) {
-                  if (isset($t['slot_index']) && (int)$t['slot_index'] === $i) {
+                  if (
+                    isset($t['slot_index']) && (int)$t['slot_index'] === $i && !empty($t['last_name'])) {
                     $task = $t;
                     break;
                   }
@@ -405,7 +418,12 @@ function day($datetime, $type)
                     data-slot-index="<?= $i ?>">
 
                     <!-- data-task-id=には 誰を動かしたかわかるため reservation_idをいれる-->
-                    <?php if ($task): ?>
+
+                    <!-- 完全にNUllにして -->
+                     <!-- 名前を結合してみて、完全に空（あるいはスペースのみ）じゃないか確認 -->
+                      <?php $studentName = trim(($task['last_name'] ?? '') . ($task['first_name'] ?? ''));?>
+
+                    <?php if ($task && $studentName !== ''): ?>
                       <div class="card 
                   <?php if ($task['is_plus_carcon'] === 0): echo 'bg-warning';
                       else: echo 'bg-info';

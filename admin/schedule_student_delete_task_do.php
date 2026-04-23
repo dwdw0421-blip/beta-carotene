@@ -11,7 +11,9 @@ $id = isset($data['id']) ? (int)$data['id'] : 0;
 if ($id > 0) {
     try {
         $pdo = db_connect();
-        $sql = 'DELETE FROM carcon_reservations WHERE id = :id';
+        // 物理削除から論理削除へ変更
+        // $sql = 'DELETE FROM carcon_reservations WHERE id = :id';
+        $sql = 'UPDATE carcon_reservations SET is_deleted = 1 WHERE id = :id';
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
