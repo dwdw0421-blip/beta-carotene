@@ -48,6 +48,14 @@ try {
     // SQLの実行
     $stmt->execute();
     $reservation_result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($is_request_meeting_type === 1) {
+        $sql = "SELECT name FROM m_meeting_types WHERE id=:id";
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(":id", $change_meeting_type, PDO::PARAM_INT);
+        $stmt->execute();
+        $chenge_type_text = $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 } catch (PDOException $e) {
     exit('エラー:' . $e->getMessage());
 }
@@ -115,7 +123,7 @@ try {
                                     <label class="form-check-label" for="check_type">変更後の面談形式</label>
                                 </dt>
                                 <dd class="fw-bold fs-5 ps-4">
-                                    <?php echo h($reservation_result["meeting_type"]); ?>
+                                    <?php echo h($chenge_type_text["name"]); ?>
                                 </dd>
                             </div>
                         </dl>
