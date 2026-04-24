@@ -63,7 +63,7 @@ try {
             INNER JOIN m_request_statuses ON carcon_request_reservations.request_status_id = m_request_statuses.id
             INNER JOIN carcon_reservations ON carcon_reservations.carcon_reservation_detail_id = carcon_reservation_details.id
             INNER JOIN carcon_lines ON carcon_reservations.carcon_line_id = carcon_lines.id
-            INNER JOIN m_classrooms ON carcon_lines.classroom_id = m_classrooms.id
+            LEFT JOIN m_classrooms ON carcon_lines.classroom_id = m_classrooms.id
             INNER JOIN m_students ON carcon_reservation_details.student_id = m_students.id
             WHERE carcon_request_reservations.id=:id;
         ";
@@ -188,7 +188,15 @@ try {
                                 </div>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>教室</dt>
-                                    <dd><?php echo h($request_result["classroom_name"]); ?></dd>
+                                    <dd><?php
+                                        $class_text = $request_result["classroom_name"];
+
+                                        if (empty($class_text)) {
+                                            $class_text = "未確定";
+                                        }
+
+                                        echo h($class_text);
+                                        ?></dd>
                                 </div>
                             </dl>
                         </div>
@@ -224,9 +232,18 @@ try {
                                     </div>
                                     <div class="d-flex justify-content-center gap-3">
                                         <dt>教室</dt>
-                                        <dd><?php echo h(!$is_exchange_data ?
+                                        <dd><?php
+                                            $class_text = h(!$is_exchange_data ?
                                                 $request_result["classroom_name"] :
-                                                $change_result["classroom_name"]); ?></dd>
+                                                $change_result["classroom_name"]);
+
+
+                                            if (empty($class_text)) {
+                                                $class_text = "未確定";
+                                            }
+
+                                            echo h($class_text);
+                                            ?></dd>
                                     </div>
                                 </dl>
                             </div>
@@ -262,7 +279,15 @@ try {
                                 </div>
                                 <div class="d-flex justify-content-center gap-3">
                                     <dt>教室</dt>
-                                    <dd><?php echo h($change_result["classroom_name"]); ?></dd>
+                                    <dd><?php
+                                        $class_text = $change_result["classroom_name"];
+
+                                        if (empty($class_text)) {
+                                            $class_text = "未確定";
+                                        }
+
+                                        echo h($class_text);
+                                        ?></dd>
                                 </div>
                             </div>
                         </div>
@@ -290,7 +315,15 @@ try {
                                     </div>
                                     <div class="d-flex justify-content-center gap-3">
                                         <dt>教室</dt>
-                                        <dd><?php echo h($request_result["classroom_name"]); ?></dd>
+                                        <dd><?php
+                                            $class_text = $request_result["classroom_name"];
+
+                                            if (empty($class_text)) {
+                                                $class_text = "未確定";
+                                            }
+
+                                            echo h($class_text);
+                                            ?></dd>
                                     </div>
                                 </dl>
                             </div>
