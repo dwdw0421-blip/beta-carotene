@@ -2,11 +2,11 @@
 session_start();
 require_once __DIR__ . '/./includes/functions.php';
 
-//ログインしていない場合はログイン画面へ
-// if (!isset($_SESSION['id'])) {
-//     header('location:index.php');
-//     exit();
-// }
+// ログインしていない場合はログイン画面へ
+if (!isset($_SESSION['id'])) {
+    header('location:login.php');
+    exit();
+}
 
 $db = db_connect();
 $login_id = $_SESSION['id'];
@@ -43,7 +43,8 @@ try {
     INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id
     INNER JOIN m_meeting_types ON carcon_reservation_details.meeting_type = m_meeting_types.id
     WHERE carcon_reservation_details.student_id = :student_id
-    ORDER BY carcon_lines.date';
+    AND carcon_lines.date >= CURDATE()
+    ORDER BY carcon_lines.date ASC';
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':student_id', $login_id, PDO::PARAM_INT);
     // SQLの実行
@@ -109,51 +110,32 @@ try {
                         次回の予約日時
                     </h2>
 
-                    <?php
-                    //求職者支援訓練だったら...
-                    if ($student_result['course_type'] === 2):
-                        $latest_reservation = $reservation_result[0];
+                    <?php if (empty($reservation_result)): ?>
+                        <p class="text-secondary fs-6 mb-4 text-center">
+                            現在、予定されている面談はありません。
+                        </p>
+
+                    <?php else:
+                        // 予約がある場合はデータを表示
+                        $latest = $reservation_result[0];
                     ?>
-                        <!-- 必須キャリコン -->
-                        <div class="user-card px-4 py-4 shadow mb-4 rounded-4">
-                            <h3 class="titele-carcon mb-4 fw-bold">キャリコン（必須面談）</h3>
-                            <dl>
-                                <div class="mb-3">
-                                    <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
-                                    <div class="fw-bold fs-5">
-                                        <dd>
-                                            <?php
-                                            echo h(format_date($latest_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($latest_reservation['slot_index']));
-                                            ?>
-                                        </dd>
-                                    </div>
-                                </div>
 
-                                <div>
-                                    <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
-                                    <dd class="fw-bold fs-5">
-                                        <?php
-                                        echo h($latest_reservation['meeting_type_name']);
-                                        ?>
-                                    </dd>
-                                </div>
-                            </dl>
-                        </div>
-
-                        <!-- キャリコンプラス -->
-                        <div class="user-card  px-4 py-4 shadow rounded-4">
-                            <h3 class="mb-4 fw-bold">キャリコン＋（任意面談）</h3>
-                            <dl>
-                                <?php
-                                if ($reservation_result[0]['is_plus_carcon'] === 1):
-                                    $latest_reservation = $reservation_result[0];
-                                ?>
+                        <?php
+                        //求職者支援訓練だったら...
+                        if ($student_result['course_type'] === 2):
+                            $carcon_reservation = $reservation_result[0];
+                            $carconplus_reservation = $reservation_result[1];
+                        ?>
+                            <!-- 必須キャリコン -->
+                            <div class="user-card px-4 py-4 shadow mb-4 rounded-4">
+                                <h3 class="titele-carcon mb-4 fw-bold">キャリコン（必須面談）</h3>
+                                <dl>
                                     <div class="mb-3">
                                         <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
                                         <div class="fw-bold fs-5">
                                             <dd>
                                                 <?php
-                                                echo h(format_date($latest_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($latest_reservation['slot_index']));
+                                                echo h(format_date($carcon_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($carcon_reservation['slot_index']));
                                                 ?>
                                             </dd>
                                         </div>
@@ -163,87 +145,117 @@ try {
                                         <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
                                         <dd class="fw-bold fs-5">
                                             <?php
-                                            echo h($latest_reservation['meeting_type_name']);
+                                            echo h($carcon_reservation['meeting_type_name']);
                                             ?>
                                         </dd>
                                     </div>
+                                </dl>
+                            </div>
 
-                                <?php else: ?>
-                                    <div class="d-flex flex-column align-items-center">
-                                        <p class="text-secondary fs-5 mb-5">
-                                            キャリコン＋（任意面談）の予約はありません。
-                                        </p>
-                                        <a class="btn btn-primary px-4 py-2 m-0" href="./reserve.php">予約はこちら</a>
-                                    </div>
-                                <?php endif; ?>
+                            <!-- キャリコンプラス -->
+                            <div class="user-card  px-4 py-4 shadow rounded-4">
+                                <h3 class="mb-4 fw-bold">キャリコン＋（任意面談）</h3>
+                                <dl>
+                                    <?php
+                                    if ($reservation_result[1]['is_plus_carcon'] === 1):
+                                    ?>
+                                        <div class="mb-3">
+                                            <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
+                                            <div class="fw-bold fs-5">
+                                                <dd>
+                                                    <?php
+                                                    echo h(format_date($carconplus_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($carconplus_reservation['slot_index']));
+                                                    ?>
+                                                </dd>
+                                            </div>
+                                        </div>
 
-                                <div class="p-2 border-start border-danger border-4 bg-light rounded-end shadow-sm mt-4" style="max-width: 600px; margin: 0 auto;">
-                                    <div class="d-flex align-items-center gap-2 text-danger mb-1">
-                                        <span class="material-symbols-outlined fs-5">warning</span>
-                                        <span class="fw-bold">ご確認ください</span>
-                                    </div>
-                                    <p class="mb-0 small text-muted px-4">
-                                        キャリコン＋（任意面談）は仕様上、直接の日時変更ができません。<br />
-                                        お手数ですが、現在の予約を一度取り消した上で、再度ご希望の日時でご予約をお願いいたします。
-                                    </p>
-                                </div>
-                            </dl>
-                        </div>
-
-                    <?php
-                    //公共職業訓練だったら...
-                    else:
-                    ?>
-                        <!-- キャリコンプラス -->
-                        <div class="user-card  px-4 py-4 shadow rounded-4">
-                            <h3 class="mb-4 fw-bold">キャリコン＋（任意面談）</h3>
-                            <dl>
-                                <?php
-                                if ($reservation_result[0]['is_plus_carcon'] === 1):
-                                    $latest_reservation = $reservation_result[0];
-                                ?>
-                                    <div class="mb-3">
-                                        <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
-                                        <div class="fw-bold fs-5">
-                                            <dd>
+                                        <div>
+                                            <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
+                                            <dd class="fw-bold fs-5">
                                                 <?php
-                                                echo h(format_date($latest_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($latest_reservation['slot_index']));
+                                                echo h($carconplus_reservation['meeting_type_name']);
                                                 ?>
                                             </dd>
                                         </div>
-                                    </div>
 
-                                    <div>
-                                        <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
-                                        <dd class="fw-bold fs-5">
-                                            <?php
-                                            $latest_reservation = $reservation_result[0];
-                                            echo h($latest_reservation['meeting_type_name']);
-                                            ?>
-                                        </dd>
-                                    </div>
+                                    <?php else: ?>
+                                        <div class="d-flex flex-column align-items-center">
+                                            <p class="text-secondary fs-5 mb-5">
+                                                キャリコン＋（任意面談）の予約はありません。
+                                            </p>
+                                            <a class="btn btn-primary px-4 py-2 m-0" href="./reserve.php">予約はこちら</a>
+                                        </div>
+                                    <?php endif; ?>
 
-                                <?php else: ?>
-                                    <div class="d-flex flex-column align-items-center">
-                                        <p class="text-secondary fs-5 mb-4">
-                                            キャリコン＋（任意面談）の予約はありません。
+                                    <div class="p-2 border-start border-danger border-4 bg-light rounded-end shadow-sm mt-4" style="max-width: 600px; margin: 0 auto;">
+                                        <div class="d-flex align-items-center gap-2 text-danger mb-1">
+                                            <span class="material-symbols-outlined fs-5">warning</span>
+                                            <span class="fw-bold">ご確認ください</span>
+                                        </div>
+                                        <p class="mb-0 small text-muted px-4">
+                                            キャリコン＋（任意面談）は仕様上、直接の日時変更ができません。<br />
+                                            お手数ですが、現在の予約を一度取り消した上で、再度ご希望の日時でご予約をお願いいたします。
                                         </p>
-                                        <a class="btn btn-primary px-4 py-2 m-0" href="./reserve.php">予約はこちら</a>
                                     </div>
-                                <?php endif; ?>
+                                </dl>
+                            </div>
 
-                                <div class="p-2 border-start border-danger border-4 bg-light rounded-end shadow-sm mt-4" style="max-width: 600px; margin: 0 auto;">
-                                    <div class="d-flex align-items-center gap-2 text-danger mb-1">
-                                        <span class="material-symbols-outlined fs-5">warning</span>
-                                        <span class="fw-bold">ご確認ください</span>
+                        <?php
+                        //公共職業訓練だったら...
+                        else:
+                        ?>
+                            <!-- キャリコンプラス -->
+                            <div class="user-card  px-4 py-4 shadow rounded-4">
+                                <h3 class="mb-4 fw-bold">キャリコン＋（任意面談）</h3>
+                                <dl>
+                                    <?php
+                                    if ($reservation_result[0]['is_plus_carcon'] === 1):
+                                        $latest_reservation = $reservation_result[0];
+                                    ?>
+                                        <div class="mb-3">
+                                            <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
+                                            <div class="fw-bold fs-5">
+                                                <dd>
+                                                    <?php
+                                                    echo h(format_date($latest_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($latest_reservation['slot_index']));
+                                                    ?>
+                                                </dd>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
+                                            <dd class="fw-bold fs-5">
+                                                <?php
+                                                $latest_reservation = $reservation_result[0];
+                                                echo h($latest_reservation['meeting_type_name']);
+                                                ?>
+                                            </dd>
+                                        </div>
+
+                                    <?php else: ?>
+                                        <div class="d-flex flex-column align-items-center">
+                                            <p class="text-secondary fs-5 mb-4">
+                                                キャリコン＋（任意面談）の予約はありません。
+                                            </p>
+                                            <a class="btn btn-primary px-4 py-2 m-0" href="./reserve.php">予約はこちら</a>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <div class="p-2 border-start border-danger border-4 bg-light rounded-end shadow-sm mt-4" style="max-width: 600px; margin: 0 auto;">
+                                        <div class="d-flex align-items-center gap-2 text-danger mb-1">
+                                            <span class="material-symbols-outlined fs-5">warning</span>
+                                            <span class="fw-bold">ご確認ください</span>
+                                        </div>
+                                        <p class="mb-0 small text-muted px-4">
+                                            キャリコン＋（任意面談）は仕様上、直接の日時変更ができません。<br />
+                                            お手数ですが、現在の予約を一度取り消した上で、再度ご希望の日時でご予約をお願いいたします。
+                                        </p>
                                     </div>
-                                    <p class="mb-0 small text-muted px-4">
-                                        キャリコン＋（任意面談）は仕様上、直接の日時変更ができません。<br />
-                                        お手数ですが、現在の予約を一度取り消した上で、再度ご希望の日時でご予約をお願いいたします。
-                                    </p>
-                                </div>
-                            </dl>
-                        </div>
+                                </dl>
+                            </div>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </section>
 
