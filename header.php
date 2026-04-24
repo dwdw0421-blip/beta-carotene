@@ -1,5 +1,5 @@
 <header>
-    <div class="py-3 text-center shadow-sm">
+    <div class="py-3 text-center shadow">
         <div class="container px-3">
             <h1 class="mb-2">
                 <a href="./index.php">
