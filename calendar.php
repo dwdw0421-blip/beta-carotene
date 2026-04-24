@@ -1,6 +1,6 @@
 <?php
 try {
-    $line_sql = "SELECT id, date FROM carcon_lines";
+    $line_sql = "SELECT id, date FROM carcon_lines WHERE date >= CURDATE()";
     $stmt = $db->prepare($line_sql);
     $stmt->execute();
     $line_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
