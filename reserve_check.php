@@ -54,7 +54,6 @@ if ($day === "" || $time === "" || $type === "") {
             <div class="alert alert-danger" style="color: red; font-weight: bold; text-align: center; background: #fff0f0; padding: 10px; border: 1px solid red; margin: 20px auto; width: 80%;">
                 <?php
                 echo h($_SESSION['err']);
-                unset($_SESSION['err']); // 一度表示したら消す
                 ?>
             </div>
         <?php endif; ?>
