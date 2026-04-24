@@ -146,7 +146,7 @@ try {
                                 </dt>
 
                                 <dd class="fw-bold fs-5 ps-4">
-                                    <?php echo h($reservation_result["meeting_type"]); ?>
+                                    <?php echo h($chenge_type_text["name"]); ?>
                                 </dd>
                             </div>
                         </dl>
