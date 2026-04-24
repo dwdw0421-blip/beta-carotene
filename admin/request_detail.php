@@ -92,7 +92,7 @@ try {
                 INNER JOIN m_request_statuses ON carcon_request_reservations.request_status_id = m_request_statuses.id
                 INNER JOIN carcon_reservations ON carcon_reservations.carcon_reservation_detail_id = carcon_reservation_details.    id
                 INNER JOIN carcon_lines ON carcon_reservations.carcon_line_id = carcon_lines.id
-                INNER JOIN m_classrooms ON carcon_lines.classroom_id = m_classrooms.id
+                LEFT JOIN m_classrooms ON carcon_lines.classroom_id = m_classrooms.id
                 INNER JOIN m_students ON carcon_reservation_details.student_id = m_students.id
                 WHERE carcon_request_reservations.id=:id;
             ";
