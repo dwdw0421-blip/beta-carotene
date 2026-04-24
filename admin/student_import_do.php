@@ -32,7 +32,13 @@ foreach ($data as $key => $row) {
     $first_name = $row[2];
     $password = $row[3];
     $enrollment_id = $row[4];
-
+    $pw_hash = "";
+    if (check_preg_password($password)) {
+        $pw_hash = password_hash($password, PASSWORD_DEFAULT);
+    } else {
+        header('location:student.php?course_id=' . $course_id);
+        exit();
+    }
 
     try {
         $db = db_connect();
@@ -74,7 +80,7 @@ foreach ($data as $key => $row) {
             $stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR);
             $stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR);
             $stmt->bindParam(':login_id', $login_id, PDO::PARAM_INT);
-            $stmt->bindParam(':password', $password, PDO::PARAM_STR);
+            $stmt->bindParam(':password', $pw_hash, PDO::PARAM_STR);
             $stmt->bindParam(':course_id', $course_id, PDO::PARAM_INT);
             $stmt->bindParam(':enrollment_id', $enrollment_id, PDO::PARAM_INT);
             $stmt->execute();
