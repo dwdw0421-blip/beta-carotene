@@ -11,7 +11,7 @@
             <span class="material-symbols-outlined d-block">
                 calendar_check
             </span>
-            <small>予約</small>
+            <small>新規予約</small>
         </a>
 
         <a class="nav-link text-center" href="./edit.php">

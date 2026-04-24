@@ -136,8 +136,8 @@ try {
                             <dd><?php echo h(format_date($request['request_date'], 1)) ?></dd>
                             <?php $type = get_meeting_type_list(); ?>
                             <?php if ($request['request_status'] == "申請中"): ?>
-                                <dt class="user-card_subtitle mb-2 fs-6">申請中の予約内容（変更前の日時｜形式）</dt>
-                                <dd><?php echo h(format_date($request['date'], 4)) ?>&nbsp<?php echo h(get_slot_time_by_index($request['slot_index'])) ?>｜<?php echo h($type[$request['meeting_type']]) ?></dd>
+                                <dt class="user-card_subtitle mb-2 fs-6">申請中の予約内容（変更前の日時）</dt>
+                                <dd><?php echo h(format_date($request['date'], 4)) ?>&nbsp<?php echo h(get_slot_time_by_index($request['slot_index'])) ?> </dd>
                                 <dd><?php ?></dd>
                             <?php endif; ?>
                             <dt class="user-card_subtitle mb-2 fs-6">事務局からの回答日時</dt>

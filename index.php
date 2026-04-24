@@ -58,6 +58,7 @@ try {
     carcon_request_reservations.reject_message as reject_message,
     carcon_request_reservations.created_at as request_date,
     carcon_request_reservations.request_type as request_type,
+    carcon_reservation_details.slot_index as slot_index,
     m_request_statuses.name as request_status
     FROM carcon_request_reservations 
     INNER JOIN carcon_reservation_details ON carcon_request_reservations.request_carcon_reservation_detail_id = carcon_reservation_details.id
@@ -291,7 +292,12 @@ try {
                                         </dd>
                                     </div>
                                 </div>
-
+                                <?php $type = get_meeting_type_list(); ?>
+                                <?php if ($latest_request['request_status'] == "申請中"): ?>
+                                    <dt class="user-card_subtitle mb-2 fs-6">申請中の予約内容（変更前の日時）</dt>
+                                    <dd><?php echo h(format_date($latest_request['request_date'], 4)) ?>&nbsp<?php echo h(get_slot_time_by_index($latest_request['slot_index'])) ?> </dd>
+                                    <dd><?php ?></dd>
+                                <?php endif; ?>
                                 <div class="mb-3">
                                     <dt class="user-card_subtitle mb-2 fs-6">ステータス</dt>
                                     <dd class="fw-bold fs-5">
