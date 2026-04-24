@@ -261,21 +261,21 @@ function day($datetime, $type)
 
     ?>
 
-<!-- ++++++++++++++++++++++++++++++++++++++ -->
+    <!-- ++++++++++++++++++++++++++++++++++++++ -->
 
-<div class="mb-3" style="max-width: 200px;">
-  <label for="columnSelect" class="form-label">表示列数を選択</label>
-  <select id="columnSelect" class="form-select">
-    <option value="1">1列</option>
-    <option value="2">2列</option>
-    <option value="3" selected>3列</option> <!-- 初期値 -->
-    <option value="4">4列</option>
-    <option value="5">5列</option>
-    <option value="6">6列</option>
-  </select>
-</div>
+    <div class="mb-3" style="max-width: 200px;">
+      <label for="columnSelect" class="form-label">表示列数を選択</label>
+      <select id="columnSelect" class="form-select">
+        <option value="1">1列</option>
+        <option value="2">2列</option>
+        <option value="3" selected>3列</option> <!-- 初期値 -->
+        <option value="4">4列</option>
+        <option value="5">5列</option>
+        <option value="6">6列</option>
+      </select>
+    </div>
 
-<!-- ++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++ -->
 
 
     <?php foreach ($grouped_students as $line_id => $tasks_in_line): ?>
@@ -289,11 +289,11 @@ function day($datetime, $type)
 
       $current_date = $student['line_date'];
 
-    //       echo '<pre>';
-    // print_r($current_date);
-    // echo '</pre>';
-    //  
-     ?>
+      //       echo '<pre>';
+      // print_r($current_date);
+      // echo '</pre>';
+      //  
+      ?>
 
 
       <?php
@@ -368,7 +368,7 @@ function day($datetime, $type)
               <input type="hidden" name="line_id" value="<?= htmlspecialchars($line_id) ?>">
               <div class="row g-2 mb-2">
                 <div class="col-6">
-                  <select name="classroom_id" class="group-select form-select form-select-sm small" data-group="group-class-<?= htmlspecialchars($current_date) ?>">
+                  <select name="classroom_id" class="group-select form-select form-select-sm small text-wrap" data-group="group-class-<?= htmlspecialchars($current_date) ?>">
                     <option value="">教室選択</option>
 
                     <?php foreach ($m_classrooms as $class):
@@ -386,7 +386,7 @@ function day($datetime, $type)
                 </div>
 
                 <div class="col-6">
-                  <select name="staff_id" class="group-select form-select form-select-sm small" data-group="group-staff-<?= htmlspecialchars($current_date) ?>" >
+                  <select name="staff_id" class="group-select form-select form-select-sm small text-wrap" data-group="group-staff-<?= htmlspecialchars($current_date) ?>">
                     <option value="">講師選択</option>
 
                     <?php foreach ($m_carcon_staffs as $staff):
@@ -404,7 +404,7 @@ function day($datetime, $type)
               </div>
 
               <div class="text-center mt-2">
-                <button type="submit" class="btn btn-primary btn-sm">教室・講師 / 設定更新</button>
+                <button type="submit" class="btn btn-primary btn-sm text-wrap">教室・講師 / 設定更新</button>
               </div>
 
             </form>
@@ -421,7 +421,8 @@ function day($datetime, $type)
 
                 foreach ($tasks_in_line as $t) {
                   if (
-                    isset($t['slot_index']) && (int)$t['slot_index'] === $i && !empty($t['last_name'])) {
+                    isset($t['slot_index']) && (int)$t['slot_index'] === $i && !empty($t['last_name'])
+                  ) {
                     $task = $t;
                     break;
                   }
@@ -448,8 +449,8 @@ function day($datetime, $type)
                     <!-- data-task-id=には 誰を動かしたかわかるため reservation_idをいれる-->
 
                     <!-- 完全にNUllにして -->
-                     <!-- 名前を結合してみて、完全に空（あるいはスペースのみ）じゃないか確認 -->
-                      <?php $studentName = trim(($task['last_name'] ?? '') . ($task['first_name'] ?? ''));?>
+                    <!-- 名前を結合してみて、完全に空（あるいはスペースのみ）じゃないか確認 -->
+                    <?php $studentName = trim(($task['last_name'] ?? '') . ($task['first_name'] ?? '')); ?>
 
                     <?php if ($task && $studentName !== ''): ?>
                       <div class="card 
