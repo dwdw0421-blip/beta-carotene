@@ -348,13 +348,22 @@ async function updateTask(dataObject) {
 
 
 
+// 効果音用の設定
+const swapSound = new Audio('../data/puyon.mp3');
 /**
  * ◎追加　要素を「ぷにゅプルン」と現在の位置へ戻す　（アニメーション用）
  */
 function applyPunyuSwap(el, dx, dy) {
   if (!el) return;
+
+// --- 【追加】音が重なっても鳴るように再生 ---
+  swapSound.currentTime = 0;
+  swapSound.play().catch(e => {}); // ユーザー操作前のエラー防止
+
   el.classList.remove('punyu-move');
   el.style.transition = 'none';
+
+  
 
   // 相手のいた場所からスタート（少し潰す）
   el.style.transform = `translate(${dx}px, ${dy}px) scale(1.2, 0.8)`;
