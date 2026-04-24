@@ -280,15 +280,19 @@ try {
                                     </dd>
                                 </div>
 
-                                <div>
-                                    <dt class="user-card_subtitle mb-2 fs-6">メッセージ</dt>
-                                    <dd class="fw-bold fs-5">
-                                        <?php
-                                        $latest_request = $request_result;
-                                        echo h($latest_request['reject_message']);
-                                        ?>
-                                    </dd>
-                                </div>
+                                <?php
+                                if (!empty($latest_request['reject_message'])):
+                                ?>
+                                    <div>
+                                        <dt class="user-card_subtitle mb-2 fs-6">メッセージ</dt>
+                                        <dd class="fw-bold fs-5">
+                                            <?php
+                                            $latest_request = $request_result;
+                                            echo h($latest_request['reject_message']);
+                                            ?>
+                                        </dd>
+                                    </div>
+                                <?php endif; ?>
 
                             <?php else: ?>
                                 <p class="text-secondary text-center fs-5">
