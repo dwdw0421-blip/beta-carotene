@@ -106,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <input class="form-check-input" type="radio"
                                             name="radioDefault"
                                             id="type_<?php echo h($type['id']); ?>"
-                                            value="<?php echo h($type['name']); ?>"
+                                            value="<?php echo h($type['id']); ?>"
                                             required
                                             <?php if ($selected_type === $type['name']) echo 'checked'; ?>>
                                         <label class="form-check-label" for="type_<?php echo h($type['id']); ?>">
