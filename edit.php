@@ -146,7 +146,7 @@ try {
                     <!-- 必須キャリコン -->
                     <div class="user-card px-4 py-4 shadow mb-4 rounded-4 m-auto" style="max-width: 500px;">
                         <?php if ($result['is_plus_carcon'] === 1): ?>
-                            <h3 class="titele-carcon mb-4 fw-bold">キャリコン＋（任意面談）</h3>
+                            <h3 class="mb-4 fw-bold">キャリコン＋（任意面談）</h3>
                         <?php else: ?>
                             <h3 class="titele-carcon mb-4 fw-bold">キャリコン（必須面談）</h3>
                         <?php endif; ?>
