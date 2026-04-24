@@ -15,12 +15,14 @@ if (!empty($_POST)) {
             // carcon_request_reservationsテーブルに1行挿入するSQL
             $sql = 'INSERT INTO `carcon_request_reservations` (
                 `request_carcon_reservation_detail_id`, 
+                `change_carcon_reservation_detail_id`,
                 `request_status_id`, 
                 `request_type`, 
                 `created_at`, 
                 `updated_at`
             ) VALUES (
-                :reservation_id, 
+                :request_carcon_reservation_detail_id, 
+                :change_carcon_reservation_detail_id, 
                 1, 
                 0, 
                 NOW(), 
@@ -28,11 +30,12 @@ if (!empty($_POST)) {
             )';
             $stmt = $db->prepare($sql);
             // idをプレースホルダへバインド
-            $stmt->bindParam(':reservation_id', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':request_carcon_reservation_detail_id', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':change_carcon_reservation_detail_id', $change_detail, PDO::PARAM_INT);
             $stmt->execute();
 
             //成功メッセージをセットして遷移
-            $_SESSION['change'] = '変更申請を送信';
+            $_SESSION['change_date'] = '変更申請を送信';
             header('location:edit.php');
             exit();
         } catch (PDOException $e) {
