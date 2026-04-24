@@ -14,8 +14,16 @@ try {
     $student_result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     //学生の予約情報を取得
-    $sql = 'SELECT carcon_reservation_details.student_id as student_id,carcon_reservation_details.meeting_type as meeting_type,carcon_reservation_details.slot_index as slot_index,carcon_lines.date as date FROM carcon_reservation_details INNER JOIN carcon_reservations ON carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id  ORDER BY carcon_lines.date ASC';
+    $sql = 'SELECT carcon_reservation_details.student_id as student_id,carcon_reservation_details.meeting_type as meeting_type,
+    carcon_reservation_details.slot_index as slot_index,carcon_lines.date as date, 
+    carcon_reservation_details.is_plus_carcon as is_plus_carcon
+    FROM carcon_reservation_details 
+    INNER JOIN carcon_reservations ON carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id 
+    INNER JOIN carcon_lines ON carcon_lines.id  = carcon_reservations.carcon_line_id  
+    INNER JOIN m_students ON carcon_reservation_details.student_id = m_students.id 
+    WHERE carcon_reservation_details.student_id = :student_id AND carcon_reservations.is_deleted = 0 ORDER BY carcon_lines.date ASC';
     $stmt = $db->prepare($sql);
+    $stmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
     // SQLの実行
     $stmt->execute();
     $reservation_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -100,14 +108,14 @@ $course_id = $student_result['course_id'];
         </form>
 
         <p class="mt-5">予約一覧</p>
-        <ul class="list-group">
+        <ul class="list-group pb-5">
             <?php
             $slot = get_slot_list();
             $meeting = get_meeting_type_list();
             ?>
-            <?php foreach ($reservation_result as $reserve) ?>
-            <li class="list-group-item"><?php echo format_date($reserve['date'], 4) ?>&nbsp;<?php echo h($slot[$reserve['slot_index']]) ?>&nbsp;(<?php echo h($meeting[$reserve['meeting_type']]) ?>)</li>
-
+            <?php foreach ($reservation_result as $reserve): ?>
+                <li class="list-group-item"><?php echo format_date($reserve['date'], 4) ?>&nbsp;<?php echo h($slot[$reserve['slot_index']]) ?>&nbsp;(<?php echo h($meeting[$reserve['meeting_type']]) ?>)｜<?php echo ($reserve['is_plus_carcon'] == 0) ? "キャリコン（必須）" : "キャリコン＋（任意）" ?></li>
+            <?php endforeach; ?>
         </ul>
     </section>
 </body>

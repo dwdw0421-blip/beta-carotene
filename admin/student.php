@@ -24,11 +24,12 @@ try {
 
 
     //学生の予約情報を取得
-    $sql = 'SELECT carcon_reservation_details.student_id as student_id,carcon_reservation_details.meeting_type as meeting_type,carcon_reservation_details.slot_index as slot_index,carcon_lines.date as date FROM carcon_reservation_details INNER JOIN carcon_reservations ON carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id ORDER BY carcon_lines.date DESC';
+    $sql = 'SELECT carcon_reservation_details.student_id as student_id,carcon_reservation_details.meeting_type as meeting_type,carcon_reservation_details.slot_index as slot_index,carcon_lines.date as date FROM carcon_reservation_details INNER JOIN carcon_reservations ON carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id WHERE carcon_reservations.is_deleted = 0 ORDER BY carcon_lines.date DESC';
     $stmt = $db->prepare($sql);
     // SQLの実行
     $stmt->execute();
     $reservation_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
     // すでにこのクラスで一括予約が作成されていないか確認する
     $checkSql = "SELECT 1 FROM carcon_reservations r INNER JOIN carcon_reservation_details d ON r.carcon_reservation_detail_id = d.id INNER JOIN m_students s ON d.student_id = s.id WHERE s.course_id = :course_id LIMIT 1";
