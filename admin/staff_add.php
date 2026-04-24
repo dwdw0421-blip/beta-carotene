@@ -47,7 +47,7 @@ $db = db_connect();
                 <input class="form-control" type="password" name="password" id="password" required>
             </div>
 
-            <input type="submit" class="btn btn-outline-danger d-inline-block" value="変更する">
+            <input type="submit" class="btn btn-outline-danger d-inline-block" value="追加する">
         </form>
     </section>
 </body>
