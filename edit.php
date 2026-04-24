@@ -109,15 +109,24 @@ try {
     ?>
 
     <main class="mt-5">
-        <?php if (!empty($_SESSION['change'])): ?>
-            <div class="alert alert-success user-wrapper mb-4 text-center" style="max-width: 250px;">
-                変更申請を送信しました！
+        <!-- 面談形式の変更申請完了後のメッセージを表示 -->
+        <?php if (!empty($_SESSION['change_meeting_type'])): ?>
+            <div class="alert alert-success user-wrapper mb-4 text-center" style="max-width: 350px;">
+                <p class="m-0">面談形式の変更申請を送信しました！</p>
             </div>
-            <?php unset($_SESSION['change']); ?>
+            <?php unset($_SESSION['change_meeting_type']); ?>
 
+            <!-- 日時形式の変更申請完了後のメッセージを表示 -->
+        <?php elseif (!empty($_SESSION['change_date'])): ?>
+            <div class="alert alert-success user-wrapper mb-4 text-center" style="max-width: 350px;">
+                <p class="m-0">日時の変更申請を送信しました！</p>
+            </div>
+            <?php unset($_SESSION['change_date']); ?>
+
+            <!-- 取消申請完了後のメッセージを表示 -->
         <?php elseif (!empty($_SESSION['delete'])): ?>
-            <div class="alert alert-success user-wrapper mb-4 text-center" style="max-width: 250px;">
-                取消申請を送信しました！
+            <div class="alert alert-success user-wrapper mb-4 text-center" style="max-width: 350px;">
+                <p class="m-0">取消申請を送信しました！</p>
             </div>
             <?php unset($_SESSION['delete']); ?>
         <?php endif; ?>
