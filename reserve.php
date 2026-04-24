@@ -17,7 +17,7 @@ $stmt_student->execute();
 $student = $stmt_student->fetch(PDO::FETCH_ASSOC);
 
 /* 日付 */
-$sql_dates = "SELECT DISTINCT date FROM carcon_lines WHERE carcon_staff_id IS NOT NULL ORDER BY date ASC";
+$sql_dates = "SELECT DISTINCT date FROM carcon_lines ORDER BY date ASC";
 $stmt_dates = $db->query($sql_dates);
 $dates = $stmt_dates->fetchAll(PDO::FETCH_ASSOC);
 
