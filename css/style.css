@@ -224,6 +224,7 @@ h1 {
     margin: 0 16px 130px;
 }
 
+
 .category {
     font-size: 14px;
     color: #fff;
@@ -238,11 +239,7 @@ h1 {
     background: #FF29A9;
 }
 
-.history-item {
-    font-size: 20px;
-    margin-block: auto;
-    align-items: center;
-}
+
 
 .item {
     margin: 0;
@@ -381,4 +378,23 @@ bottom-bar
     &:hover {
         color: #2563EB;
     }
+}
+
+
+/* --------------------
+history
+--------------------*/
+
+.history-item {
+    font-size: 20px;
+    margin-block: auto;
+    align-items: center;
+}
+
+.history-ul {
+    padding: 0 0 200px;
+}
+
+.reserve-card--history {
+    margin: 0 16px 20px;
 }
