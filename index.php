@@ -111,7 +111,7 @@ try {
                 </p>
             </div>
             <?php unset($_SESSION['msg']); ?>
-        <?php else: ?>
+        <?php elseif (!empty($_SESSION['err'])): ?>
             <div class="alert alert-danger user-wrapper mb-4 text-center" style="max-width: 350px;">
                 <p class="m-0">
                     キャリコン＋の予約に失敗しました...。<br>
