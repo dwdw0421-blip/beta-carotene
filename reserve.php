@@ -2,13 +2,19 @@
 session_start();
 require_once __DIR__ . '/./includes/functions.php';
 $db = db_connect();
-
-$day = $_GET["day"] ?? "";
-$slot_time = get_slot_list();
-$select_time = $_GET["time"] ?? "";
-$selected_type = $_POST['radioDefault'] ?? "";
 $login_id = $_SESSION['id'];
+
+$day = $_POST["day"] ?? "";
+$select_time = $_POST["time"] ?? "";
+$selected_type = $_POST['radioDefault'] ?? "";
+$slot_time = get_slot_list();
 $error_msg = "";
+
+$sql_student = "SELECT * FROM m_students WHERE id = :login_id";
+$stmt_student = $db->prepare($sql_student);
+$stmt_student->bindParam(':login_id', $login_id, PDO::PARAM_INT);
+$stmt_student->execute();
+$student = $stmt_student->fetch(PDO::FETCH_ASSOC);
 
 /* 日付 */
 $sql_dates = "SELECT DISTINCT date FROM carcon_lines WHERE carcon_staff_id IS NOT NULL ORDER BY date ASC";
@@ -20,17 +26,10 @@ $sql_types = "SELECT * FROM m_meeting_types";
 $stmt_types = $db->query($sql_types);
 $types = $stmt_types->fetchAll(PDO::FETCH_ASSOC);
 
-$stmt_dates->execute();
-$stmt_types->execute();
-
-if (!isset($_SESSION['id'])) {
-    header("location:index.php");
-}
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $is_valid = true;
 
-    if ($day === "" || $time === "") {
+    if ($day === "" || $select_time === "") {
         $error_msg = "未選択の項目があります。";
         $is_valid = false;
     }
@@ -106,9 +105,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <input class="form-check-input" type="radio"
                                             name="radioDefault"
                                             id="type_<?php echo h($type['id']); ?>"
-                                            value="<?php echo h($type['name']); ?>"
+                                            value="<?php echo h($type['id']); ?>"
                                             required
-                                            <?php if ($selected_type === $type['name']) echo 'checked'; ?>>
+                                            <?php if ($selected_type === $type['id']) echo 'checked'; ?>>
                                         <label class="form-check-label" for="type_<?php echo h($type['id']); ?>">
                                             <?php echo h($type['name']); ?>
                                         </label>
