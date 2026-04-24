@@ -22,7 +22,7 @@ $sql_student =
     res.is_deleted,
     std.is_deleted
 FROM
-    carcon_lines AS lin
+    carcon_lines AS lin 
 LEFT JOIN
     m_classrooms AS rm ON lin.classroom_id = rm.id
 LEFT JOIN
@@ -40,6 +40,8 @@ LEFT JOIN
     m_courses AS cou ON std.course_id = cou.id
 LEFT JOIN
     m_classrooms AS rm2 ON cou.classroom_id = rm2.id
+WHERE
+    lin.date >= CURDATE()
 ORDER BY
     lin.date ASC,
     lin.id ASC';
