@@ -18,7 +18,8 @@ try {
     //学生情報を取得
     $sql = 'SELECT 
     m_students.*,
-    m_courses.course_type as course_type
+    m_courses.course_type as course_type,
+    CONCAT(m_students.last_name , " " , m_students.first_name) AS student_name
     FROM m_students 
     INNER JOIN m_courses ON m_students.course_id = m_courses.id 
     WHERE m_students.id  = :id';
@@ -279,15 +280,19 @@ try {
                                     </dd>
                                 </div>
 
-                                <div>
-                                    <dt class="user-card_subtitle mb-2 fs-6">メッセージ</dt>
-                                    <dd class="fw-bold fs-5">
-                                        <?php
-                                        $latest_request = $request_result;
-                                        echo h($latest_request['reject_message']);
-                                        ?>
-                                    </dd>
-                                </div>
+                                <?php
+                                if (!empty($latest_request['reject_message'])):
+                                ?>
+                                    <div>
+                                        <dt class="user-card_subtitle mb-2 fs-6">メッセージ</dt>
+                                        <dd class="fw-bold fs-5">
+                                            <?php
+                                            $latest_request = $request_result;
+                                            echo h($latest_request['reject_message']);
+                                            ?>
+                                        </dd>
+                                    </div>
+                                <?php endif; ?>
 
                             <?php else: ?>
                                 <p class="text-secondary text-center fs-5">

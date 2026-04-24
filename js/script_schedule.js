@@ -417,4 +417,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+// 日程カードの表示枚数を変更 
+const select = document.getElementById('columnSelect');
 
+select.addEventListener('change', () => {
+  const newValue = select.value;
+  // すべての対象要素を取得
+  const targets = document.querySelectorAll('.column-target');
+
+  targets.forEach(row => {
+    // 既存の row-cols-md-* クラスを正規表現で探して新しい値に置換
+    const currentClass = row.className;
+    const regex = /row-cols-md-\d+/;
+
+    if (regex.test(currentClass)) {
+      row.className = currentClass.replace(regex, `row-cols-md-${newValue}`);
+    } else {
+      row.classList.add(`row-cols-md-${newValue}`);
+    }
+  });
+});

@@ -43,7 +43,7 @@ try {
     INNER JOIN carcon_reservations ON carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id 
     INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id
     INNER JOIN m_meeting_types ON carcon_reservation_details.meeting_type = m_meeting_types.id
-    WHERE carcon_reservation_details.student_id = :student_id
+    WHERE carcon_reservation_details.student_id = :student_id 
     ORDER BY carcon_lines.date ASC';
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':student_id', $login_id, PDO::PARAM_INT);
@@ -52,7 +52,7 @@ try {
     $reservation_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     //学生の予約件数を取得(必須キャリコンのみ)
-    $sql = 'SELECT COUNT(carcon_reservation_details.id) FROM carcon_reservation_details INNER JOIN carcon_reservations ON  carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id WHERE student_id = :student_id AND carcon_reservation_details.is_plus_carcon = 0 AND carcon_lines.date < NOW();';
+    $sql = 'SELECT COUNT(carcon_reservation_details.id) FROM carcon_reservation_details INNER JOIN carcon_reservations ON  carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id WHERE student_id = :student_id AND carcon_reservation_details.is_plus_carcon = 0 AND carcon_lines.date < NOW() AND carcon_reservations.is_deleted = 0;';
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':student_id', $login_id, PDO::PARAM_INT);
     // SQLの実行
@@ -62,7 +62,7 @@ try {
 
 
     //学生の予約件数を取得(キャリコン＋のみ)
-    $sql = 'SELECT COUNT(carcon_reservation_details.id) FROM carcon_reservation_details INNER JOIN carcon_reservations ON  carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id WHERE student_id = :student_id AND carcon_reservation_details.is_plus_carcon = 1 AND carcon_lines.date < NOW();';
+    $sql = 'SELECT COUNT(carcon_reservation_details.id) FROM carcon_reservation_details INNER JOIN carcon_reservations ON  carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id WHERE student_id = :student_id AND carcon_reservation_details.is_plus_carcon = 1 AND carcon_lines.date < NOW() AND carcon_reservations.is_deleted = 0;';
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':student_id', $login_id, PDO::PARAM_INT);
     // SQLの実行
@@ -77,11 +77,17 @@ try {
     carcon_request_reservations.reject_message as reject_message,
     carcon_request_reservations.created_at as request_date,
     carcon_request_reservations.request_type as request_type,
+    carcon_request_reservations.request_meeting_type as meeting_type,
     m_request_statuses.name as request_status,
-    carcon_request_reservations.updated_at as updated_at
+    m_request_statuses.name AS request_status_name, 
+    carcon_request_reservations.updated_at as updated_at,
+    carcon_reservation_details.slot_index as slot_index,
+    carcon_lines.date as date
     FROM carcon_request_reservations 
     INNER JOIN carcon_reservation_details ON carcon_request_reservations.request_carcon_reservation_detail_id = carcon_reservation_details.id
     INNER JOIN m_request_statuses ON carcon_request_reservations.request_status_id = m_request_statuses.id
+    INNER JOIN carcon_reservations ON carcon_reservations.carcon_reservation_detail_id = carcon_request_reservations.request_carcon_reservation_detail_id
+    INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id
     WHERE carcon_reservation_details.student_id = :student_id
     ORDER BY carcon_request_reservations.created_at DESC
    ';
@@ -117,32 +123,41 @@ try {
                 <li class="nav-item btn btn-outline-dark"><a href="#reserve_log" class="nav-link">面談履歴</a></li>
             </ul>
             <h3 class="user-card_subtitle mb-2 fs-6 text-center" id="request">申請履歴</h3>
-            <?php foreach ($request_result as $request): ?>
-                <div class="reserve-card user-card px-4 py-4 shadow mb-4 rounded-4">
-                    <h4 class="mb-4 fw-bold">
-                        <?php echo ($request['request_type'] == 0 ? "変更申請" : "キャンセル申請") ?>
-                    </h4>
-                    <dl>
-                        <dt class="user-card_subtitle mb-2 fs-6">申請日時</dt>
-                        <dd><?php echo h(format_date($request['request_date'], 1)) ?></dd>
-                        <dt class="user-card_subtitle mb-2 fs-6">事務局からの回答日時</dt>
-                        <dd>
-                            <?php if ($request['updated_at'] !== $request['request_date']): ?>
-                                <?php echo h(format_date($request['updated_at'], 1)) ?>
-                            <?php else: ?>
-                                順次対応中です。しばらくお待ちください。
+            <?php if (empty($request_result)): ?>
+                <p>申請履歴はありません</p>
+            <?php else: ?>
+                <?php foreach ($request_result as $request): ?>
+                    <div class="reserve-card user-card px-4 py-4 shadow mb-4 rounded-4">
+                        <h4 class="mb-4 fw-bold">
+                            <?php echo ($request['request_type'] == 0 ? "変更申請" : "キャンセル申請") ?>
+                        </h4>
+                        <dl>
+                            <dt class="user-card_subtitle mb-2 fs-6">申請日時</dt>
+                            <dd><?php echo h(format_date($request['request_date'], 1)) ?></dd>
+                            <?php $type = get_meeting_type_list(); ?>
+                            <?php if ($request['request_status'] == "申請中"): ?>
+                                <dt class="user-card_subtitle mb-2 fs-6">申請中の予約内容（変更前の日時｜形式）</dt>
+                                <dd><?php echo h(format_date($request['date'], 4)) ?>&nbsp<?php echo h(get_slot_time_by_index($request['slot_index'])) ?>｜<?php echo h($type[$request['meeting_type']]) ?></dd>
+                                <dd><?php ?></dd>
                             <?php endif; ?>
-                        </dd>
-                        <dt class="user-card_subtitle mb-2 fs-6">ステータス</dt>
-                        <dd><?php echo h($request['request_status']) ?></dd>
-                        <?php if (!empty($request['reject_message'])): ?>
-                            <dt class="user-card_subtitle mb-2 fs-6">メッセージ</dt>
-                            <dd><?php echo h($request['reject_message']) ?></dd>
-                        <?php endif; ?>
-                    </dl>
-                </div>
-            <?php endforeach; ?>
-
+                            <dt class="user-card_subtitle mb-2 fs-6">事務局からの回答日時</dt>
+                            <dd>
+                                <?php if ($request['updated_at'] !== $request['request_date']): ?>
+                                    <?php echo h(format_date($request['updated_at'], 1)) ?>
+                                <?php else: ?>
+                                    順次対応中です。しばらくお待ちください。
+                                <?php endif; ?>
+                            </dd>
+                            <dt class="user-card_subtitle mb-2 fs-6">ステータス</dt>
+                            <dd><?php echo h($request['request_status_name']) ?></dd>
+                            <?php if (!empty($request['reject_message'])): ?>
+                                <dt class="user-card_subtitle mb-2 fs-6">メッセージ</dt>
+                                <dd><?php echo h($request['reject_message']) ?></dd>
+                            <?php endif; ?>
+                        </dl>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
 
         </section>
         <section class="wrapper mt-5">
@@ -162,9 +177,9 @@ try {
                 <?php endif; ?>
 
             </div>
-            <ul>
+            <ul class="history-ul">
                 <?php foreach ($reservation_result as $reserve): ?>
-                    <li class="reserve-card d-flex flex-row gap-2">
+                    <li class="reserve-card reserve-card--history d-flex flex-row gap-1">
                         <!-- is_plus_carconが0なら必須、1なら＋（任意） -->
                         <?php if ($reserve['is_plus_carcon'] == 0): ?>
                             <p class="category category--required">キャリコン(必須)</p>
