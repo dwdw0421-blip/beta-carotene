@@ -102,6 +102,16 @@ try {
             <?php endif; ?>
         </div>
 
+        <!-- キャリコンプラス予約完了後のメッセージを表示 -->
+        <?php if (!empty($_SESSION['msg'])): ?>
+            <div class="alert alert-success user-wrapper mb-4 text-center" style="max-width: 350px;">
+                <p class="m-0">
+                    キャリコン＋（任意面談）の予約が完了しました！
+                </p>
+            </div>
+            <?php unset($_SESSION['msg']); ?>
+        <?php endif; ?>
+
         <div class="d-md-flex flex-row">
             <div class="col-md-6">
                 <!-- 次回の予約日時sec -->
