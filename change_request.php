@@ -19,6 +19,7 @@ if ($is_request_detail === 1) {
 } else if ($is_request_meeting_type === 1) {
     $id = isset($_POST['currentDetailId_type']) ? $_POST['currentDetailId_type'] : "";
     $change_meeting_type = isset($_POST['radioType']) ? (int)$_POST['radioType'] : "";
+    $meeting_type = ($change_meeting_type === 1) ? '対面' : 'ZOOM';
 } else {
     exit('エラー');
 }
@@ -135,8 +136,9 @@ try {
                                     <input class="form-check-input mt-0" type="checkbox" id="check_type" required>
                                     <label class="form-check-label" for="check_type">変更後の面談形式</label>
                                 </dt>
+
                                 <dd class="fw-bold fs-5 ps-4">
-                                    <?php echo h($reservation_result["meeting_type"]); ?>
+                                    <?php echo h($meeting_type); ?>
                                 </dd>
                             </div>
                         </dl>
