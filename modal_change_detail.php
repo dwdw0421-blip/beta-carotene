@@ -11,7 +11,7 @@
                     <p>現在の予約日</p>
                     <p id="currentDateDetail"></p>
                     <select id="changeDetailData" name="changeDetailData" class="form-select form-select-sm" aria-label="Small select example" required>
-                        <option selected>変更相手を選択してください</option>
+                        <option selected>交換する日時を選択してください</option>
                     </select>
                 </div>
                 <div class="modal-footer justify-content-end">
