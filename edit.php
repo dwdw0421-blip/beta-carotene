@@ -184,7 +184,7 @@ try {
 
                                 <?php if ($result['is_plus_carcon'] === 1): ?>
                                     <form action="./delete.php" method="post" class="flex-fill w-100">
-                                        <input type="hidden" name="id">
+                                        <input type="hidden" name="id" value="<?php echo h($result['id']) ?>">
                                         <button type="submit" class="w-100 d-block btn btn-danger py-2">
                                             予約の取消
                                         </button>

@@ -11,7 +11,7 @@ require_once __DIR__ . '/./includes/functions.php';
 $db = db_connect();
 $login_id = $_SESSION['id'];
 
-$id = isset($_GET["id"]) ? (int)$_GET["id"] : "";
+$id = isset($_POST["id"]) ? (int)$_POST["id"] : "";
 if (empty($id)) {
     header("location: edit.php");
     exit();
