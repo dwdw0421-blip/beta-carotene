@@ -43,7 +43,7 @@ try {
     INNER JOIN carcon_reservations ON carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id 
     INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id
     INNER JOIN m_meeting_types ON carcon_reservation_details.meeting_type = m_meeting_types.id
-    WHERE carcon_reservation_details.student_id = :student_id
+    WHERE carcon_reservation_details.student_id = :student_id 
     ORDER BY carcon_lines.date ASC';
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':student_id', $login_id, PDO::PARAM_INT);
@@ -52,7 +52,7 @@ try {
     $reservation_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     //学生の予約件数を取得(必須キャリコンのみ)
-    $sql = 'SELECT COUNT(carcon_reservation_details.id) FROM carcon_reservation_details INNER JOIN carcon_reservations ON  carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id WHERE student_id = :student_id AND carcon_reservation_details.is_plus_carcon = 0 AND carcon_lines.date < NOW();';
+    $sql = 'SELECT COUNT(carcon_reservation_details.id) FROM carcon_reservation_details INNER JOIN carcon_reservations ON  carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id WHERE student_id = :student_id AND carcon_reservation_details.is_plus_carcon = 0 AND carcon_lines.date < NOW() AND carcon_reservations.is_deleted = 0;';
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':student_id', $login_id, PDO::PARAM_INT);
     // SQLの実行
@@ -62,7 +62,7 @@ try {
 
 
     //学生の予約件数を取得(キャリコン＋のみ)
-    $sql = 'SELECT COUNT(carcon_reservation_details.id) FROM carcon_reservation_details INNER JOIN carcon_reservations ON  carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id WHERE student_id = :student_id AND carcon_reservation_details.is_plus_carcon = 1 AND carcon_lines.date < NOW();';
+    $sql = 'SELECT COUNT(carcon_reservation_details.id) FROM carcon_reservation_details INNER JOIN carcon_reservations ON  carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id WHERE student_id = :student_id AND carcon_reservation_details.is_plus_carcon = 1 AND carcon_lines.date < NOW() AND carcon_reservations.is_deleted = 0;';
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':student_id', $login_id, PDO::PARAM_INT);
     // SQLの実行
