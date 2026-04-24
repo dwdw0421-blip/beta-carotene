@@ -106,10 +106,18 @@ try {
         <?php if (!empty($_SESSION['msg'])): ?>
             <div class="alert alert-success user-wrapper mb-4 text-center" style="max-width: 350px;">
                 <p class="m-0">
-                    キャリコン＋（任意面談）の予約が完了しました！
+                    キャリコン＋の予約が完了しました！
                 </p>
             </div>
             <?php unset($_SESSION['msg']); ?>
+        <?php else: ?>
+            <div class="alert alert-danger user-wrapper mb-4 text-center" style="max-width: 350px;">
+                <p class="m-0">
+                    キャリコン＋の予約に失敗しました...。<br>
+                    (´・ω・`)(´・ω・`)(´・ω・`)
+                </p>
+            </div>
+            <?php unset($_SESSION['err']); ?>
         <?php endif; ?>
 
         <div class="d-md-flex flex-row">
