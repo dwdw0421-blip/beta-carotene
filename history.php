@@ -2,12 +2,11 @@
 session_start();
 require_once __DIR__ . '/./includes/functions.php';
 
-//ログインしていない場合はログイン画面へ
-// if (!isset($_SESSION['id'])) {
-//     header('location:index.php');
-//     exit();
-// }
-
+// ログインしていない場合はログイン画面へ
+if (!isset($_SESSION['id'])) {
+    header('location:login.php');
+    exit();
+}
 
 $db = db_connect();
 $login_id = $_SESSION['id'];

@@ -2,6 +2,12 @@
 session_start();
 require_once __DIR__ . '/includes/functions.php';
 
+// ログインしていない場合はログイン画面へ
+if (!isset($_SESSION['id'])) {
+    header('location:login.php');
+    exit();
+}
+
 // TODO: データ受け取り
 if (!empty($_POST)) {
     // POST送信されたとき
