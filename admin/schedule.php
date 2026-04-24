@@ -259,6 +259,22 @@ function day($datetime, $type)
 
     ?>
 
+<!-- ++++++++++++++++++++++++++++++++++++++ -->
+
+<div class="mb-3" style="max-width: 200px;">
+  <label for="columnSelect" class="form-label">表示列数を選択</label>
+  <select id="columnSelect" class="form-select">
+    <option value="1">1列</option>
+    <option value="2">2列</option>
+    <option value="3" selected>3列</option> <!-- 初期値 -->
+    <option value="4">4列</option>
+    <option value="5">5列</option>
+    <option value="6">6列</option>
+  </select>
+</div>
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++ -->
+
 
     <?php foreach ($grouped_students as $line_id => $tasks_in_line): ?>
 
@@ -323,7 +339,7 @@ function day($datetime, $type)
 
         <!-- ブートストラップ対応　2. 再びカードを並べるための row を開始 -->
         <!-- 横のカードの数の指定 row-cols-md- 1~6 ←これ -->
-        <div class="row row-cols-1 row-cols-md-4 g-3 w-100 px-3">
+        <div class="column-target row row-cols-1 row-cols-md-3 g-3 w-100 px-3">
 
         <?php endif; ?>
 
