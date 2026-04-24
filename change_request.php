@@ -29,12 +29,10 @@ try {
                 carcon_lines.date,
                 carcon_reservation_details.slot_index,
                 carcon_reservation_details.is_plus_carcon,
-                m_meeting_types.name AS meeting_type,
                 CONCAT(m_students.last_name , " " , m_students.first_name) AS student_name
             FROM carcon_reservation_details 
             INNER JOIN carcon_reservations ON carcon_reservation_details.id = carcon_reservations.carcon_reservation_detail_id 
             INNER JOIN carcon_lines ON carcon_lines.id = carcon_reservations.carcon_line_id
-            INNER JOIN m_meeting_types ON carcon_reservation_details.meeting_type = m_meeting_types.id
             INNER JOIN m_students ON carcon_reservation_details.student_id = m_students.id
             WHERE carcon_reservation_details.id = :id
             ';
