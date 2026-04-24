@@ -25,7 +25,6 @@ try {
     $stmt->execute();
     $student_result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-
     //学生の予約情報を取得
     $sql = 'SELECT 
     carcon_reservation_details.id as id,
@@ -41,32 +40,13 @@ try {
     INNER JOIN m_meeting_types ON carcon_reservation_details.meeting_type = m_meeting_types.id
     WHERE carcon_reservation_details.student_id = :student_id
         AND carcon_reservations.is_deleted = 0
+        AND carcon_lines.date >= CURDATE()
     ORDER BY carcon_lines.date';
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':student_id', $login_id, PDO::PARAM_INT);
     // SQLの実行
     $stmt->execute();
-    $latest_reservation = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    //学生の変更・キャンセル申請情報を取得
-    $sql = 'SELECT 
-    carcon_request_reservations.request_carcon_reservation_detail_id as request_id,
-    carcon_request_reservations.request_status_id as request_status_id,
-    carcon_request_reservations.reject_message as reject_message,
-    carcon_request_reservations.created_at as request_date,
-    carcon_request_reservations.request_type as request_type,
-    m_request_statuses.name as request_status
-    FROM carcon_request_reservations 
-    INNER JOIN carcon_reservation_details ON carcon_request_reservations.request_carcon_reservation_detail_id = carcon_reservation_details.id
-    INNER JOIN m_request_statuses ON carcon_request_reservations.request_status_id = m_request_statuses.id
-    WHERE carcon_reservation_details.student_id = :student_id
-    ORDER BY carcon_request_reservations.created_at DESC
-    LIMIT 1';
-    $stmt = $db->prepare($sql);
-    $stmt->bindParam(':student_id', $login_id, PDO::PARAM_INT);
-    // SQLの実行
-    $stmt->execute();
-    $request_result = $stmt->fetch(PDO::FETCH_ASSOC);
+    $reservation_result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // 同じクラスの人が設定している必須キャリコンのデータを取得
     $sql = 'SELECT 
@@ -161,21 +141,22 @@ try {
             </div>
 
             <h3 class="text-center mb-4">予約一覧</h3>
-            <?php if (empty($request_result)): ?>
-                <?php
-                //求職者支援訓練だったら...
-                if ($student_result['course_type'] === 2):
-                ?>
+            <?php if (!empty($reservation_result)): ?>
+                <?php foreach ($reservation_result as $result): ?>
                     <!-- 必須キャリコン -->
                     <div class="user-card px-4 py-4 shadow mb-4 rounded-4 m-auto" style="max-width: 500px;">
-                        <h3 class="titele-carcon mb-4 fw-bold">キャリコン（必須面談）</h3>
+                        <?php if ($result['is_plus_carcon'] === 1): ?>
+                            <h3 class="titele-carcon mb-4 fw-bold">キャリコン＋（任意面談）</h3>
+                        <?php else: ?>
+                            <h3 class="titele-carcon mb-4 fw-bold">キャリコン（必須面談）</h3>
+                        <?php endif; ?>
                         <dl>
                             <div class="mb-3">
                                 <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
                                 <div class="fw-bold fs-5">
                                     <dd>
                                         <?php
-                                        echo h(format_date($latest_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($latest_reservation['slot_index']));
+                                        echo h(format_date($result['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($result['slot_index']));
                                         ?>
                                     </dd>
                                 </div>
@@ -185,7 +166,7 @@ try {
                                 <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
                                 <dd class="fw-bold fs-5">
                                     <?php
-                                    echo h($latest_reservation['meeting_type_name']);
+                                    echo h($result['meeting_type_name']);
                                     ?>
                                 </dd>
                             </div>
@@ -194,141 +175,35 @@ try {
                                 <button type="button" class="btn btn-primary py-2 flex-fill w-100 d-block"
                                     data-bs-toggle="modal"
                                     data-bs-target="#modal_change_type"
-                                    data-id="<?php echo h($latest_reservation['id']); ?>"
-                                    data-current-type="<?php echo h($latest_reservation['meeting_type_id']); ?>"
-                                    data-date="<?php echo h(format_date($latest_reservation['date'], 4)); ?>"
-                                    data-slot-text="<?php echo h(get_slot_time_by_index($latest_reservation['slot_index'])); ?>">
+                                    data-id="<?php echo h($result['id']); ?>"
+                                    data-current-type="<?php echo h($result['meeting_type_id']); ?>"
+                                    data-date="<?php echo h(format_date($result['date'], 4)); ?>"
+                                    data-slot-text="<?php echo h(get_slot_time_by_index($result['slot_index'])); ?>">
                                     面談形式の変更
                                 </button>
 
-                                <button class="btn btn-success py-2 flex-fill w-100 d-block"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#modal_change_detail"
-                                    data-id="<?php echo h($latest_reservation['id']); ?>"
-                                    data-date="<?php echo h(format_date($latest_reservation['date'], 4)); ?>"
-                                    data-slot-text="<?php echo h(get_slot_time_by_index($latest_reservation['slot_index']));  ?>"
-                                    data-class-data-list="<?php echo h(json_encode($c_data_list)); ?>">
-                                    日時変更
-                                </button>
-                            </div>
-                        </dl>
-                    </div>
-
-                    <!-- キャリコンプラスの予約があれば表示 -->
-                    <?php
-                    if ($latest_reservation['is_plus_carcon'] === 1):
-                    ?>
-                        <div class="user-card px-4 py-4 shadow rounded-4 m-auto" style="max-width: 500px;">
-                            <h3 class="mb-4 fw-bold">
-                                キャリコン＋（任意面談）
-                            </h3>
-
-                            <dl>
-                                <div class="mb-3">
-                                    <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
-                                    <div class="fw-bold fs-5">
-                                        <dd>
-                                            <?php
-                                            echo h(format_date($latest_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($latest_reservation['slot_index']));
-                                            ?>
-                                        </dd>
-                                    </div>
-                                </div>
-
-                                <div class="mb-4">
-                                    <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
-                                    <dd class="fw-bold fs-5">
-                                        <?php
-                                        echo h($latest_reservation['meeting_type_name']);
-                                        ?>
-                                    </dd>
-                                </div>
-
-                                <div class="d-flex flex-row gap-2">
-                                    <button type="button" class="btn btn-primary py-2 flex-fill w-100 d-block"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#modal_change_type"
-                                        data-id="<?php echo h($latest_reservation['id']); ?>"
-                                        data-current-type="<?php echo h($latest_reservation['meeting_type_id']); ?>"
-                                        data-date="<?php echo h(format_date($latest_reservation['date'], 4)); ?>"
-                                        data-slot-text="<?php echo h(get_slot_time_by_index($latest_reservation['slot_index'])); ?>">
-                                        面談形式の変更
-                                    </button>
-
+                                <?php if ($result['is_plus_carcon'] === 1): ?>
                                     <form action="./delete.php" method="post" class="flex-fill w-100">
                                         <input type="hidden" name="id">
                                         <button type="submit" class="w-100 d-block btn btn-danger py-2">
                                             予約の取消
                                         </button>
                                     </form>
-                                </div>
-                            </dl>
-                        </div>
-                    <?php endif; ?>
-
-                <?php
-                //公共職業訓練だったら...    
-                else:
-                ?>
-                    <!-- キャリコンプラスの予約があれば... -->
-                    <?php
-                    if ($latest_reservation['is_plus_carcon'] === 1): ?>
-
-                        <div class="user-card  px-4 py-4 shadow rounded-4"
-                            style="max-width: 500px;">
-                            <h3 class="mb-4 fw-bold">キャリコン＋（任意面談）</h3>
-
-                            <dl>
-                                <div class="mb-3">
-                                    <dt class="user-card_subtitle mb-2 fs-6">予約日時</dt>
-                                    <div class="fw-bold fs-5">
-                                        <dd>
-                                            <?php
-                                            echo h(format_date($latest_reservation['date'], 4))  . "&nbsp;" .  h(get_slot_time_by_index($latest_reservation['slot_index']));
-                                            ?>
-                                        </dd>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <dt class="user-card_subtitle mb-2 fs-6">面談形式</dt>
-                                    <dd class="fw-bold fs-5">
-                                        <?php
-                                        echo h($latest_reservation['meeting_type_name']);
-                                        ?>
-                                    </dd>
-                                </div>
-
-                                <div class="d-flex flex-row gap-2">
-                                    <button type="button" class="btn btn-primary py-2 flex-fill w-100 d-block"
+                                <?php else: ?>
+                                    <button class="btn btn-success py-2 flex-fill w-100 d-block"
                                         data-bs-toggle="modal"
-                                        data-bs-target="#modal_change_type"
-                                        data-id="<?php echo h($latest_reservation['id']); ?>"
-                                        data-current-type="<?php echo h($latest_reservation['meeting_type_id']); ?>"
-                                        data-date="<?php echo h(format_date($latest_reservation['date'], 4)); ?>"
-                                        data-slot-text="<?php echo h(get_slot_time_by_index($latest_reservation['slot_index'])); ?>">
-                                        面談形式の変更
+                                        data-bs-target="#modal_change_detail"
+                                        data-id="<?php echo h($result['id']); ?>"
+                                        data-date="<?php echo h(format_date($result['date'], 4)); ?>"
+                                        data-slot-text="<?php echo h(get_slot_time_by_index($result['slot_index']));  ?>"
+                                        data-class-data-list="<?php echo h(json_encode($c_data_list)); ?>">
+                                        日時変更
                                     </button>
-
-                                    <form action="./delete.php" method="post">
-                                        <input type="hidden" name="id" value="<?php echo h($latest_reservation['id']); ?>">
-                                        <button type="submit" class="btn btn-danger py-2 flex-fill w-100 d-block">
-                                            予約の取消
-                                        </button>
-                                    </form>
-                                </div>
-                            </dl>
-                        </div>
-
-                        <!-- キャリコンプラスの予約がなければ... -->
-                    <?php else: ?>
-                        <div class="d-flex flex-column align-items-center">
-                            <p class="text-secondary fs-5 mb-4">
-                                キャリコン＋（任意面談）の予約はありません。
-                            </p>
-                        </div>
-                    <?php endif; ?>
-                <?php endif; ?>
+                                <?php endif; ?>
+                            </div>
+                        </dl>
+                    </div>
+                <?php endforeach; ?>
             <?php else: ?>
                 <div class="d-flex flex-column align-items-center">
                     <p class="text-secondary fs-5 mb-4">
