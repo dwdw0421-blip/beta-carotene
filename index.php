@@ -18,7 +18,8 @@ try {
     //学生情報を取得
     $sql = 'SELECT 
     m_students.*,
-    m_courses.course_type as course_type
+    m_courses.course_type as course_type,
+    CONCAT(m_students.last_name , " " , m_students.first_name) AS student_name
     FROM m_students 
     INNER JOIN m_courses ON m_students.course_id = m_courses.id 
     WHERE m_students.id  = :id';
