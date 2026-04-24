@@ -25,7 +25,6 @@ try {
     $stmt->execute();
     $student_result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-
     //学生の予約情報を取得
     $sql = 'SELECT 
     carcon_reservation_details.id as id,
@@ -41,6 +40,7 @@ try {
     INNER JOIN m_meeting_types ON carcon_reservation_details.meeting_type = m_meeting_types.id
     WHERE carcon_reservation_details.student_id = :student_id
         AND carcon_reservations.is_deleted = 0
+        AND carcon_lines.date >= CURDATE()
     ORDER BY carcon_lines.date';
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':student_id', $login_id, PDO::PARAM_INT);
@@ -141,13 +141,7 @@ try {
             </div>
 
             <h3 class="text-center mb-4">予約一覧</h3>
-            <?php
-            echo "<pre>";
-            var_dump($reservation_result);
-            echo "</pre>";
-            ?>
             <?php if (!empty($reservation_result)): ?>
-
                 <?php foreach ($reservation_result as $result): ?>
                     <!-- 必須キャリコン -->
                     <div class="user-card px-4 py-4 shadow mb-4 rounded-4 m-auto" style="max-width: 500px;">
@@ -188,15 +182,24 @@ try {
                                     面談形式の変更
                                 </button>
 
-                                <button class="btn btn-success py-2 flex-fill w-100 d-block"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#modal_change_detail"
-                                    data-id="<?php echo h($result['id']); ?>"
-                                    data-date="<?php echo h(format_date($result['date'], 4)); ?>"
-                                    data-slot-text="<?php echo h(get_slot_time_by_index($result['slot_index']));  ?>"
-                                    data-class-data-list="<?php echo h(json_encode($c_data_list)); ?>">
-                                    日時変更
-                                </button>
+                                <?php if ($result['is_plus_carcon'] === 1): ?>
+                                    <form action="./delete.php" method="post" class="flex-fill w-100">
+                                        <input type="hidden" name="id">
+                                        <button type="submit" class="w-100 d-block btn btn-danger py-2">
+                                            予約の取消
+                                        </button>
+                                    </form>
+                                <?php else: ?>
+                                    <button class="btn btn-success py-2 flex-fill w-100 d-block"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modal_change_detail"
+                                        data-id="<?php echo h($result['id']); ?>"
+                                        data-date="<?php echo h(format_date($result['date'], 4)); ?>"
+                                        data-slot-text="<?php echo h(get_slot_time_by_index($result['slot_index']));  ?>"
+                                        data-class-data-list="<?php echo h(json_encode($c_data_list)); ?>">
+                                        日時変更
+                                    </button>
+                                <?php endif; ?>
                             </div>
                         </dl>
                     </div>
