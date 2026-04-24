@@ -95,7 +95,7 @@ $room = get_classrooms_list();
 
                         <th scope="col">最新の予約日時</th>
                         <th scope="col">在籍状況</th>
-                        <th scope="col">変更</th>
+                        <th scope="col" colspan="2">情報変更・予約一覧</th>
                     </tr>
                 </thead>
 
@@ -127,7 +127,7 @@ $room = get_classrooms_list();
                                 <?php endif; ?>
                             </td>
                             <td><?php echo h($enrollments[$student['enrollment_id']]) ?></td>
-                            <td><a href="./student_edit.php?student_id=<?php echo h($student['id']) ?>" class="btn btn-primary d-inline-block">変更</a></td>
+                            <td colspan="2"><a href="./student_edit.php?student_id=<?php echo h($student['id']) ?>" class="btn btn-primary d-inline-block">変更・予約一覧</a></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

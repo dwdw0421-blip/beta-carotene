@@ -32,9 +32,9 @@ $course_id = htmlspecialchars($_GET['course_id']);
     <section class="admin-main-wrapper">
         <h1>学生を追加</h1>
         <form action="./student_add_confirm.php" method="post">
-            <!-- 学生番号-->
+            <!-- 出席番号-->
             <div class="mb-2">
-                <label class="form-label" for="student_no">学生番号</label>
+                <label class="form-label" for="student_no">出席番号</label>
                 <input class="form-control" type="text" pattern="[0-9]*" name="student_no" id="student_no">
                 <p class="fs-6 ">※半角数字のみ入力可能です</p>
             </div>

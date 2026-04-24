@@ -19,7 +19,7 @@ try {
 
     // 2. タスクが1つ以上あれば、削除せずにメッセージを返す
     if ($taskCount > 0) {
-        echo json_encode(['msg' => '削除する前に生徒を移動してください。', 'status' => 'error']);
+        echo json_encode(['msg' => '削除する前に学生を移動してください。', 'status' => 'error']);
         exit;
     }
 
@@ -50,4 +50,3 @@ try {
 
     echo json_encode(['status' => 'error', 'msg' => 'データベースエラーが発生しました。']);
 }
-

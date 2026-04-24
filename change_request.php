@@ -19,6 +19,7 @@ if ($is_request_detail === 1) {
 } else if ($is_request_meeting_type === 1) {
     $id = isset($_POST['currentDetailId_type']) ? $_POST['currentDetailId_type'] : "";
     $change_meeting_type = isset($_POST['radioType']) ? (int)$_POST['radioType'] : "";
+    $meeting_type = ($change_meeting_type === 1) ? '対面' : 'ZOOM';
 } else {
     exit('エラー');
 }
@@ -82,6 +83,27 @@ try {
                 変更内容確認
             </h2>
 
+            <div class="alert alert-danger bg-danger-subtle border-0 rounded-4 p-4 mb-6 shadow-sm m-auto" style="max-width: 400px;">
+                <div class="d-flex flex-column align-items-center gap-3 ">
+                    <div class="d-flex flex-row align-items-center gap-2 fs-5">
+                        <span class="material-symbols-outlined text-danger ">
+                            info
+                        </span>
+                        <p class="fw-bold mb-1 text-danger">
+                            申請に関する注意事項
+                        </p>
+                    </div>
+
+                    <ul class="mb-0 small text-secondary-emphasis">
+                        <li>申請は事務局の承認をもって確定となります。</li>
+                        <li>
+                            ご希望に沿えない場合もございますので、<br>
+                            あらかじめご了承ください。
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
             <?php if ($is_request_meeting_type === 1): ?>
                 <!-- 面談形式の変更 -->
                 <div class="user-card px-4 py-4 shadow mb-4 rounded-4 m-auto d-flex flex-column align-items-center" style="max-width: 500px;">
@@ -122,8 +144,9 @@ try {
                                     <input class="form-check-input mt-0" type="checkbox" id="check_type" required>
                                     <label class="form-check-label" for="check_type">変更後の面談形式</label>
                                 </dt>
+
                                 <dd class="fw-bold fs-5 ps-4">
-                                    <?php echo h($chenge_type_text["name"]); ?>
+                                    <?php echo h($reservation_result["meeting_type"]); ?>
                                 </dd>
                             </div>
                         </dl>
@@ -143,7 +166,7 @@ try {
 
                             <input type="hidden" name="id" value="<?php echo $id; ?>">
                             <input type="hidden" name="change_meeting_type" value="<?php echo $change_meeting_type; ?>">
-                            <button type="submit" class="btn btn-primary py-2 m-0">
+                            <button type="submit" class="btn btn-primary py-2 m-0" onclick="return confirm('面談形式の変更申請を送信してもよろしいですか？')">
                                 変更申請を送信
                             </button>
                         </div>
@@ -214,7 +237,7 @@ try {
 
                             <input type="hidden" name="id" value="<?php echo $id; ?>">
                             <input type="hidden" name="change_detail_id" value="<?php echo $change_detail_id; ?>">
-                            <button type="submit" class="btn btn-primary py-2 m-0">
+                            <button type="submit" class="btn btn-primary py-2 m-0" onclick="return confirm('日時の変更申請を送信してもよろしいですか？')">
                                 変更申請を送信
                             </button>
                         </div>

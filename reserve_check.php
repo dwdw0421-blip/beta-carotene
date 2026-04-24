@@ -23,7 +23,7 @@ if ($day === "" && $time === "" && $type === "") {
     <?php
     include('head_link.php');
     ?>
-    <title>ユーザー｜予約内容確認</title>
+    <title>予約内容確認</title>
 </head>
 
 <body>

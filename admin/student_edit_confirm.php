@@ -34,9 +34,9 @@ $course_id = $_POST['course_id'];
     <section class="admin-main-wrapper">
         <h1>学生情報を編集｜確認画面</h1>
         <form action="./student_edit_do.php" method="post">
-            <!-- 学生番号-->
+            <!-- 出席番号-->
             <div class="mb-2">
-                <p class="form-label" for="student_no">学生番号</p>
+                <p class="form-label" for="student_no">出席番号</p>
                 <p><?php echo h($student_no); ?></p>
                 <input class="form-control" type="hidden" pattern="[0-9]*" name="student_no" id="student_no" value="<?php echo h($student_no); ?>">
 
