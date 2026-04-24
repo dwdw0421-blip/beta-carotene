@@ -37,7 +37,7 @@ $db = db_connect();
                 <input class="form-control" type="text" name="first_name" id="first_name" required>
             </div>
 
-            <input type="submit" class="btn btn-outline-danger d-inline-block" value="変更する">
+            <input type="submit" class="btn btn-outline-danger d-inline-block" value="追加する">
         </form>
     </section>
 </body>
