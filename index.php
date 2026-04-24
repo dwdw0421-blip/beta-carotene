@@ -170,7 +170,7 @@ try {
                                 <?php else: ?>
                                     <div class="d-flex flex-column align-items-center">
                                         <p class="text-secondary fs-5 mb-5">
-                                            キャリコンプラスの予約はありません。
+                                            キャリコン＋（任意面談）の予約はありません。
                                         </p>
                                         <a class="btn btn-primary px-4 py-2 m-0" href="./reserve.php">予約はこちら</a>
                                     </div>
@@ -182,7 +182,7 @@ try {
                                         <span class="fw-bold">ご確認ください</span>
                                     </div>
                                     <p class="mb-0 small text-muted px-4">
-                                        キャリコンプラスは仕様上、直接の日時変更ができません。<br />
+                                        キャリコン＋（任意面談）は仕様上、直接の日時変更ができません。<br />
                                         お手数ですが、現在の予約を一度取り消した上で、再度ご希望の日時でご予約をお願いいたします。
                                     </p>
                                 </div>
@@ -225,7 +225,7 @@ try {
                                 <?php else: ?>
                                     <div class="d-flex flex-column align-items-center">
                                         <p class="text-secondary fs-5 mb-4">
-                                            キャリコンプラスの予約はありません。
+                                            キャリコン＋（任意面談）の予約はありません。
                                         </p>
                                         <a class="btn btn-primary px-4 py-2 m-0" href="./reserve.php">予約はこちら</a>
                                     </div>
@@ -237,7 +237,7 @@ try {
                                         <span class="fw-bold">ご確認ください</span>
                                     </div>
                                     <p class="mb-0 small text-muted px-4">
-                                        キャリコンプラスは仕様上、直接の日時変更ができません。<br />
+                                        キャリコン＋（任意面談）は仕様上、直接の日時変更ができません。<br />
                                         お手数ですが、現在の予約を一度取り消した上で、再度ご希望の日時でご予約をお願いいたします。
                                     </p>
                                 </div>

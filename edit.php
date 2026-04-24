@@ -314,7 +314,7 @@ try {
                 <?php else: ?>
                     <div class="d-flex flex-column align-items-center">
                         <p class="text-secondary fs-5 mb-4">
-                            キャリコンプラスの予約はありません。
+                            キャリコン＋（任意面談）の予約はありません。
                         </p>
                     </div>
                 <?php endif; ?>

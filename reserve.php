@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php
     include('head_link.php');
     ?>
-    <title>ユーザー｜面談予約</title>
+    <title>面談予約</title>
 </head>
 
 <body>
