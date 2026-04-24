@@ -13,7 +13,9 @@ if ($id > 0) {
         $pdo = db_connect();
         // 物理削除から論理削除へ変更
         // $sql = 'DELETE FROM carcon_reservations WHERE id = :id';
-        $sql = 'UPDATE carcon_reservations SET is_deleted = 1 WHERE id = :id';
+        $sql = 'UPDATE carcon_reservations 
+                SET is_deleted = 1, carcon_line_id = 1
+                WHERE id = :id';
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
