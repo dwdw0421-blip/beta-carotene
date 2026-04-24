@@ -35,7 +35,7 @@ if (!empty($_POST)) {
             $stmt->execute();
 
             //成功メッセージをセットして遷移
-            $_SESSION['change'] = '変更申請を送信';
+            $_SESSION['change_meeting_type'] = '変更申請を送信';
             header('location:edit.php');
             exit();
         } catch (PDOException $e) {
