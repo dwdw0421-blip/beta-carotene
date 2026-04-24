@@ -120,12 +120,13 @@ try {
     $_SESSION["msg"] = "予約が完了しました！";
     header('location: index.php');
     exit();
+    
 } catch (Throwable $e) {
     if ($db->inTransaction()) {
         $db->rollBack();
     }
-    // エラー時、reserve_check.phpに戻す
-    $_SESSION["err"] = "予約に失敗しました: " . $e->getMessage();
-    header('Location: reserve_check.php');
+    // エラー時、index.phpに戻す
+    $_SESSION["err"] = $e->getMessage();
+    header('location: index.php');
     exit();
 }
