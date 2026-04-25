@@ -196,6 +196,10 @@ td:first-child {
     width: auto;
 }
 
+.reserve-link-button:hover {
+    text-decoration: underline !important;
+}
+
 /* --------------------
 edit
 --------------------*/
