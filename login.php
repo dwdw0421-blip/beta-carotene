@@ -8,7 +8,6 @@ if (isset($_SESSION['id'])) {
 }
 
 $message = $_SESSION['res_message'] ?? '';
-unset($_SESSION['res_message']);
 $type = ['danger', 'primary'];
 ?>
 
@@ -28,11 +27,12 @@ $type = ['danger', 'primary'];
     ?>
 
     <main class="user-login d-flex flex-column justify-content-center">
-        <div class="user-wrapper message-area text-center" style="max-width: 450px;">
+        <div class="user-wrapper message-area" style="max-width: 450px;">
             <?php if ($message !== ''): ?>
-                <div class="alert alert-<?php echo $type[$message['type']]; ?> text-center w-100" role="alert">
+                <div class="alert alert-<?php echo $type[$message['type']]; ?>" role="alert">
                     <?php echo $message['msg']; ?>
                 </div>
+                <?php unset($_SESSION['res_message']);  ?>
             <?php endif; ?>
         </div>
 
@@ -43,14 +43,14 @@ $type = ['danger', 'primary'];
                     <label for="login_id" class="mb-2 form-label">
                         | ログインID
                     </label>
-                    <input type="text" name="login_id" id="login_id" class="form-control" placeholder=" 例：202646A01">
+                    <input type="text" name="login_id" id="login_id" class="form-control" placeholder=" 例：202646A01" required>
                 </div>
 
                 <div class="mb-5">
                     <label for="password" class="mb-2 form-label">
                         | パスワード
                     </label>
-                    <input type="password" name="password" id="password" class="form-control" placeholder="パスワード">
+                    <input type="password" name="password" id="password" class="form-control" placeholder="パスワード" required>
                 </div>
 
                 <div class="text-center">
