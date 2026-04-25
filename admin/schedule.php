@@ -266,9 +266,10 @@ function day($datetime, $type)
 
     ?>
 
+<div class="d-flex align-items-center justify-content-between">
     <!-- ++++++++++++++++++++++++++++++++++++++ -->
 
-    <div class="mb-3" style="max-width: 200px;">
+    <div class="mb-2" style="max-width: 200px;">
       <label for="columnSelect" class="form-label">表示列数を選択</label>
       <select id="columnSelect" class="form-select">
         <option value="1">1列</option>
@@ -281,6 +282,20 @@ function day($datetime, $type)
     </div>
 
     <!-- ++++++++++++++++++++++++++++++++++++++++++ -->
+     <!-- ++++++++++++++++++++++++++++++++++++++ -->
+
+    <div class="mb-2" style="min-width: 300px;">
+      <label for="soundSelect" class="form-label">効果音を選択</label>
+      <select id="soundSelect" class="form-select">
+        <option value="puyon.mp3" selected>ぶびょっん</option>
+        <option value="syakinnnnm.mp3">シャッキーーン</option>
+        <option value="jump.mp3" >ヒョイーン</option> <!-- 初期値 -->
+        
+      </select>
+    </div>
+
+    <!-- ++++++++++++++++++++++++++++++++++++++++++ -->
+</div>
 
 
     <?php foreach ($grouped_students as $line_id => $tasks_in_line): ?>

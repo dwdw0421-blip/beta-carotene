@@ -347,18 +347,36 @@ async function updateTask(dataObject) {
 
 
 
+//　効果音
+let soundSelect;
+let swapSound;
 
-// 効果音用の設定
-const swapSound = new Audio('../data/puyon.mp3');
+document.addEventListener('DOMContentLoaded', () => {
+    // HTMLが読み込まれた後に要素を取得
+    soundSelect = document.getElementById('soundSelect');
+    
+    // 初期状態の音を設定
+    if (soundSelect) {
+        swapSound = new Audio(`../data/${soundSelect.value}`);
+
+        // セレクターが変更されたら音源を切り替える
+        soundSelect.addEventListener('change', function() {
+            swapSound = new Audio(`../data/${this.value}`);
+        });
+    }
+});
+
 /**
  * ◎追加　要素を「ぷにゅプルン」と現在の位置へ戻す　（アニメーション用）
  */
 function applyPunyuSwap(el, dx, dy) {
-  if (!el) return;
+  if (!el || !swapSound) return; // swapSoundが準備できていない場合は何もしない
 
-// --- 【追加】音が重なっても鳴るように再生 ---
+// --- 現在選択されている音源を再生 ---
   swapSound.currentTime = 0;
-  swapSound.play().catch(e => {}); // ユーザー操作前のエラー防止
+  swapSound.play().catch(e => {
+    console.log("再生エラー:", e);
+  });
 
   el.classList.remove('punyu-move');
   el.style.transition = 'none';
@@ -446,3 +464,4 @@ select.addEventListener('change', () => {
     }
   });
 });
+
