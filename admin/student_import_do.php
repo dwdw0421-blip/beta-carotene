@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once __DIR__ . '/../includes/functions.php';
 $course_id = $_POST['course_id'];
 $login_id = $_POST['start_year'] . $_POST['start_month'] . $_POST['room'];

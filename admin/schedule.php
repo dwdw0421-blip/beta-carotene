@@ -1,6 +1,11 @@
 <?php
-
+session_start();
 require_once __DIR__ . '/../includes/functions.php';
+
+if (!isset($_SESSION['login_admin_id'])) {
+    header('location:login.php');
+    exit();
+}
 
 $db = db_connect();
 
