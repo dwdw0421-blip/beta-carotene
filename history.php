@@ -151,7 +151,7 @@ try {
                             <dd><?php echo h($request['request_status_name']) ?></dd>
                             <?php if (!empty($request['reject_message'])): ?>
                                 <dt class="user-card_subtitle mb-2 fs-6">メッセージ</dt>
-                                <dd><?php echo h($request['reject_message']) ?></dd>
+                                <dd class="text-break"><?php echo h($request['reject_message']) ?></dd>
                             <?php endif; ?>
                         </dl>
                     </div>
