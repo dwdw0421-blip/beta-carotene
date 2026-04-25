@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once __DIR__ . '/../includes/functions.php';
 $line_data_json = file_get_contents('php://input');
 $line_data = json_decode($line_data_json, true);

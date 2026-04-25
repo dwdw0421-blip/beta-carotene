@@ -1,4 +1,5 @@
 <?php
+session_start();
 // require_once 'functions_test.php';
 require_once __DIR__ . '/../includes/functions.php';
 
