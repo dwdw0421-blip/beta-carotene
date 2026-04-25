@@ -196,6 +196,16 @@ td:first-child {
     width: auto;
 }
 
+.reserve-link-button {
+    /* bootstrapの処理を上書きするために important */
+    white-space: normal !important;
+}
+
+.reserve-link-button:hover {
+    /* bootstrapの処理を上書きするために important */
+    text-decoration: underline !important;
+}
+
 /* --------------------
 edit
 --------------------*/

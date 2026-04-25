@@ -24,7 +24,8 @@ $stmt_student->execute();
 $student = $stmt_student->fetch(PDO::FETCH_ASSOC);
 
 /* 日付 */
-$sql_dates = "SELECT DISTINCT date FROM carcon_lines ORDER BY date ASC";
+// 選択できるのは現在の日付以降
+$sql_dates = "SELECT DISTINCT date FROM carcon_lines WHERE date >= CURDATE() ORDER BY date ASC";
 $stmt_dates = $db->query($sql_dates);
 $dates = $stmt_dates->fetchAll(PDO::FETCH_ASSOC);
 
@@ -33,6 +34,21 @@ $sql_types = "SELECT * FROM m_meeting_types";
 $stmt_types = $db->query($sql_types);
 $types = $stmt_types->fetchAll(PDO::FETCH_ASSOC);
 
+/*
+// NOTE: nagata-t
+// ここの処理の意図が把握できず、不要と判断したのでコメントアウトしてます(´>ω<)人
+
+// 以下の実装は「日付（$day）と時刻（$select_time）が渡されていたら、予約確認画面（reserve_check.php）へ直接遷移する」という処理になっています。
+// 現時点で発生している処理の流れは以下のようになっていました。
+
+// 1. カレンダーから「日付（$day）と時刻（$select_time）」を渡しつつ reserve.php に遷移する
+// 2. reserve.php側で二つのデータが存在していたら、予約確認画面（reserve_check.php）に遷移する
+// 3. 予約確認画面（reserve_check.php）に遷移するも、ただのlocationなのでデータが渡せていない遷移のため、予約確認画面（reserve_check.php）の39~42行目のチェック判定に引っかかり reserve.php にデータなしの状態で戻される
+// 4. 結果、reserve.php にデータを渡しても、reserve_check.php を経由して、データなしの reserve.php が表示される
+
+// おそらく「予約画面」に来た際に、すでにデータを持っていたら「予約確認画面」へ遷移させる意図のコードなのかなー？と思ったんですが、
+// 現在の画面仕様だと「面談方式を選択させるのが reserve.php」なので、一旦この処理は無いほうが良いかな？と判断して削除（コメントアウト）しています！
+// （上記に書いた通り、この処理が残っているとデータを渡してもグルグル回って無くなってしまう不具合が発生してしまう状態にもなるので）
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $is_valid = true;
 
@@ -46,6 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 }
+*/
 
 ?>
 <!DOCTYPE html>
